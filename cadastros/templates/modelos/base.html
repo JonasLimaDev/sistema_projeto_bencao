@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="pt-br">
+{%load static %}
+{% load filtros %}
+{% load tags_users %}
+{% load tags_registros %}
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" href="{%static 'img/logo.png' %}" />
+
+  <!-- Bootstrap CSS -->
+  <!-- <link href="{% static 'css/bootstrap.min.css'%}" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous"> -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+  <title>{% block title %} Home{% endblock title %}</title>
+  <style>
+    body {
+      background-image: linear-gradient(180deg, #e8e9f3, #fefefe 100px, #ffffff);
+    }
+
+    .nav-link-menu {
+
+      font-weight: 600;
+      text-decoration: none;
+
+      color: rgba(0, 0, 0, .75);
+      background-color: transparent;
+      border-bottom: .25rem solid rgba(0, 0, 0, .25);
+    }
+
+    .nav-link-menu:hover,
+    nav-link-menu:focus {
+      color: rgba(0, 0, 0, .90);
+      border-bottom-color: rgba(0, 0, 0, .5);
+    }
+
+
+
+    nav-link-menu .active {
+      border-bottom-color: rgba(0, 0, 0, 1);
+    }
+  </style>
+</head>
+
+<body class="d-flex h-100 ">
+  <div class="d-flex w-100 h-100 p-3 mx-auto flex-column">
+    <header>
+      <div class="d-flex flex-column flex-md-row align-items-center py-3 px-5 mx-4 pb-3 mb-2 border-bottom">
+        <a href="" class="d-flex align-items-center text-dark text-decoration-none">
+          {% comment %} <img src="{%static 'img/logo.png' %}" height="48" width="48"> {% endcomment %}
+          <span class="ps-2 fs-3 text-uppercase">Benefícios Eventuais</span>
+        </a>
+        <nav class="d-md-inline-flex  align-items-center mt-2 mt-md-0  ms-md-auto ">
+          <a class="me-3 my-3 py-2 btn btn-outline-dark {%if request.path == '/'%} active {%endif%}"
+            href="{% url 'home' %}">Home</a>
+          {%if request.user.is_anonymous%}
+          <a class="me-3 py-2 my-2 my-sm-1 btn btn-outline-dark  {%if '/login/entrar/' in request.path %} active {%endif%}"
+            href="{% url 'logar_usuario' %}">Logar-se</a>
+          <a class="me-3 py-2 my-2 my-sm-1 btn btn-outline-dark {%if '/login/registrar/' in request.path %} active {%endif%}"
+            href="{% url 'criar_usuario' %}">Cadastrar-se</a>
+          {%else%}
+          <a class="me-3 py-2 my-2 my-sm-1 btn btn-outline-dark  {%if '/cadastros/' in request.path %} active {%endif%}"
+            href="{% url 'listar_cadastros' %}">Cadastros</a>
+
+          <a class="me-3 py-2 my-2 my-sm-1 btn btn-outline-dark position-relative  {%if  '/beneficios/' in request.path%} active {%endif%}"
+            href="{% url 'listar_solicitacoes' %}" role="button">Solicitações
+            {%if user.id|has_pendencias%}
+            <span class="badge rounded-pill ">
+              <i class="bi bi-exclamation-octagon-fill px-0 mx-0 text-danger fs-6"></i>
+              <span class="visually-hidden">unread messages</span>
+            </span>
+            {%endif%}
+          </a>
+          <!-- <a class="me-3 py-2 my-2 my-sm-1 btn btn-outline-dark {%if  '/entregas/' in request.path%} active {%endif%}"
+            href="{% url 'listar_solicitacoes' %}" role="button">Entregas
+            <span class="badge rounded-pill ">
+              <i class="bi bi-exclamation-octagon-fill px-0 mx-0 text-danger fs-6"></i>
+              <span class="visually-hidden">unread messages</span>
+            </span>
+          </a> -->
+          {%if user.id|is_supervisor %}
+
+          <a class="me-3 py-2  my-2 my-sm-1 btn btn-outline-dark  {%if request.path == '/tecnicos/equipe/'%} active {%endif%}"
+            href="{% url 'equipe_tecnica' %}">Equipe
+            <span
+              class=" ms-2  {%if not user.id|tecnicos_pendentes %} visually-hidden {%endif%} badge rounded-pill bg-danger">
+              {{user.id|tecnicos_pendentes}}
+            </span>
+          </a>
+          {%endif%}
+
+
+          <div class="dropdown ">
+            <a class="me-3  py-2 my-2 my-sm-1 btn btn-outline-secondary   dropdown-toggle {%if '/perfil/' in request.path %} active {%endif%} "
+              href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+              {{request.user}}
+            </a>
+
+            <ul class="dropdown-menu dropdown-menu-dark " aria-labelledby="dropdownMenuLink">
+              <li><a class="dropdown-item " href="{% url 'dados_tecnico' request.user.id %}">Perfil</a></li>
+              <li><a class="dropdown-item " href="{% url 'deslogar' %}">Sair</a></li>
+            </ul>
+          </div>
+
+          {%endif%}
+        </nav>
+
+      </div>
+
+      <div class="container  py-1 px-1 my-2 pb-md-3">
+        {%block barra_titulo%}
+
+        {%endblock barra_titulo%}
+      </div>
+    </header>
+
+    <main class="px-3 " style="min-height: 30em;">
+      {%block main%}
+
+      <table class="table table-responsive caption-top border-success table-success table-striped">
+        <caption class=" ps-1 bg-success text-light">Quantitativos Mensais Por Órgão - Todos os Benefícios
+          <small class="text-warning pt-0" style="font-size:12px">*Dados Gerados
+            Aleatóriamente</small>
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Orgão</th>
+            <th scope="col">Jan</th>
+            <th scope="col">Fev</th>
+            <th scope="col">Mar</th>
+            <th scope="col">Abr</th>
+            <th scope="col">Mai</th>
+            <th scope="col">Jun</th>
+            <th scope="col">Jul</th>
+            <th scope="col">Ago</th>
+            <th scope="col">Set</th>
+            <th scope="col">Out</th>
+            <th scope="col">Nov</th>
+            <th scope="col">Dez</th>
+
+          </tr>
+        </thead>
+        <tbody>
+          {%for orgao, info in dados.items %}
+          <tr>
+            <th scope="row">{{forloop.counter}}</th>
+            <td>{{orgao}}</td>
+            {%for valor in info.values%}
+            <td>{{valor}}</td>
+            {%endfor%}
+
+          </tr>
+          {%endfor%}
+
+        </tbody>
+      </table>
+
+      {% comment %} <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
+        <div class="col-12">
+          <p class="fs-5 text-muted">Quickly build an effective pricing table for your potential customers with this
+            Bootstrap example. It’s built with default Bootstrap components and utilities with little customization.
+          </p>
+        </div>
+      </div> {% endcomment %}
+      {%endblock main%}
+    </main>
+
+
+    <footer class="mt-5 pt-3 pb-1 text-center border-top">
+      <div class="row row-cols-md-3 row-cols-sm-2 row-cols-auto justify-content-center">
+        <div class="col">
+          <p>Construido por Jonas Lima <a href="{% url 'sobre'%}" target="_blank"
+            class="text-decoration-none text-info">Saiba mais</a>.</p>
+        {% comment %} <p>Construido por Jonas Lima.</p> {% endcomment %}
+        </div>
+        <!-- <div class="col">
+          <p>Tecnologias usadas:</p>
+          <p>
+            <ul class="list-group-numbered">
+              <li class="list-group-item">Django</li>
+              <li class="list-group-item">Bootstrap</li>
+            </ul>
+          </p>
+          
+        {% comment %} <p>Construido por Jonas Lima.</p> {% endcomment %}
+        </div> -->
+        <div class="col">
+          <p>
+            Faça uma doação ao desenvolvedor
+          </p>
+      <form action="https://www.paypal.com/donate" method="post" target="_bank">
+        <input type="hidden" name="hosted_button_id" value="J3J4RWXJCLVSA" />
+        <input type="image" src="https://www.paypalobjects.com/pt_BR/BR/i/btn/btn_donateCC_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Faça doações com o botão do PayPal" />
+        <img alt="" border="0" src="https://www.paypal.com/pt_BR/i/scr/pixel.gif" width="1" height="1" />
+    </form>
+        </div>
+      </div>
+
+      
+    </footer>
+  </div>
+
+
+
+  <!-- Optional JavaScript; choose one of the two! -->
+
+  <!-- Option 1: Bootstrap Bundle with Popper -->
+  <!-- <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script> -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous">
+  </script>
+  <!-- Option 2: Separate Popper and Bootstrap JS -->
+  <!--
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+    integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+    integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous">
+  </script>
+-->
+  <script>
+    var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+    var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+      return new bootstrap.Popover(popoverTriggerEl)
+    })
+  </script>
+
+</body>
+
+</html>

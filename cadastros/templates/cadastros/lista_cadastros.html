@@ -1,0 +1,425 @@
+{% extends 'base.html' %}
+{% load filtros %}
+{% block title %}Todos Cadastros{% endblock title %}
+{% block barra_titulo %}
+<div class="row align-items-center justify-content-content-between ">
+
+  <div class="col-3 ">
+    <h5 class="card-title ">Todos os Cadastros</h5>
+  </div>
+  <div class="col d-flex align-items-center justify-content-end">
+    {%if request.path != "/cadastros/lista/"  %}
+    <a href="{% url 'listar_cadastros' %}" type="button" class="btn btn-outline-secondary "><i
+        class="bi bi-list align-middle" style="font-size: 1.25rem;"></i><span class="align-middle mx-1">Lista
+        Completa</span></a>
+    {%endif%}
+    <div class="mx-1 ">
+      <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container-fluid">
+          <form class="d-flex " method="post">
+            {% csrf_token %}
+            <!-- <div class="input-group me-1">
+              <span class="input-group-text" id="basic-addon1">Bairro</span>
+              <input type="text" class="form-control rounded-end" list="datalistOptions"  aria-describedby="basic-addon1" id="exampleDataList" placeholder="Selecione um Bairro">
+              <datalist id="datalistOptions">
+                <option value="San Francisco">
+                <option value="New York">
+                <option value="Seattle">
+                <option value="Los Angeles">
+                <option value="Chicago">
+              </datalist>
+            </div> -->
+            <div class="input-group w-100">
+              <input class="form-control " name="busca" type="search" placeholder="Nome ou CPF" aria-label="Search">
+              <button class="btn btn-outline-primary" type="submit" id="button-addon2"><i
+                  class="bi bi-search mx-1"></i>Buscar</button>
+            </div>
+          </form>
+
+        </div>
+      </nav>
+
+    </div>
+    <div class="ms-2">
+
+      {% comment %} <a href="{% url 'listar_cadastros' %}" type="button" class="btn btn-outline-secondary "><i
+          class="bi bi-file-text align-middle" style="font-size: 1.25rem;"></i><span
+          class="align-middle mx-1">Todos</span></a> {% endcomment %}
+
+      <a href="{% url 'adicionar_cadastro' %}" type="button" class="btn btn-outline-secondary "><i
+          class="bi bi-plus-circle align-middle" style="font-size: 1.25rem;"></i><span
+          class="align-middle mx-1">Adicionar</span></a>
+
+    </div>
+  </div>
+</div>
+
+{% endblock barra_titulo %}
+{% block main %}
+{% include 'modelos/mensagens_sucesso.html' %}
+<div class="list-group py-1">
+  {% for cadastro in cadastros %}
+  <div class="card list-group-item my-2 border" aria-current="true">
+    <div class="d-flex w-100 justify-content-between ">
+      <h5 class="mb-1">{{cadastro.responsavel.nome}}</h5>
+      <div class="d-flex flex-column align-items-end">
+        <small class="text-secondary">Cadastro realizado em: {{cadastro.data_cadastro}}</small>
+        <small class=" text-muted fw-bold">Cadastrador: <span
+            class="text-uppercase ">{{cadastro.responsavel_cadastro}}</span></small>
+      </div>
+    </div>
+    <p class="mb-1">Moradora do Bairro: {{cadastro.endereco.bairro}}
+      <a href="{% url 'editar_endereco' cadastro.endereco.id %}" class="link-warning mt-2 btn-sm d-print-none">
+        <i class="bi bi-pencil"></i>
+      </a>
+    </p>
+    <p class="mt-0">
+      {% if cadastro.endereco.logradouro %}
+      {{cadastro.endereco.logradouro}},
+      {% endif %}
+      {% if cadastro.endereco.numero %}
+      nº {{cadastro.endereco.numero}}
+      {% endif %}
+
+    </p>
+    <div class="d-grid gap-2 d-md-flex justify-content-md-start pb-3 ">
+      <button class="btn btn-primary me-md-2 btn-sm" type="button" data-bs-toggle="collapse"
+        data-bs-target="#collapseComposicao{{cadastro.id}}">
+        <i class="bi bi-people align-middle" style="font-size: 1.25rem;"></i><span class="align-middle mx-1">Composição
+          Familiar</span>
+      </button>
+
+      <button class="btn btn-primary me-md-2 btn-sm" type="button" data-bs-toggle="collapse"
+        data-bs-target="#collapsePerfil{{cadastro.id}}">
+        <i class="bi bi-graph-up align-middle" style="font-size: 1.25rem;"></i><span class="align-middle mx-1">Dados
+          Socioeconômicos</span>
+      </button>
+      
+      <a class="btn btn-primary me-md-2 btn-sm" type="button" href="{% url 'exibir_dados_cadastro' cadastro.id%}">
+        <i class="bi bi-journal-text align-middle" style="font-size: 1.25rem;"></i>
+        <span class="align-middle mx-1">Ver Todos os Dados</span>
+      </a>
+      {%comment %}
+      <a class="btn btn-primary me-md-2 btn-sm" type="button" href="{% url 'solicitar_beneficio' cadastro.id%}">
+        <i class="bi bi-journal-plus align-middle" style="font-size: 1.25rem;"></i>
+        <span class="align-middle mx-1">Solicitar Beneficio</span>
+      </a>
+
+      <a class="btn btn-primary me-md-2 btn-sm" type="button" href="{% url 'lista_individual' cadastro.id%}">
+        <i class="bi bi-journal-text align-middle" style="font-size: 1.25rem;"></i>
+        <span class="align-middle mx-1">Solicitações Individuais</span>
+      </a>
+      {% endcomment %}
+      {% if cadastro.disparidades %}
+      <button class="btn btn-warning me-md-2 btn-sm" type="button" data-bs-toggle="collapse"
+        data-bs-target="#collapsePendencias{{cadastro.id}}">
+        <i class="bi bi-exclamation-diamond align-middle" style="font-size: 1.25rem;"></i><span
+          class="align-middle mx-1">Pendências</span>
+      </button>
+
+      {%endif%}
+    </div>
+
+
+    <!-- conteudo oculto-->
+    <div class="collapse my-1  " id="collapseComposicao{{cadastro.id}}">
+      <div class="card-header text-center " style="background:#efefef;">
+        <h5 class="card-title">Composição Familiar</h5>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-sm table-light  table-striped">
+          <thead>
+            <tr>
+              <th scope="col" >Nome</th>
+              <th scope="col" >Parentesco</th>
+             
+              <th scope="col">Idade</th>
+              
+              <th scope="col">Sexo</th>
+              <th scope="col">CPF</th>
+              {%comment%}
+              <th scope="col" >Situação de Trabalho</th>
+              <th scope="col" >Escolaridade</th>
+              {%endcomment%}
+              <th scope="col">Contato</th>
+              <th scope="col"></th>
+              <th scope="col"></th>
+
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-nowrap mx-3">{{cadastro.responsavel.nome}}</td>
+              <td >Referência Familiar</td>
+              
+              <td>{{cadastro.responsavel.idade}}</td>
+             
+              <td >{{cadastro.responsavel.sexo}}</td>
+              {% if cadastro.responsavel.cpf %}
+              <td class="text-nowrap">{{cadastro.responsavel.cpf}}</td>
+              {% else %}
+              <td class="text-center">-</td>
+              {% endif %}
+              {%comment%}
+              <td >{{cadastro.responsavel.trabalho}}</td>
+              <td class="text-nowrap">{{cadastro.responsavel.escolaridade}}</td>
+              {%endcomment%}
+              {% if cadastro.responsavel.contato %}
+              <td class="text-nowrap">{{cadastro.responsavel.contato}}</td>
+              {% else %}
+              <td class="text-center">-</td>
+              {% endif %}
+              <td>
+                <a href="{% url 'editar_referencia' cadastro.responsavel.id %}"
+                  class="link-warning mt-2 btn-sm d-print-none">
+                  <i class="bi bi-pencil fs-5"></i>
+                </a>
+              </td>
+              <th></th>
+            </tr>
+            {% for membro in cadastro.lista_membros %}
+            <tr>
+              <td >{{membro.nome}}</td>
+              <td >{{membro.parentesco}}</td>
+             
+              <td >{{membro.idade}}</td>
+           
+              <td>{{membro.sexo}}</td>
+              {% if membro.cpf %}
+              <td class="text-nowrap">{{membro.cpf}}</td>
+              {% else %}
+              <td class="text-center">-</td>
+              {% endif %}
+              {%comment%}
+              <td >{{membro.trabalho}}</td>
+              <td>{{membro.escolaridade}}</td>
+              {%endcomment%}
+              {% if membro.contato %}
+              <td >{{membro.contato}}</td>
+              {% else %}
+              <td class="text-center">-</td>
+              {% endif %}
+              <td>
+                <a href="{%url 'editar_membro' membro.id%}" class="link-warning mt-2 btn-sm d-print-none">
+                  <i class="bi bi-pencil fs-5"></i>
+                </a>
+              </td>
+              <td>
+                 <a href="{%url 'excluir_membro' membro.id%}" class="link-danger mt-2 btn-sm d-print-none">
+                  <i class="bi bi-trash fs-5"></i>
+                </a>
+              </td>
+            </tr>
+            {% endfor %}
+            <tr>
+              <td colspan="12" class="text-center">
+                <a href="{%url 'adicionar_membro' cadastro.id%}"
+                  class="btn btn-outline-secondary mt-2 btn-sm d-print-none">
+                  <i class="bi bi-plus-circle fs-6"></i>
+                  Adicionar Membro
+                </a>
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="collapse my-1" id="collapsePerfil{{cadastro.id}}">
+      <div class="card-header text-center " style="background:#efefef;">
+        <h5 class="card-title">Perfil Socieconômico</h5>
+      </div>
+      <div class="card-body">
+        <h5 class="card-title pt-2">Informações de Infraestrutura <a href="{% url 'editar_habitacao' cadastro.habitacao.id %}"
+            class="link-warning  mt-2 px-2 "><i class="bi bi-pencil "></i></a></h5>
+        <hr>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 d-flex justify-content-between mb-2">
+          <div class="col d-flex align-items-start ">
+            <p class="fw-bold">
+              Situação da Moradia:
+            </p>
+            <p class="ms-2">
+              {{cadastro.habitacao.get_situacao_moradia_display}}
+
+            </p>
+          </div>
+          <div class="col d-flex justify-content-start">
+            <p class="fw-bold">
+              Tipo de Construção:
+            </p>
+            <p class="ms-2">
+              {{cadastro.habitacao.get_tipo_construcao_display}}
+            </p>
+          </div>
+
+          <div class="col d-flex justify-content-start">
+            <p class="fw-bold">
+              Possui Energia Elétrica:
+            </p>
+            <p class="ms-2 text-nowrap">
+              {{cadastro.habitacao.get_rede_eletrica_display}}
+
+            </p>
+          </div>
+
+          <div class="col d-flex justify-content-start">
+            <p class="fw-bold">
+              Abastecimento de Água:
+            </p>
+            <p class="ms-2">
+              {{cadastro.habitacao.get_possui_abastecimento_display}}
+
+            </p>
+          </div>
+
+          <div class="col d-flex justify-content-start">
+            <p class="fw-bold">
+              Possui Rede de Esgoto:
+            </p>
+            <p class="ms-2">
+              {{cadastro.habitacao.get_possui_rede_esgoto_display}}
+
+            </p>
+          </div>
+
+          <div class="col d-flex justify-content-start">
+            <p class="fw-bold">
+              Coleta de Lixo:
+            </p>
+            <p class="ms-2">
+              {{cadastro.habitacao.get_possui_coleta_display}}
+
+            </p>
+          </div>
+          <div class="col d-flex justify-content-start">
+            <p class="fw-bold">
+              Pavimentação da Rua:
+            </p>
+            <p class="ms-2">
+              {{cadastro.habitacao.get_pavimentacao_display}}
+
+            </p>
+          </div>
+          </div>
+        <h5 class="card-title pt-4 ">Informações de Moradia</h5>
+        <hr>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 d-flex justify-content-start">
+
+
+          <div class="col d-flex justify-content-start">
+            <p class="fw-bold">
+              Número de Moradores:
+            </p>
+            <p class="ms-2">
+              {{cadastro.habitacao.numero_moradores}}
+
+            </p>
+          </div>
+          <div class="col d-flex justify-content-start">
+            <p class="fw-bold">
+              Tempo de Ocupação do Imóvel:
+            </p>
+            <p class="ms-2">
+              {{cadastro.habitacao.tempo_ocupacao}} Anos
+            </p>
+          </div>
+          
+          <div class="col d-flex justify-content-start">
+            <p class="fw-bold">
+              Número de Cômodos da Casa:
+            </p>
+            <p class="ms-2">
+              {{cadastro.habitacao.numero_comodos}}
+            </p>
+          </div>
+        </div>
+        <h5 class="card-title pt-4 ">Informações da Renda</h5>
+        <hr>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 d-flex justify-content-start">
+
+          <div class="col d-flex justify-content-start">
+            <p class="fw-bold">
+              Renda Total:
+            </p>
+            <p class="ms-2 text-nowrap">
+              {{cadastro.renda_total|formatar_reais}}
+            </p>
+          </div>
+          <div class="col d-flex justify-content-start">
+            <p class="fw-bold">
+              Renda Per Capita:
+            </p>
+            <p class="ms-2 text-nowrap">
+              {{cadastro.renda_per_capita|formatar_reais}}
+            </p>
+          </div>
+
+
+
+        </div>
+        <div class="row pt-2 pb-0 mb-0 ">
+          <div class="d-grid gap-2 col-4 mx-auto">
+
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+
+    <div class="collapse my-1" id="collapsePendencias{{cadastro.id}}">
+      <div class="card-header text-center " style="background:#efefef;">
+        <h5 class="card-title">Pendências</h5>
+      </div>
+      <div class="card-body">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 d-flex">
+          <div class="col d-flex align-items-start">
+            <p class="fw-bold">
+              Disparidades:
+            </p>
+            <p class="ms-2">
+              {{cadastro.disparidades}}
+            </p>
+          </div>
+
+
+
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- <div class="card-group py-2 px-1">
+
+        <div class="card" style="width: 18rem;">
+          <ul class="list-group">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              Situação da Moradia:
+              <span class="fs-6">{{cadastro.habitacao.get_situacao_moradia_display}}</span>
+            </li>
+          </ul>
+        </div>
+        <div class="card" style="width: 18rem;">
+          <ul class="list-group">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              Situação da Moradia:
+              <span class="fs-6">{{cadastro.habitacao.get_situacao_moradia_display}}</span>
+            </li>
+          </ul>
+        </div>
+      </div> -->
+
+  </div>
+
+  {% empty %}
+  <h6>
+    Nenhum cadastro Encontrado
+  </h6>
+
+  {%endfor%}
+
+</div>
+
+{% endblock main %}

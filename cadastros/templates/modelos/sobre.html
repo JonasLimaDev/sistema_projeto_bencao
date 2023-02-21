@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="pt-br" class="h-100">
+
+<head>
+  {%load static %}
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+  <meta name="generator" content="Hugo 0.84.0">
+  <title>Cover Template · Bootstrap v5.0</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+  <!-- Bootstrap core CSS -->
+
+
+  <style>
+  /*
+ * Globals
+ */
+
+
+/* Custom default button */
+.btn-secondary,
+.btn-secondary:hover,
+.btn-secondary:focus {
+  color: #333;
+  text-shadow: none; /* Prevent inheritance from `body` */
+}
+
+
+/*
+ * Base structure
+ */
+
+body {
+  text-shadow: 0 .05rem .1rem rgba(0, 0, 0, .5);
+  box-shadow: inset 0 0 5rem rgba(0, 0, 0, .5);
+}
+
+.cover-container {
+  max-width: 42em;
+}
+
+
+/*
+ * Header
+ */
+
+.nav-masthead .nav-link {
+  padding: .25rem 0;
+  font-weight: 700;
+  color: rgba(255, 255, 255, .5);
+  background-color: transparent;
+  border-bottom: .25rem solid transparent;
+}
+
+.nav-masthead .nav-link:hover,
+.nav-masthead .nav-link:focus {
+  border-bottom-color: rgba(255, 255, 255, .25);
+}
+
+.nav-masthead .nav-link + .nav-link {
+  margin-left: 1rem;
+}
+
+.nav-masthead .active {
+  color: #fff;
+  border-bottom-color: #fff;
+}
+    .bd-placeholder-img {
+      font-size: 1.125rem;
+      text-anchor: middle;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
+    }
+
+    @media (min-width: 768px) {
+      .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+      }
+    }
+  </style>
+
+
+  <!-- Custom styles for this template -->
+  <link href="{% static 'css/personal.css' %}" rel="stylesheet">
+
+</head>
+
+<body class="d-flex h-100 text-center text-white bg-dark">
+
+  <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+    <header class="mb-auto">
+      <h3 class="float-md-start mb-0">Sobre</h3>
+      <nav class="nav nav-masthead justify-content-center float-md-end ">
+        <a class="nav-link active" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0"
+          aria-current="true" aria-label="Slide 1" id="btn1">Desenvolvedor</a>
+        <a class="nav-link" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"
+          aria-label="Slide 2" id="btn2">Projeto Bênção</a>
+        <a class="nav-link" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
+          aria-label="Slide 3" id="btn3">Tecnologias</a>
+      </nav>
+    </header>
+
+    <main class="px-3">
+      <div id="carouselExampleIndicators" class="carousel" data-bs-ride="carousel" data-bs-interval="">
+        <div class="carousel-inner">
+          <div class="carousel-item active py-auto">
+            <h1>Jonas Lima de Araújo</h1>
+            <p class="lead">Estudante de Tecnológia em Redes de Computadores e Programador Amador Independente.</p>
+            <p class="lead">
+              <a href="https://github.com/JonasLimaDev/JonasLimaDev/" target="_blank"
+                class="btn btn-lg btn-secondary fw-bold border-white bg-white">Github</a>
+            </p>
+          </div>
+          <div class="carousel-item py-auto">
+            <h1>Projeto Bênção</h1>
+            <p class="lead">O Projeto Bênção é uma iniciativa da nova gestão da cidade, que institui um Benefício Suplementar para Famílias de Altamira.</p>
+            <p class="lead">
+              <a href="https://altamira.pa.gov.br/wp-content/uploads/2022/06/DIARIO-OFICIAL-ED.-564-EDICAO-EXTRA.pdf" target="_blank"
+                class="btn btn-lg btn-secondary fw-bold border-white bg-white">Projeto de Lei</a>
+            </p>
+          </div>
+          <div class="carousel-item py-auto">
+            <h3>Bootstrap</h3>
+            <p class="lead">Originalmente criado por um designer e um desenvolvedor do Twitter,
+              o <a href="https://getbootstrap.com/" class="text-info" target="_blank"
+                style="text-decoration:none;">Bootstrap</a> é um dos frameworks de front-end de código aberto mais
+              populares do mundo.
+            </p>
+
+            <h3>Django</h3>
+            <p class="lead"><a href="https://www.djangoproject.com/" class="text-info" target="_blank"
+              style="text-decoration:none;">Django</a> é um framework web Python de alto nível que encoraja o desenvolvimento rápido e design limpo e pragmático.
+            </p>
+
+            <!-- <h3>Heroku</h3>
+            <p class="lead">A <a href="https://www.heroku.com/home/" class="text-info" target="_blank"
+              style="text-decoration:none;">Heroku</a> é uma plataforma em nuvem que permite que as empresas criem, entreguem, monitorem e dimensionem aplicativos.
+            </p> -->
+          </div>
+        </div>
+
+      </div>
+      
+    </main>
+
+    <footer class="mt-auto text-white-50">
+      <a  href="{% url 'home' %}" class="text-white">Acessar o Sistema</a>
+      <p>Cover template for <a target="_blank" href="https://getbootstrap.com/" class="text-white">Bootstrap</a>, by <a
+          href="https://twitter.com/mdo" target="_blank" class="text-white">@mdo</a>.</p>
+
+    </footer>
+  </div>
+
+  <!-- JavaScript Bundle with Popper -->
+  <!-- JavaScript Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous">
+  </script>
+  <script>
+    var botao1 = document.querySelector('a#btn1');
+    var botao2 = document.querySelector('a#btn2');
+    var botao3 = document.querySelector('a#btn3');
+    botao1.addEventListener('click', function() {
+      botao1.classList.add('active');
+      botao2.classList.remove('active');
+      botao3.classList.remove('active');
+
+    });
+    botao2.addEventListener('click', function() {
+      botao1.classList.remove('active');
+      botao2.classList.add('active');
+      botao3.classList.remove('active');
+    });
+    botao3.addEventListener('click', function() {
+      botao1.classList.remove('active');
+      botao2.classList.remove('active');
+      botao3.classList.add('active');
+    });
+  </script>
+</body>
+
+</html>
