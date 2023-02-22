@@ -1,6 +1,7 @@
 from django.db import models
 from datetime import datetime
 
+
 ESCOLHA = (
     ('1', 'Sim'),
     ('2', 'Não'),
@@ -32,6 +33,7 @@ class Pessoa(models.Model):
         # abstract = True
         verbose_name = "Pessoa"
         verbose_name_plural = "Pessoas"
+        ordering = ('nome',)
 
 
     SEXO = (
@@ -73,8 +75,9 @@ class Pessoa(models.Model):
     # profissao = models.CharField(max_length=45, null=True, blank=True,verbose_name="Profissão ou Formação Técnica")
     contato = models.CharField(max_length=15, null=True, blank=True)
     renda = models.FloatField(null=True, blank=True)
-    dados_educacionais = models.OneToOneField('DadosEducacao', null=True, blank=True, on_delete=models.CASCADE)
-    
+    dados_educacionais = models.OneToOneField('dados_adicionais.Educacao', null=True, blank=True, on_delete=models.CASCADE)
+    dados_saude = models.OneToOneField('dados_adicionais.Saude', null=True, blank=True,
+                                              on_delete=models.CASCADE)
 
     def __str__(self):
         return self.nome
@@ -84,6 +87,7 @@ class Referencia(Pessoa):
     class Meta:
         verbose_name = "Referência Familiar"
         verbose_name_plural = "Referências Familiares"
+
     
     ESTADO_CIVIL = (
         ('1', 'Solteiro(a)'),
@@ -98,6 +102,7 @@ class Referencia(Pessoa):
         ('3', 'Não Binário'),
         ('4', 'Não Declarado'),
     )
+
     COR_RACA = (
         ('1', 'Branca'),
         ('2', 'Preta'),
@@ -114,11 +119,11 @@ class Referencia(Pessoa):
     situacao_civil = models.CharField(max_length=1, choices=ESTADO_CIVIL, null=False, blank=False, verbose_name="Situação Civil")
     cor_raca = models.CharField(max_length=1, choices=COR_RACA, null=False, blank=False, verbose_name="Identificação Étnico-Racial")
     
-    documentos_extras = models.OneToOneField('Identificacao', null=True, blank=True, on_delete=models.CASCADE)
+    documentos_extras = models.OneToOneField('dados_adicionais.Identificacao', null=True, blank=True, on_delete=models.CASCADE)
     cadastro_unico = models.CharField(max_length=1, choices=ESCOLHA, null=False, blank=False,default='1', verbose_name="Possui Cadastro Único?")
     
-    contato2 = models.CharField(max_length=15, null=True, blank=True,verbose_name="Contato Alternativo")
-    
+    contato2 = models.CharField(max_length=15, null=True, blank=True, verbose_name="Contato Alternativo")
+    entrevistador = models.CharField(max_length=200, null=True, blank=True, verbose_name="Entrevistador")
 
 class Membros(Pessoa):
     class Meta:
@@ -142,33 +147,33 @@ class Membros(Pessoa):
 
 class Identificacao(models.Model):
     ESTADOS = (
-        ("AC","Acre"),
-        ("AL","Alagoas"),
-        ("AP","Amapá"),
-        ("AM","Amazonas"),
-        ("BA","Bahia"),
-        ("CE","Ceará"),
-        ("DF","Distrito Federal"),
-        ("ES","Espírito Santo"),
-        ("GO","Goiás"),
-        ("MA","Maranhão"),
-        ("MT","Mato Grosso"),
-        ("MS","Mato Grosso do Sul"),
-        ("MG","Minas Gerais"),
-        ("PA","Pará"),
-        ("PB","Paraíba"),
-        ("PR","Paraná"),
-        ("PE","Pernambuco"),
-        ("PI","Piauí"),
+        ("AC", "Acre"),
+        ("AL", "Alagoas"),
+        ("AP", "Amapá"),
+        ("AM", "Amazonas"),
+        ("BA", "Bahia"),
+        ("CE", "Ceará"),
+        ("DF", "Distrito Federal"),
+        ("ES", "Espírito Santo"),
+        ("GO", "Goiás"),
+        ("MA", "Maranhão"),
+        ("MT", "Mato Grosso"),
+        ("MS", "Mato Grosso do Sul"),
+        ("MG", "Minas Gerais"),
+        ("PA", "Pará"),
+        ("PB", "Paraíba"),
+        ("PR", "Paraná"),
+        ("PE", "Pernambuco"),
+        ("PI", "Piauí"),
         ("RJ","Rio de Janeiro"),
-        ("RN","Rio Grande do Norte"),
-        ("RS","Rio Grande do Sul"),
-        ("RO","Rondônia"),
-        ("RR","Roraima"),
-        ("SC","Santa Catarina"),
-        ("SP","São Paulo"),
-        ("SE","Sergipe"),
-        ("TO","Tocantins"),
+        ("RN", "Rio Grande do Norte"),
+        ("RS", "Rio Grande do Sul"),
+        ("RO", "Rondônia"),
+        ("RR", "Roraima"),
+        ("SC", "Santa Catarina"),
+        ("SP", "São Paulo"),
+        ("SE", "Sergipe"),
+        ("TO", "Tocantins"),
     )
     rg = models.CharField(max_length=16, null=False, blank=False, verbose_name="Nº RG")
     orgao_emissor = models.CharField(max_length=25, null=False, blank=False, verbose_name="Órgão Emissor (RG)")
@@ -291,6 +296,8 @@ class Endereco(models.Model):
 
 
 class Cadastro(models.Model):
+    class Meta:
+        ordering = ('responsavel_familiar__nome',)
     
     responsavel_familiar = models.OneToOneField(Referencia, on_delete=models.CASCADE)
     habitacao = models.OneToOneField(Habitacao, on_delete=models.CASCADE)
@@ -302,48 +309,3 @@ class Cadastro(models.Model):
         return self.responsavel_familiar.nome
 
 
-class DadosEducacao(models.Model):
-    class Meta:
-        verbose_name = "Dado de Educação"
-        verbose_name_plural = "Dados Educacionais"
-    
-    NIVEL_ESTUDO = (
-        ('1', 'Alfabetização'),
-        ('2', 'Ensino Infantil'),
-        ('3', 'Ensino Fundamental'),
-        ('4', 'Ensino Médio'),
-        ('5', 'Ensino Técnico'),
-        ('6', 'Ensino Superior'),
-        ('7', 'Pós Graduação'),
-        ('8', 'Outro'),
-        ('9', 'Nenhum'),
-    )
-    
-    estuda = models.CharField(max_length=1, choices=ESCOLHA, null=False, blank=False, verbose_name="Está Estudando?")
-    nivel_curso = models.CharField(max_length=1, choices=NIVEL_ESTUDO, null=True, blank=True, verbose_name="Está Cursando?")
-    local = models.CharField(max_length=60,  null=True, blank=True, verbose_name="Local Onde Estuda")
-
-
-class DadoSaude(models.Model):
-    class Meta:
-        verbose_name = "Dado de Saúde"
-        verbose_name_plural = "Dados Saúde"
-    
-    
-    TIPO_DEFICIENCIA = (
-        ('1', 'Física'),
-        ('2', 'Auditiva'),
-        ('3', 'Visual'),
-        ('4', 'Mental/Intelectual'),
-        ('5', 'Múltipla'),
-    )
-
-    GRAVIDEZ = (
-        ('1', 'Gravida'),
-        ('2', 'Não Grávida'),
-        ('3', 'Não Se Aplica'),
-    )
-    
-    deficiencia = models.CharField(max_length=1, choices=ESCOLHA, null=False, blank=False, verbose_name="Possui Deficiência?")
-    tipo_deficiencia = models.CharField(max_length=1, choices=TIPO_DEFICIENCIA, null=True, blank=True, verbose_name="Especifique o Tipo de Deficiência")
-    gravidez = models.CharField(max_length=1, choices=GRAVIDEZ, null=True, blank=True, verbose_name="Gravidez")

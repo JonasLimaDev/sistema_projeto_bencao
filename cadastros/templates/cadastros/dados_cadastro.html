@@ -77,7 +77,7 @@
                                             <span class="bg-secondary p-2  border border-secondary  rounded-start"
                                                 style="--bs-bg-opacity: .5;">{{chave}}:</span>
                                             <span
-                                                class=" bg-light p-2  border border-secondary   rounded-end">{{valor}}</span>
+                                                class=" bg-light p-2  border border-secondary   rounded-end">{%if valor %} {{valor}} {%else%} - {%endif%}</span>
                                         </div>
                                     </div>
                                     {%endfor%}
@@ -105,7 +105,7 @@
                                             <span class="bg-secondary p-2  border border-secondary  rounded-start"
                                                 style="--bs-bg-opacity: .5;">{{chave}}:</span>
                                             <span
-                                                class=" bg-light p-2  border border-secondary   rounded-end">{{valor}}</span>
+                                                class=" bg-light p-2  border border-secondary   rounded-end">{%if valor %} {{valor}} {%else%} - {%endif%}</span>
                                         </div>
                                     </div>
 
@@ -123,28 +123,51 @@
                                     class="link-warning btn-sm d-print-none">
                                     <i class="bi bi-pencil fs-5"></i>
                                 </a>
-
                             </div>
                             <div class="card-body ">
                                 <div class="row row-cols-md-3 row-cols-sm-2 row-cols-xs-1  row-cols-auto g-3">
                                     {%for chave, valor in cadastro.responsavel.educacao_all_data.items %}
-
                                     <div class="col">
                                         <div class="input-group flex-nowrap">
                                             <span class="bg-secondary p-2  border border-secondary  rounded-start"
                                                 style="--bs-bg-opacity: .5;">{{chave}}:</span>
                                             <span
-                                                class=" bg-light p-2  border border-secondary   rounded-end">{{valor}}</span>
+                                                class=" bg-light p-2  border border-secondary   rounded-end">{%if valor %} {{valor}} {%else%} - {%endif%}</span>
                                         </div>
                                     </div>
-
                                     {%endfor%}
                                 </div>
                             </div>
                         </div>
-
                         {%endif%}
-                        <div class="d-grid gap-2 col-3 mb-3 mx-auto">
+
+                        {% if cadastro.responsavel.dados_saude %}
+                        <div class="card mb-3">
+                            <div class="card-header d-flex justify-content-between align-items-start">
+                                <h5>Dados de Saúde</h5>
+                                <a href="{% url 'editar_saude' cadastro.id cadastro.responsavel.dados_saude.id %}"
+                                    class="link-warning btn-sm d-print-none">
+                                    <i class="bi bi-pencil fs-5"></i>
+                                </a>
+                            </div>
+                            <div class="card-body ">
+                                <div class="row row-cols-md-3 row-cols-sm-2 row-cols-xs-1  row-cols-auto g-3">
+                                    {%for chave, valor in cadastro.responsavel.saude_all_data.items %}
+                                    <div class="col">
+                                        <div class="input-group flex-nowrap">
+                                            <span class="bg-secondary p-2  border border-secondary  rounded-start"
+                                                style="--bs-bg-opacity: .5;">{{chave}}:</span>
+                                            <span
+                                                class=" bg-light p-2  border border-secondary   rounded-end">{%if valor %} {{valor}} {%else%} - {%endif%}</span>
+                                        </div>
+                                    </div>
+                                    {%endfor%}
+                                </div>
+                            </div>
+                        </div>
+                        {%endif%}
+
+                        <div class="d-grid gap-2 d-md-block mb-3 mx-auto">
                             {%if not cadastro.responsavel.info_extra%}
                             <a class="btn btn-primary me-md-2 btn-sm" type="button"
                                 href="{% url 'adicionar_extras' cadastro.id%}">
@@ -157,6 +180,13 @@
                                 href="{% url 'adicionar_educacao' cadastro.id cadastro.responsavel.id%}">
                                 <i class="bi bi-journal-plus align-middle" style="font-size: 1.25rem;"></i>
                                 <span class="align-middle mx-1">Adicionar Dados Educacionais</span>
+                            </a>
+                            {%endif%}
+                            {%if not cadastro.responsavel.dados_saude%}
+                            <a class="btn btn-primary me-md-2 btn-sm" type="button"
+                                href="{% url 'adicionar_saude' cadastro.id cadastro.responsavel.id%}">
+                                <i class="bi bi-journal-plus align-middle" style="font-size: 1.25rem;"></i>
+                                <span class="align-middle mx-1">Adicionar Dados de Saúde</span>
                             </a>
                             {%endif%}
 

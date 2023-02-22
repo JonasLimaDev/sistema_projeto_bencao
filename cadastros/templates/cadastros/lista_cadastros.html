@@ -58,7 +58,7 @@
 {% block main %}
 {% include 'modelos/mensagens_sucesso.html' %}
 <div class="list-group py-1">
-  {% for cadastro in cadastros %}
+  {% for cadastro in page_obj %}
   <div class="card list-group-item my-2 border" aria-current="true">
     <div class="d-flex w-100 justify-content-between ">
       <h5 class="mb-1">{{cadastro.responsavel.nome}}</h5>
@@ -421,5 +421,33 @@
   {%endfor%}
 
 </div>
+<hr>
+ {% if page_obj.has_next or page_obj.has_previous %}
+<nav aria-label="Page navigation  ">
+  <ul class="pagination  justify-content-center  ">
+    {% if page_obj.has_previous %}
+    <li class="page-item link-info"><a class="page-link" href="?page=1">Inicio</a></li>
 
+    <li class="page-item me-2">
+      <a class="page-link " href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+    {% endif %}
+    {%for page in page_obj.paginator %}
+
+    <li class="page-item"><a class="page-link {%if page_obj.number == page.number%}active {%endif%}"
+        href="?page={{page.number}}">{{page.number}}</a></li>
+    {%endfor%}
+    {% if page_obj.has_next %}
+    <li class="ms-2 page-item">
+      <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+    </li>
+    <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Fim</a></li>
+    {% endif %}
+  </ul>
+</nav>
+{%endif%}
 {% endblock main %}

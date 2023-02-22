@@ -6,13 +6,6 @@ from ..models import Cadastro,Referencia
 import json
 from django.http import JsonResponse,HttpResponse
 
-def dados_cadastro_json(request):
-    data_json = []
-    data_json.append(list(Cadastro.objects.values()))
-    data_json.append(list(Referencia.objects.values()))
-
-    return JsonResponse(data_json, safe=False)
-
 
 
 # from django.views.generic import TemplateView

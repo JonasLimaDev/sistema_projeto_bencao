@@ -25,6 +25,7 @@ class Referencia():
         self.renda = referencia_bd.renda
         self.info_extra = referencia_bd.documentos_extras
         self.dados_educacionais = referencia_bd.dados_educacionais
+        self.dados_saude = referencia_bd.dados_saude
 
         self.all_data = {            
             "Nome":self.nome,
@@ -68,8 +69,12 @@ class Referencia():
                 "Está Cursando?": self.dados_educacionais.get_nivel_curso_display(),
                 "Local Onde Estuda": self.dados_educacionais.local
             }
-
-        
+        if self.dados_saude:
+            self.saude_all_data = {
+                "Possui Deficiência?": self.dados_saude.deficiencia,
+                "Tipo de Deficiência": self.dados_saude.get_tipo_deficiencia_display(),
+                "Pessoa Grávida": self.dados_saude.get_gravidez_display
+            }
         
     def formatar_cpf(self,value):
         if value:
@@ -97,6 +102,7 @@ class Membro():
         self.renda = membro_bd.renda
         self.parentesco = membro_bd.get_parentesco_display()
         self.dados_educacionais = membro_bd.dados_educacionais
+        self.dados_saude = membro_bd.dados_saude
         
 
         self.all_data = {
@@ -121,6 +127,12 @@ class Membro():
                 "Está Estudando": self.dados_educacionais.get_estuda_display(), 
                 "Está Cursando": self.dados_educacionais.get_nivel_curso_display(),
                 "Local Onde Estuda": self.dados_educacionais.local
+            }
+        if self.dados_saude:
+            self.saude_all_data = {
+                "Possui Deficiência?": self.dados_saude.deficiencia,
+                "Tipo de Deficiência": self.dados_saude.get_tipo_deficiencia_display(),
+                "Pessoa Grávida": self.dados_saude.get_gravidez_display
             }
 
     def formatar_cpf(self,value):

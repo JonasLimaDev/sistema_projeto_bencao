@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'cadastros',
     'tecnicos',
+    'dados_adicionais',
 ]
 
 MIDDLEWARE = [
