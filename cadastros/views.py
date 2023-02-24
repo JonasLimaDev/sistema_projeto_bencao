@@ -94,13 +94,16 @@ class AdicionarCadastroView(TemplateView):
     form_referencia = FormReferencia
     form_endereco = FormEndereco
     form_habitacao = FormHabitacao
+    form_cadastro = FormCadastroModel
     template_name = "cadastros/forms/formulario_cadastro.html"
     context = {'titulo_pagina': "Adicionar Cadastro", 'link': '/cadastros/lista/'}
 
     def get(self, request, *args, **kwargs):
         forms_generic = {"Informações da Referência Familiar": self.form_referencia(),
                          "Informações de Endereço": self.form_endereco(),
-                         "Informações da Moradia": self.form_habitacao()}
+                         "Informações da Moradia": self.form_habitacao(),
+                         "Informações do Cadastramento": self.form_cadastro(),
+                         }
         self.context['forms_generic'] = forms_generic
         return render(request, self.template_name, self.context)
 
@@ -108,16 +111,22 @@ class AdicionarCadastroView(TemplateView):
         form1 = self.form_referencia(request.POST)
         form2 = self.form_endereco(request.POST)
         form3 = self.form_habitacao(request.POST)
+        form4 =  self.form_cadastro(request.post),
         forms_generic = {"Informações da Referência Familiar": form1,
                          "Informações do Endereço": form2,
-                         "Informações da Moradia": form3}
+                         "Informações da Moradia": form3,
+                         "Informações do Cadastramento":form4}
         if form1.is_valid():
             if form2.is_valid():
                 if form3.is_valid():
-                    cadastro = Cadastro.objects.create(responsavel_familiar=form1.save(),
-                                                       endereco=form2.save(), habitacao=form3.save())
-                    messages.success(request, f'Cadastro Realizado Com Sucesso.')
-                    return redirect('listar_cadastros', f'id:{cadastro.id}')
+                    if form4.is_valid():
+                        entrevistador = form4.cleane_data('entrevistador')
+                        abrangencia = form4.cleane_data('abrangencia')
+                        cadastro = Cadastro.objects.create(responsavel_familiar=form1.save(),
+                                                        endereco=form2.save(), habitacao=form3.save(),
+                                                        entrevistador=entrevistador,abrangencia=abrangencia)
+                        messages.success(request, f'Cadastro Realizado Com Sucesso.')
+                        return redirect('listar_cadastros', f'id:{cadastro.id}')
         self.context['forms_generic'] = forms_generic
         return render(request, self.template_name, self.context)
 
@@ -310,7 +319,7 @@ class ExibirDadosCadastroView(TemplateView):
 
 # @method_decorator(login_required, name='dispatch')
 class AdicionarMembroView(TemplateView):
-    form_membro = FormEditarMembro
+    form_membro = FormMembro
     form_dados = FormDadosCadastro
     template_name = "cadastros/forms/formulario_cadastro.html"
     context = {'titulo_pagina': "Editar Membro"}

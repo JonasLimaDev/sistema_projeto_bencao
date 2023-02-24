@@ -71,9 +71,9 @@ class Referencia():
             }
         if self.dados_saude:
             self.saude_all_data = {
-                "Possui Deficiência?": self.dados_saude.deficiencia,
+                "Possui Deficiência?": self.dados_saude.get_deficiencia_display(),
                 "Tipo de Deficiência": self.dados_saude.get_tipo_deficiencia_display(),
-                "Pessoa Grávida": self.dados_saude.get_gravidez_display
+                "Pessoa Grávida": self.dados_saude.get_gravidez_display()
             }
         
     def formatar_cpf(self,value):
@@ -130,9 +130,9 @@ class Membro():
             }
         if self.dados_saude:
             self.saude_all_data = {
-                "Possui Deficiência?": self.dados_saude.deficiencia,
+                "Possui Deficiência?": self.dados_saude.get_deficiencia_display(),
                 "Tipo de Deficiência": self.dados_saude.get_tipo_deficiencia_display(),
-                "Pessoa Grávida": self.dados_saude.get_gravidez_display
+                "Pessoa Grávida": self.dados_saude.get_gravidez_display()
             }
 
     def formatar_cpf(self,value):
@@ -150,11 +150,26 @@ class Cadastro():
         self.endereco = cadastro_bd.endereco
         self.habitacao = cadastro_bd.habitacao
         self.data_cadastro = cadastro_bd.data_cadastro
+        self.data_alteracao = cadastro_bd.data_alteracao
+        self.abrangencia = cadastro_bd.get_abrangencia_display()
+        self.entrevistador = cadastro_bd.entrevistador
         #self.responsavel_cadastro = cadastro_bd.responsavel_cadastro
         self.lista_membros = [Membro(membro_obj) for membro_obj in Membros.objects.all().filter(cadastro_membro=cadastro_bd)]
         self.renda_total = self.calcular_renda()
         self.renda_per_capita = self.calcular_renda_per_capita()
         self.disparidades = self.disparidade()
+
+        self.all_data = {            
+            "Data do Cadastro":self.data_cadastro,
+            "Ultima Alteração":self.data_alteracao,
+            "Abrangência":self.abrangencia,
+            "Entrevistador":self.entrevistador,
+            
+        }
+        self.dados_renda = {            
+            "Renda Total da Familia":self.renda_total,
+            "Renda Per Capita":self.renda_per_capita,
+        }
 
     def calcular_renda(self):
         renda = 0

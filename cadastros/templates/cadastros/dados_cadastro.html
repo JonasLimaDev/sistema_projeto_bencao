@@ -31,544 +31,484 @@
 {% block main %}
 {% include 'modelos/mensagens_sucesso.html' %}
 
-<div class="row">
+<div class="row ">
 
-    <div class="col-lg-2 col-md-2 col-12 my-md-1 my-lg-1 my-2 d-print-none bg-light rounded">
-        <div class="sticky-top">
-            <nav id="navbar-example3" class="h-100 flex-column  align-items-stretch  ">
-                <nav class="nav nav-pills flex-lg-column flex-md-column">
-                    <a class="nav-link" href="#top">Topo</a>
+    <div class=" col-lg-2 col-md-2 col-12 my-md-1 my-lg-1 my-2 d-print-none bg-light rounded  border-end border-secondary">
+        <div class="sticky-top ">
+            <nav id="navbar-example3" class="h-100 flex-column align-items-stretch pe-4 ">
+                <nav class="nav  flex-lg-column flex-md-column">
+                    <a class="nav-link " href="#top">Topo</a>
                     <a class="nav-link" href="#item-1">Referência Familiar</a>
                     <a class="nav-link" href="#item-2">Lista de Membros</a>
                     <a class="nav-link" href="#item-3">Informações da Moradia</a>
+                    <a class="nav-link" href="#item-4">Dados Cadastrais</a>
                 </nav>
             </nav>
+            
         </div>
+        
+        
     </div>
-
+        
+    
     <div class="col ">
-        <div data-bs-spy="scroll" data-bs-target="#navbar-example3" data-bs-smooth-scroll="true"
-            class="scrollspy-example" tabindex="0">
-
-            <div class="card" id="item-1">
-                <a class=" text-decoration-none text-dark" data-bs-toggle="collapse" href="#collapseReferencia"
-                    role="button" aria-expanded="false" aria-controls="collapseExample">
-                    <div class="card-header text-center">
-                        <h3>Referência Familiar</h3>
-                    </div>
-                </a>
-                <div class="collapse show" id="collapseReferencia">
-                    <div class="card-body ">
-                        <div class="card mb-3">
-                            <div class="card-header d-flex justify-content-between align-items-start">
-                                <h5>Dados Pessoais</h5>
-                                <a href="{% url 'editar_referencia' cadastro.responsavel.id %}"
-                                    class="link-warning btn-sm d-print-none">
-                                    <i class="bi bi-pencil fs-5"></i>
-                                </a>
-                            </div>
-                            <div class="card-body ">
-                                <div
-                                    class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 row-cols-xs-1  row-cols-auto g-3">
-                                    {%for chave, valor in cadastro.responsavel.all_data.items %}
-
-                                    <div class="col">
-                                        <div class="input-group flex-nowrap">
-                                            <span class="bg-secondary p-2  border border-secondary  rounded-start"
-                                                style="--bs-bg-opacity: .5;">{{chave}}:</span>
-                                            <span
-                                                class=" bg-light p-2  border border-secondary   rounded-end">{%if valor %} {{valor}} {%else%} - {%endif%}</span>
-                                        </div>
-                                    </div>
-                                    {%endfor%}
-                                </div>
-                            </div>
+    
+            <div id="item-1">
+                <div class="card">
+                    <a class=" text-decoration-none text-dark" data-bs-toggle="collapse" href="#collapseReferencia"
+                        role="button" aria-expanded="false" aria-controls="collapseExample">
+                        <div class="card-header text-center">
+                            <h3>Referência Familiar</h3>
                         </div>
-
-                        {% if cadastro.responsavel.info_extra %}
-
-                        <div class="card mb-3">
-                            <div class="card-header d-flex justify-content-between align-items-start">
-                                <h5>Informações Adicionais</h5>
-                                <a href="{% url 'editar_extras' cadastro.responsavel.info_extra.id %}"
-                                    class="link-warning btn-sm d-print-none">
-                                    <i class="bi bi-pencil fs-5"></i>
-                                </a>
-
-                            </div>
-                            <div class="card-body ">
-                                <div class="row row-cols-md-3 row-cols-sm-2 row-cols-xs-1  row-cols-auto g-3">
-                                    {%for chave, valor in cadastro.responsavel.extra_all_data.items %}
-
-                                    <div class="col">
-                                        <div class="input-group flex-nowrap">
-                                            <span class="bg-secondary p-2  border border-secondary  rounded-start"
-                                                style="--bs-bg-opacity: .5;">{{chave}}:</span>
-                                            <span
-                                                class=" bg-light p-2  border border-secondary   rounded-end">{%if valor %} {{valor}} {%else%} - {%endif%}</span>
-                                        </div>
-                                    </div>
-
-                                    {%endfor%}
-                                </div>
-                            </div>
-                        </div>
-                        {%endif%}
-
-                        {% if cadastro.responsavel.dados_educacionais %}
-                        <div class="card mb-3">
-                            <div class="card-header d-flex justify-content-between align-items-start">
-                                <h5>Dados Educacacionais</h5>
-                                <a href="{% url 'editar_educacao' cadastro.id cadastro.responsavel.dados_educacionais.id %}"
-                                    class="link-warning btn-sm d-print-none">
-                                    <i class="bi bi-pencil fs-5"></i>
-                                </a>
-                            </div>
-                            <div class="card-body ">
-                                <div class="row row-cols-md-3 row-cols-sm-2 row-cols-xs-1  row-cols-auto g-3">
-                                    {%for chave, valor in cadastro.responsavel.educacao_all_data.items %}
-                                    <div class="col">
-                                        <div class="input-group flex-nowrap">
-                                            <span class="bg-secondary p-2  border border-secondary  rounded-start"
-                                                style="--bs-bg-opacity: .5;">{{chave}}:</span>
-                                            <span
-                                                class=" bg-light p-2  border border-secondary   rounded-end">{%if valor %} {{valor}} {%else%} - {%endif%}</span>
-                                        </div>
-                                    </div>
-                                    {%endfor%}
-                                </div>
-                            </div>
-                        </div>
-                        {%endif%}
-
-                        {% if cadastro.responsavel.dados_saude %}
-                        <div class="card mb-3">
-                            <div class="card-header d-flex justify-content-between align-items-start">
-                                <h5>Dados de Saúde</h5>
-                                <a href="{% url 'editar_saude' cadastro.id cadastro.responsavel.dados_saude.id %}"
-                                    class="link-warning btn-sm d-print-none">
-                                    <i class="bi bi-pencil fs-5"></i>
-                                </a>
-                            </div>
-                            <div class="card-body ">
-                                <div class="row row-cols-md-3 row-cols-sm-2 row-cols-xs-1  row-cols-auto g-3">
-                                    {%for chave, valor in cadastro.responsavel.saude_all_data.items %}
-                                    <div class="col">
-                                        <div class="input-group flex-nowrap">
-                                            <span class="bg-secondary p-2  border border-secondary  rounded-start"
-                                                style="--bs-bg-opacity: .5;">{{chave}}:</span>
-                                            <span
-                                                class=" bg-light p-2  border border-secondary   rounded-end">{%if valor %} {{valor}} {%else%} - {%endif%}</span>
-                                        </div>
-                                    </div>
-                                    {%endfor%}
-                                </div>
-                            </div>
-                        </div>
-                        {%endif%}
-
-                        <div class="d-grid gap-2 d-md-block mb-3 mx-auto">
-                            {%if not cadastro.responsavel.info_extra%}
-                            <a class="btn btn-primary me-md-2 btn-sm" type="button"
-                                href="{% url 'adicionar_extras' cadastro.id%}">
-                                <i class="bi bi-journal-plus align-middle" style="font-size: 1.25rem;"></i>
-                                <span class="align-middle mx-1">Adicinar Informações Extras</span>
-                            </a>
-                            {%endif%}
-                            {%if not cadastro.responsavel.dados_educacionais%}
-                            <a class="btn btn-primary me-md-2 btn-sm" type="button"
-                                href="{% url 'adicionar_educacao' cadastro.id cadastro.responsavel.id%}">
-                                <i class="bi bi-journal-plus align-middle" style="font-size: 1.25rem;"></i>
-                                <span class="align-middle mx-1">Adicionar Dados Educacionais</span>
-                            </a>
-                            {%endif%}
-                            {%if not cadastro.responsavel.dados_saude%}
-                            <a class="btn btn-primary me-md-2 btn-sm" type="button"
-                                href="{% url 'adicionar_saude' cadastro.id cadastro.responsavel.id%}">
-                                <i class="bi bi-journal-plus align-middle" style="font-size: 1.25rem;"></i>
-                                <span class="align-middle mx-1">Adicionar Dados de Saúde</span>
-                            </a>
-                            {%endif%}
-
-                        </div>
-                        <div class="d-grid gap-2 col-3 mb-3 mx-auto">
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card my-2" id="item-2">
-
-                <a class=" text-decoration-none text-dark" data-bs-toggle="collapse" href="#collapseListaMembros"
-                    role="button" aria-expanded="false" aria-controls="collapseExample">
-                    <div class="card-header text-center">
-                        <h3>Lista de Membros</h3>
-                    </div>
-                    <div class="card-body collapse show" id="collapseListaMembros">
-
-                        {% for membro in cadastro.lista_membros%}
-                        <div class="card my-1 ">
-                            <a class=" text-decoration-none text-dark" data-bs-toggle="collapse"
-                                href="#collapseMembro{{mebro.id}}" role="button" aria-expanded="false"
-                                aria-controls="collapseExample">
-                                <div class="card-header text-center">
-                                    <h5>Membro #{{forloop.counter}}</h5>
-                                    
-                                </div>
-                            </a>
-
-                            <div class="collapse show" id="collapseMembro{{mebro.id}}">
-                                <div class="card-body ">
-                                    <div class="card">
-                                        <div class="card-header d-flex justify-content-between align-items-start">
-                                            <h5 class="text-center">Dados Pessoais</h5>
-                                            <a href="{%url 'editar_membro' membro.id%}"
+                    </a>
+                    <div class="collapse show" id="collapseReferencia">
+                        <div class="card-body ">
+                            <div class="card mb-3">
+                                <div class="card-header d-flex justify-content-between align-items-start">
+                                    <h5>Dados Pessoais</h5>
+                                    <a href="{% url 'editar_referencia' cadastro.responsavel.id %}"
                                         class="link-warning btn-sm d-print-none">
                                         <i class="bi bi-pencil fs-5"></i>
                                     </a>
-                                        </div>
-                                        <div class="card-body">
-                                            <div
-                                                class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-2 row-cols-xs-1  row-cols-auto g-3">
-
-                                                {%for chave, valor in membro.all_data.items %}
-                                                <div class="col">
-                                                    <div class="input-group flex-nowrap">
-                                                        <span
-                                                            class="bg-secondary p-2  border border-secondary  rounded-start"
-                                                            style="--bs-bg-opacity: .5;">{{chave}}:</span>
-                                                        <span
-                                                            class=" bg-light p-2  border border-secondary   rounded-end">{{valor}}</span>
-                                                    </div>
-                                                </div>
-                                                {%endfor%}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {%if membro.dados_educacionais%}
-                                    <div class="card mt-2">
-                                        <div class="card-header d-flex justify-content-between align-items-start">
-                                    <h5 class="text-center">Dados Educacionais</h5>
-                                    <a href="{% url 'editar_educacao' cadastro.id membro.dados_educacionais.id %}"
-                                    class="link-warning btn-sm d-print-none">
-                                    <i class="bi bi-pencil fs-5"></i>
-                                </a>
                                 </div>
-                                <div class="card-body">
+                                <div class="card-body ">
                                     <div
-                                        class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-2 row-cols-xs-1  row-cols-auto g-3">
-
-                                        {%for chave, valor in membro.educacao_all_data.items %}
-                                        <div class="col">
-                                            <div class="input-group flex-nowrap">
-                                                <span class="bg-secondary p-2  border border-secondary  rounded-start"
-                                                    style="--bs-bg-opacity: .5;">{{chave}}:</span>
-                                                <span
-                                                    class=" bg-light p-2  border border-secondary   rounded-end">{{valor}}</span>
-                                            </div>
-                                        </div>
+                                        class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 row-cols-xs-1  row-cols-auto g-3">
+                                        {%for chave, valor in cadastro.responsavel.all_data.items %}
+                                        {%include 'cadastros/modelo_dados_chave_valor.html'%}
                                         {%endfor%}
                                     </div>
                                 </div>
-                                </div>
-                                    {%endif%}
-                                </div>
-                                <div class="card-footer">
-                                    {%if not membro.dados_educacionais %}
-                                    <a class="btn btn-primary me-md-2 btn-sm" type="button"
-                                        href="{% url 'adicionar_educacao' cadastro.id membro.id%}">
-                                        <i class="bi bi-journal-plus align-middle" style="font-size: 1.25rem;"></i>
-                                        <span class="align-middle mx-1">Adicionar Dados Educacionais</span>
+                            </div>
+
+                            {% if cadastro.responsavel.info_extra %}
+
+                            <div class="card mb-3">
+                                <div class="card-header d-flex justify-content-between align-items-start">
+                                    <h5>Informações Adicionais</h5>
+                                    <a href="{% url 'editar_extras' cadastro.responsavel.info_extra.id %}"
+                                        class="link-warning btn-sm d-print-none">
+                                        <i class="bi bi-pencil fs-5"></i>
                                     </a>
-                                    {%endif%}
+                                </div>
+                                <div class="card-body ">
+                                    <div class="row row-cols-md-3 row-cols-sm-2 row-cols-xs-1  row-cols-auto g-3">
+                                        {%for chave, valor in cadastro.responsavel.extra_all_data.items %}
+                                        {%include 'cadastros/modelo_dados_chave_valor.html'%}
+                                        {%endfor%}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        {%endfor%}
-                    </div>
-            </div>
+                            {%endif%}
 
-            <div class="card my-2" id="item-3">
-                <a class=" text-decoration-none text-dark" data-bs-toggle="collapse" href="#collapseEndereco"
-                    role="button" aria-expanded="false" aria-controls="collapseExample">
-                    <div class="card-header text-center">
-                        <h3>Informações da Moradia</h3>
-                    </div>
-                </a>
-                <div class="collapse show" id="collapseEndereco">
+                            {% if cadastro.responsavel.dados_educacionais %}
+                            <div class="card mb-3">
+                                <div class="card-header d-flex justify-content-between align-items-start">
+                                    <h5>Dados Educacacionais</h5>
+                                    <a href="{% url 'editar_educacao' cadastro.id cadastro.responsavel.dados_educacionais.id %}"
+                                        class="link-warning btn-sm d-print-none">
+                                        <i class="bi bi-pencil fs-5"></i>
+                                    </a>
+                                </div>
+                                <div class="card-body ">
+                                    <div class="row row-cols-md-3 row-cols-sm-2 row-cols-xs-1  row-cols-auto g-3">
+                                        {%for chave, valor in cadastro.responsavel.educacao_all_data.items %}
+                                        {%include 'cadastros/modelo_dados_chave_valor.html'%}
+                                        {%endfor%}
+                                    </div>
+                                </div>
+                            </div>
+                            {%endif%}
 
-                    <div class="card-body ">
-                        <div class="card mb-3">
-                            <div class="card-header d-flex justify-content-between align-items-start">
-                                <h5>Endereço</h5>
-                                <a href="{% url 'editar_endereco' cadastro.endereco.id %}"
-                                    class="link-warning btn-sm d-print-none">
-                                    <i class="bi bi-pencil fs-5"></i>
+                            {% if cadastro.responsavel.dados_saude %}
+                            <div class="card mb-3">
+                                <div class="card-header d-flex justify-content-between align-items-start">
+                                    <h5>Dados de Saúde</h5>
+                                    <a href="{% url 'editar_saude' cadastro.id cadastro.responsavel.dados_saude.id %}"
+                                        class="link-warning btn-sm d-print-none">
+                                        <i class="bi bi-pencil fs-5"></i>
+                                    </a>
+                                </div>
+                                <div class="card-body ">
+                                    <div class="row row-cols-md-3 row-cols-sm-2 row-cols-xs-1  row-cols-auto g-3">
+                                        {%for chave, valor in cadastro.responsavel.saude_all_data.items %}
+                                        {%include 'cadastros/modelo_dados_chave_valor.html'%}
+                                        {%endfor%}
+                                    </div>
+                                </div>
+                            </div>
+                            {%endif%}
+
+                            <div class="d-grid gap-2 d-md-block mb-3 mx-auto">
+                                {%if not cadastro.responsavel.info_extra%}
+                                <a class="btn btn-primary me-md-2 btn-sm" type="button"
+                                    href="{% url 'adicionar_extras' cadastro.id%}">
+                                    <i class="bi bi-journal-plus align-middle" style="font-size: 1.25rem;"></i>
+                                    <span class="align-middle mx-1">Adicinar Informações Extras</span>
                                 </a>
-                            </div>
-                            <div class="card-body">
-                                <div
-                                    class="row row-cols-lg-3 row-cols-md-3 row-cols-sm-2 row-cols-xs-1  row-cols-auto g-3">
-
-                                    <div class="col">
-                                        <div class="input-group flex-nowrap">
-                                            <span class="bg-secondary p-2  border border-secondary  rounded-start"
-                                                style="--bs-bg-opacity: .5;">Logradouro:</span>
-                                            <span
-                                                class=" bg-light p-2  border border-secondary   rounded-end">{{cadastro.endereco.logradouro}}</span>
-                                        </div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="input-group flex-nowrap">
-                                            <span class="bg-secondary p-2  border border-secondary  rounded-start"
-                                                style="--bs-bg-opacity: .5;">Nº:</span>
-                                            <span class=" bg-light p-2  border border-secondary   rounded-end">
-                                                {% if cadastro.endereco.numero %}
-                                                {{cadastro.endereco.numero}}
-                                                {%else%}
-                                                S/N
-                                                {%endif%}
-                                            </span>
-
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="input-group flex-nowrap">
-                                            <span class="bg-secondary p-2  border border-secondary  rounded-start"
-                                                style="--bs-bg-opacity: .5;">Bairro:</span>
-                                            <span
-                                                class=" bg-light p-2  border border-secondary   rounded-end">{{cadastro.endereco.bairro}}</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="col">
-                                        <div class="input-group flex-nowrap">
-                                            <span class="bg-secondary p-2  border border-secondary  rounded-start"
-                                                style="--bs-bg-opacity: .5;">CEP:</span>
-                                            <span class=" bg-light p-2  border border-secondary   rounded-end">
-                                                {% if cadastro.endereco.cep %}
-                                                {{cadastro.endereco.cep}}
-                                                {%else%}
-                                                -
-                                                {%endif%}
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="input-group flex-nowrap">
-                                            <span class="bg-secondary p-2  border border-secondary  rounded-start"
-                                                style="--bs-bg-opacity: .5;">Complemento:</span>
-                                            <span class=" bg-light p-2  border border-secondary   rounded-end">
-                                                {% if cadastro.endereco.complemento %}
-                                                {{cadastro.endereco.complemento}}
-                                                {%else%}
-                                                -
-                                                {%endif%}
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="input-group flex-nowrap">
-                                            <span class="bg-secondary p-2  border border-secondary  rounded-start"
-                                                style="--bs-bg-opacity: .5;">Ponto de Referência:</span>
-                                            <span class=" bg-light p-2  border border-secondary   rounded-end">
-                                                {% if cadastro.endereco.ponto_referencia %}
-                                                {{cadastro.endereco.ponto_referencia}}
-                                                {%else%}
-                                                -
-                                                {%endif%}
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="card mb-3">
-                            <div class="card-header d-flex justify-content-between align-items-start">
-                                <h5>Infraestrutura</h5>
-                                <a href="{% url 'editar_habitacao' cadastro.habitacao.id %}"
-                                    class="link-warning btn-sm d-print-none">
-                                    <i class="bi bi-pencil fs-5"></i>
+                                {%endif%}
+                                {%if not cadastro.responsavel.dados_educacionais%}
+                                <a class="btn btn-primary me-md-2 btn-sm" type="button"
+                                    href="{% url 'adicionar_educacao' cadastro.id cadastro.responsavel.id%}">
+                                    <i class="bi bi-journal-plus align-middle" style="font-size: 1.25rem;"></i>
+                                    <span class="align-middle mx-1">Adicionar Dados Educacionais</span>
                                 </a>
+                                {%endif%}
+                                {%if not cadastro.responsavel.dados_saude%}
+                                <a class="btn btn-primary me-md-2 btn-sm" type="button"
+                                    href="{% url 'adicionar_saude' cadastro.id cadastro.responsavel.id%}">
+                                    <i class="bi bi-journal-plus align-middle" style="font-size: 1.25rem;"></i>
+                                    <span class="align-middle mx-1">Adicionar Dados de Saúde</span>
+                                </a>
+                                {%endif%}
+
                             </div>
-                            <div class="card-body">
-                                <div
-                                    class="row row-cols-lg-2 row-cols-md-2 row-cols-sm-1 row-cols-xs-1  row-cols-auto g-3">
+                            <div class="d-grid gap-2 col-3 mb-3 mx-auto">
 
-                                    <div class="col">
-                                        <div class="input-group flex-nowrap">
-                                            <span class="bg-secondary p-2  border border-secondary  rounded-start"
-                                                style="--bs-bg-opacity: .5;">Situação da Moradia:</span>
-                                            <span
-                                                class=" bg-light p-2  border border-secondary   rounded-end">{{cadastro.habitacao.get_situacao_moradia_display}}</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="col">
-                                        <div class="input-group flex-nowrap">
-                                            <span class="bg-secondary p-2  border border-secondary  rounded-start"
-                                                style="--bs-bg-opacity: .5;">Tipo de Construção:</span>
-                                            <span
-                                                class=" bg-light p-2  border border-secondary   rounded-end">{{cadastro.habitacao.get_tipo_construcao_display}}</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="col">
-                                        <div class="input-group flex-nowrap">
-                                            <span class="bg-secondary p-2  border border-secondary  rounded-start"
-                                                style="--bs-bg-opacity: .5;">Possui Energia Elétrica:</span>
-                                            <span
-                                                class=" bg-light p-2  border border-secondary   rounded-end">{{cadastro.habitacao.get_rede_eletrica_display}}</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="col">
-                                        <div class="input-group flex-nowrap">
-                                            <span class="bg-secondary p-2  border border-secondary  rounded-start"
-                                                style="--bs-bg-opacity: .5;">Abastecimento de Água:</span>
-                                            <span
-                                                class=" bg-light p-2  border border-secondary   rounded-end">{{cadastro.habitacao.get_possui_abastecimento_display}}</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="col">
-                                        <div class="input-group flex-nowrap">
-                                            <span class="bg-secondary p-2  border border-secondary  rounded-start"
-                                                style="--bs-bg-opacity: .5;">Possui Rede de Esgoto:</span>
-                                            <span
-                                                class=" bg-light p-2  border border-secondary   rounded-end">{{cadastro.habitacao.get_possui_rede_esgoto_display}}</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="col">
-                                        <div class="input-group flex-nowrap">
-                                            <span class="bg-secondary p-2  border border-secondary  rounded-start"
-                                                style="--bs-bg-opacity: .5;">Coleta de Lixo:</span>
-                                            <span
-                                                class=" bg-light p-2  border border-secondary   rounded-end">{{cadastro.habitacao.get_possui_coleta_display}}</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="col">
-                                        <div class="input-group flex-nowrap">
-                                            <span class="bg-secondary p-2  border border-secondary  rounded-start"
-                                                style="--bs-bg-opacity: .5;">Pavimentação da Rua:</span>
-                                            <span
-                                                class=" bg-light p-2  border border-secondary   rounded-end">{{cadastro.habitacao.get_pavimentacao_display}}</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="col">
-                                        <div class="input-group flex-nowrap">
-                                            <span class="bg-secondary p-2  border border-secondary  rounded-start"
-                                                style="--bs-bg-opacity: .5;">Tempo de Ocupação do Imóvel:</span>
-                                            <span class=" bg-light p-2  border border-secondary   rounded-end">
-                                                {% if cadastro.habitacao.tempo_ocupacao == 0 %}
-                                                Menos de Um Ano
-                                                {% elif cadastro.habitacao.tempo_ocupacao == 1%}
-                                                {{cadastro.habitacao.tempo_ocupacao}} Ano
-                                                {%else%}
-                                                {{cadastro.habitacao.tempo_ocupacao}} Anos
-                                                {%endif%}
-
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    <div class="col">
-                                        <div class="input-group flex-nowrap">
-                                            <span class="bg-secondary p-2  border border-secondary  rounded-start"
-                                                style="--bs-bg-opacity: .5;">Número de Moradores:</span>
-                                            <span
-                                                class=" bg-light p-2  border border-secondary   rounded-end">{{cadastro.habitacao.numero_moradores}}</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="col">
-                                        <div class="input-group flex-nowrap">
-                                            <span class="bg-secondary p-2  border border-secondary  rounded-start"
-                                                style="--bs-bg-opacity: .5;">Número de Cômodos:</span>
-                                            <span
-                                                class=" bg-light p-2  border border-secondary   rounded-end">{{cadastro.habitacao.numero_comodos}}</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="col">
-                                        <div class="input-group flex-nowrap">
-                                            <span class="bg-secondary p-2  border border-secondary  rounded-start"
-                                                style="--bs-bg-opacity: .5;">Equipamento Comunitários Próximos:</span>
-                                            <span class=" bg-light p-2  border border-secondary   rounded-end">
-                                                {%for equipamento in cadastro.habitacao.equipamento_comunitario.all %}
-                                                {% if forloop.last %}
-                                                {{equipamento}}
-                                                {%else%}
-                                                {{equipamento}},
-                                                {%endif%}
-
-                                                {%endfor%}
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
-        </div>
+            <div id="item-2">
+                <div class="card my-2">
+
+                    <a class=" text-decoration-none text-dark" data-bs-toggle="collapse" href="#collapseListaMembros"
+                        role="button" aria-expanded="false" aria-controls="collapseExample">
+                        <div class="card-header text-center">
+                            <h3>Lista de Membros</h3>
+                        </div>
+                    </a>
+                    <div class="card-body collapse show" id="collapseListaMembros">
+
+                        {% for membro in cadastro.lista_membros%}
+                        {%include "cadastros/modelo_dados_membro.html"%}
+
+                        {%endfor%}
+                    </div>
+                    <div class="card-footer text-center">
+                        <a href="{%url 'adicionar_membro' cadastro.id%}"
+                            class="btn btn-outline-secondary  btn-sm d-print-none">
+                            <i class="bi bi-plus-circle fs-6"></i>
+                            Adicionar Membro
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div id="item-3">
+                <div class="card my-2">
+                    <a class=" text-decoration-none text-dark" data-bs-toggle="collapse" href="#collapseEndereco"
+                        role="button" aria-expanded="false" aria-controls="collapseExample">
+                        <div class="card-header text-center">
+                            <h3>Informações da Moradia</h3>
+                        </div>
+                    </a>
+                    <div class="collapse show" id="collapseEndereco">
+
+                        <div class="card-body ">
+                            <div class="card mb-3">
+                                <div class="card-header d-flex justify-content-between align-items-start">
+                                    <h5>Endereço</h5>
+                                    <a href="{% url 'editar_endereco' cadastro.endereco.id %}"
+                                        class="link-warning btn-sm d-print-none">
+                                        <i class="bi bi-pencil fs-5"></i>
+                                    </a>
+                                </div>
+                                <div class="card-body">
+                                    <div
+                                        class="row row-cols-lg-3 row-cols-md-3 row-cols-sm-2 row-cols-xs-1  row-cols-auto g-3">
+
+                                        <div class="col">
+                                            <div class="input-group flex-nowrap">
+                                                <span class="bg-secondary p-2  border border-secondary  rounded-start"
+                                                    style="--bs-bg-opacity: .5;">Logradouro:</span>
+                                                <span
+                                                    class=" bg-light p-2  border border-secondary   rounded-end">{{cadastro.endereco.logradouro}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="input-group flex-nowrap">
+                                                <span class="bg-secondary p-2  border border-secondary  rounded-start"
+                                                    style="--bs-bg-opacity: .5;">Nº:</span>
+                                                <span class=" bg-light p-2  border border-secondary   rounded-end">
+                                                    {% if cadastro.endereco.numero %}
+                                                    {{cadastro.endereco.numero}}
+                                                    {%else%}
+                                                    S/N
+                                                    {%endif%}
+                                                </span>
+
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="input-group flex-nowrap">
+                                                <span class="bg-secondary p-2  border border-secondary  rounded-start"
+                                                    style="--bs-bg-opacity: .5;">Bairro:</span>
+                                                <span
+                                                    class=" bg-light p-2  border border-secondary   rounded-end">{{cadastro.endereco.bairro}}</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="col">
+                                            <div class="input-group flex-nowrap">
+                                                <span class="bg-secondary p-2  border border-secondary  rounded-start"
+                                                    style="--bs-bg-opacity: .5;">CEP:</span>
+                                                <span class=" bg-light p-2  border border-secondary   rounded-end">
+                                                    {% if cadastro.endereco.cep %}
+                                                    {{cadastro.endereco.cep}}
+                                                    {%else%}
+                                                    -
+                                                    {%endif%}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="input-group flex-nowrap">
+                                                <span class="bg-secondary p-2  border border-secondary  rounded-start"
+                                                    style="--bs-bg-opacity: .5;">Complemento:</span>
+                                                <span class=" bg-light p-2  border border-secondary   rounded-end">
+                                                    {% if cadastro.endereco.complemento %}
+                                                    {{cadastro.endereco.complemento}}
+                                                    {%else%}
+                                                    -
+                                                    {%endif%}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="input-group flex-nowrap">
+                                                <span class="bg-secondary p-2  border border-secondary  rounded-start"
+                                                    style="--bs-bg-opacity: .5;">Ponto de Referência:</span>
+                                                <span class=" bg-light p-2  border border-secondary   rounded-end">
+                                                    {% if cadastro.endereco.ponto_referencia %}
+                                                    {{cadastro.endereco.ponto_referencia}}
+                                                    {%else%}
+                                                    -
+                                                    {%endif%}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card mb-3">
+                                <div class="card-header d-flex justify-content-between align-items-start">
+                                    <h5>Infraestrutura</h5>
+                                    <a href="{% url 'editar_habitacao' cadastro.habitacao.id %}"
+                                        class="link-warning btn-sm d-print-none">
+                                        <i class="bi bi-pencil fs-5"></i>
+                                    </a>
+                                </div>
+                                <div class="card-body">
+                                    <div
+                                        class="row row-cols-lg-2 row-cols-md-2 row-cols-sm-1 row-cols-xs-1  row-cols-auto g-3">
+
+                                        <div class="col">
+                                            <div class="input-group flex-nowrap">
+                                                <span class="bg-secondary p-2  border border-secondary  rounded-start"
+                                                    style="--bs-bg-opacity: .5;">Situação da Moradia:</span>
+                                                <span
+                                                    class=" bg-light p-2  border border-secondary   rounded-end">{{cadastro.habitacao.get_situacao_moradia_display}}</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="col">
+                                            <div class="input-group flex-nowrap">
+                                                <span class="bg-secondary p-2  border border-secondary  rounded-start"
+                                                    style="--bs-bg-opacity: .5;">Tipo de Construção:</span>
+                                                <span
+                                                    class=" bg-light p-2  border border-secondary   rounded-end">{{cadastro.habitacao.get_tipo_construcao_display}}</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="col">
+                                            <div class="input-group flex-nowrap">
+                                                <span class="bg-secondary p-2  border border-secondary  rounded-start"
+                                                    style="--bs-bg-opacity: .5;">Possui Energia Elétrica:</span>
+                                                <span
+                                                    class=" bg-light p-2  border border-secondary   rounded-end">{{cadastro.habitacao.get_rede_eletrica_display}}</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="col">
+                                            <div class="input-group flex-nowrap">
+                                                <span class="bg-secondary p-2  border border-secondary  rounded-start"
+                                                    style="--bs-bg-opacity: .5;">Abastecimento de Água:</span>
+                                                <span
+                                                    class=" bg-light p-2  border border-secondary   rounded-end">{{cadastro.habitacao.get_possui_abastecimento_display}}</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="col">
+                                            <div class="input-group flex-nowrap">
+                                                <span class="bg-secondary p-2  border border-secondary  rounded-start"
+                                                    style="--bs-bg-opacity: .5;">Possui Rede de Esgoto:</span>
+                                                <span
+                                                    class=" bg-light p-2  border border-secondary   rounded-end">{{cadastro.habitacao.get_possui_rede_esgoto_display}}</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="col">
+                                            <div class="input-group flex-nowrap">
+                                                <span class="bg-secondary p-2  border border-secondary  rounded-start"
+                                                    style="--bs-bg-opacity: .5;">Coleta de Lixo:</span>
+                                                <span
+                                                    class=" bg-light p-2  border border-secondary   rounded-end">{{cadastro.habitacao.get_possui_coleta_display}}</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="col">
+                                            <div class="input-group flex-nowrap">
+                                                <span class="bg-secondary p-2  border border-secondary  rounded-start"
+                                                    style="--bs-bg-opacity: .5;">Pavimentação da Rua:</span>
+                                                <span
+                                                    class=" bg-light p-2  border border-secondary   rounded-end">{{cadastro.habitacao.get_pavimentacao_display}}</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="col">
+                                            <div class="input-group flex-nowrap">
+                                                <span class="bg-secondary p-2  border border-secondary  rounded-start"
+                                                    style="--bs-bg-opacity: .5;">Tempo de Ocupação do Imóvel:</span>
+                                                <span class=" bg-light p-2  border border-secondary   rounded-end">
+                                                    {% if cadastro.habitacao.tempo_ocupacao == 0 %}
+                                                    Menos de Um Ano
+                                                    {% elif cadastro.habitacao.tempo_ocupacao == 1%}
+                                                    {{cadastro.habitacao.tempo_ocupacao}} Ano
+                                                    {%else%}
+                                                    {{cadastro.habitacao.tempo_ocupacao}} Anos
+                                                    {%endif%}
+
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div class="col">
+                                            <div class="input-group flex-nowrap">
+                                                <span class="bg-secondary p-2  border border-secondary  rounded-start"
+                                                    style="--bs-bg-opacity: .5;">Número de Moradores:</span>
+                                                <span
+                                                    class=" bg-light p-2  border border-secondary   rounded-end">{{cadastro.habitacao.numero_moradores}}</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="col">
+                                            <div class="input-group flex-nowrap">
+                                                <span class="bg-secondary p-2  border border-secondary  rounded-start"
+                                                    style="--bs-bg-opacity: .5;">Número de Cômodos:</span>
+                                                <span
+                                                    class=" bg-light p-2  border border-secondary   rounded-end">{{cadastro.habitacao.numero_comodos}}</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="col">
+                                            <div class="input-group flex-nowrap">
+                                                <span class="bg-secondary p-2  border border-secondary  rounded-start"
+                                                    style="--bs-bg-opacity: .5;">Equipamento Comunitários
+                                                    Próximos:</span>
+                                                <span class=" bg-light p-2  border border-secondary   rounded-end">
+                                                    {%for equipamento in cadastro.habitacao.equipamento_comunitario.all%}
+                                                    {% if forloop.last %}
+                                                    {{equipamento}}
+                                                    {%else%}
+                                                    {{equipamento}},
+                                                    {%endif%}
+
+                                                    {%endfor%}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="item-4">
+                <div class="card my-2">
+
+                    <a class=" text-decoration-none text-dark" data-bs-toggle="collapse" href="#collapseDadosCadastrais"
+                        role="button" aria-expanded="false" aria-controls="collapseExample">
+                        <div class="card-header text-center">
+                            <h3>Dados Cadastrais</h3>
+                        </div>
+                    </a>
+                    <div class="card-body collapse show" id="collapseDadosCadastrais">
+
+                        <div class="row row-cols-md-3 row-cols-sm-2 row-cols-xs-1  row-cols-auto g-3">
+                            {%for chave, valor in cadastro.all_data.items %}
+                            {%include 'cadastros/modelo_dados_chave_valor.html'%}
+                            {%endfor%}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        
 
     </div>
 </div>
 
 <script>
     var botaotopo = document.querySelector('[href="#top"]');
+    console.log(botaotopo)
     var botao1 = document.querySelector('[href="#item-1"]');
     var botao2 = document.querySelector('[href="#item-2"]');
     var botao3 = document.querySelector('[href="#item-3"]');
     var botao4 = document.querySelector('[href="#item-4"]');
     var botao5 = document.querySelector('[href="#item-5"]');
-    // botao3.classList.remove('active');
-    botaotopo.addEventListener('click', function() {
+    botaotopo.classList.add('active');
+    botaotopo.addEventListener('click', function () {
+        console.log("ação");
         botao1.classList.remove('active');
         botao2.classList.remove('active');
         botao3.classList.remove('active');
         botao4.classList.remove('active');
         botao5.classList.remove('active');
+        botaotop.classList.add('active');
     });
-    botao1.addEventListener('click', function() {
+    botao1.addEventListener('click', function () {
+        console.log("ação 2");
+        botaotop.classList.remove('active');
         botao1.classList.add('active');
         botao2.classList.remove('active');
         botao3.classList.remove('active');
         botao4.classList.remove('active');
         botao5.classList.remove('active');
     });
-    botao2.addEventListener('click', function() {
+    botao2.addEventListener('click', function () {
+        botaotop.classList.remove('active');
         botao1.classList.remove('active');
         botao2.classList.add('active');
         botao3.classList.remove('active');
         botao4.classList.remove('active');
         botao5.classList.remove('active');
     });
-    botao3.addEventListener('click', function() {
+    botao3.addEventListener('click', function () {
+        botaotop.classList.remove('active');
         botao1.classList.remove('active');
         botao2.classList.remove('active');
         botao3.classList.add('active');
         botao4.classList.remove('active');
         botao5.classList.remove('active');
     });
-    botao4.addEventListener('click', function() {
+    botao4.addEventListener('click', function () {
+        botaotop.classList.remove('active');
         botao1.classList.remove('active');
         botao2.classList.remove('active');
         botao3.classList.remove('active');
         botao4.classList.add('active');
         botao5.classList.remove('active');
     });
-    botao5.addEventListener('click', function() {
+    botao5.addEventListener('click', function () {
+        botaotop.classList.remove('active');
         botao1.classList.remove('active');
         botao2.classList.remove('active');
         botao3.classList.remove('active');

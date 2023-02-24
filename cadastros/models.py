@@ -123,7 +123,7 @@ class Referencia(Pessoa):
     cadastro_unico = models.CharField(max_length=1, choices=ESCOLHA, null=False, blank=False,default='1', verbose_name="Possui Cadastro Único?")
     
     contato2 = models.CharField(max_length=15, null=True, blank=True, verbose_name="Contato Alternativo")
-    entrevistador = models.CharField(max_length=200, null=True, blank=True, verbose_name="Entrevistador")
+    
 
 class Membros(Pessoa):
     class Meta:
@@ -296,6 +296,12 @@ class Endereco(models.Model):
 
 
 class Cadastro(models.Model):
+    CRAS = (
+        ('1','CRAS I'),
+        ('2','CRAS II'),
+        ('3','CRAS III'),
+        )
+
     class Meta:
         ordering = ('responsavel_familiar__nome',)
     
@@ -303,7 +309,10 @@ class Cadastro(models.Model):
     habitacao = models.OneToOneField(Habitacao, on_delete=models.CASCADE)
     endereco = models.OneToOneField(Endereco, on_delete=models.CASCADE)
     # responsavel_cadastro = models.ForeignKey("tecnicos.Tecnico", on_delete=models.PROTECT)
+    abrangencia = models.CharField(max_length=1, choices=CRAS, null=True, blank=True, verbose_name="Cras de Abrangência")
     data_cadastro = models.DateField(null=False, blank=False, default=datetime.now)
+    data_alteracao = models.DateField(auto_now=True,null=False, blank=False, )
+    entrevistador = models.CharField(max_length=200, null=True, blank=True, verbose_name="Entrevistador")
 
     def __str__(self):
         return self.responsavel_familiar.nome

@@ -16,7 +16,7 @@ class FormReferencia(forms.ModelForm):
         }
         fields = ['nome', 'apelido', 'situacao_civil', 'sexo', 'identidade_genero', 'nome_social', 'data_nascimento',
                   'cpf', 'nis', 'cadastro_unico', 'escolaridade', 'cor_raca', 'contato', 'contato2', 'trabalho',
-                  'renda', 'entrevistador']
+                  'renda']
         help_texts = {
             'cpf': 'digite apenas os 11 números sem ponto ou espaço',
             'renda': 'Valor da contribuição com a renda total em R$',
@@ -48,6 +48,8 @@ class FormReferencia(forms.ModelForm):
         return self.cleaned_data
 
 
+
+
 class FormEditarReferencia(forms.ModelForm):
     class Meta:
         model = Referencia
@@ -59,7 +61,7 @@ class FormEditarReferencia(forms.ModelForm):
         }
         fields = ['nome', 'apelido', 'situacao_civil', 'sexo', 'identidade_genero', 'nome_social', 'data_nascimento',
                   'cpf', 'nis', 'cadastro_unico', 'escolaridade', 'cor_raca', 'contato', 'contato2', 'trabalho',
-                  'renda', 'entrevistador']
+                  'renda', ]
         help_texts = {
             'cpf': 'digite apenas os 11 números sem ponto ou espaço',
             'renda': 'Valor da contribuição com a renda total em R$',
@@ -122,7 +124,7 @@ class FormMembro(forms.ModelForm):
                 attrs={'type': 'date', }),
 
         }
-        exclude = ['cadastro_membro', 'dados_educacionais']
+        exclude = ['cadastro_membro', 'dados_educacionais',  'dados_saude']
         help_texts = {
             'cpf': 'digite apenas os 11 números sem ponto ou espaço',
             'parentesco': 'Parentesco em relação à Referência Familiar',
@@ -155,6 +157,7 @@ class FormMembro(forms.ModelForm):
 
 
 class FormEditarMembro(forms.ModelForm):
+    cpf = forms.CharField(max_length=15)
     class Meta:
         model = Membros
         widgets = {
@@ -163,7 +166,7 @@ class FormEditarMembro(forms.ModelForm):
                 attrs={'type': 'date', }),
 
         }
-        exclude = ['cadastro_membro']
+        exclude = ['cadastro_membro', 'dados_educacionais',  'dados_saude']
         help_texts = {
             'cpf': 'digite apenas os 11 números sem ponto ou espaço',
             'parentesco': 'Parentesco em relação ao Responsável Familiar',
@@ -199,6 +202,21 @@ class FormEditarMembro(forms.ModelForm):
         return self.cleaned_data
 
 
+
+class FormCadastroModel(forms.ModelForm):
+
+    class Meta:
+        model = Cadastro
+
+        exclude = ['responsavel_familiar', 'habitacao', 'endereco', 'data_cadastro','data_alteracao']
+        # help_texts = {
+        #     'cpf': 'digite apenas os 11 números sem ponto ou espaço',
+        #     'parentesco': 'Parentesco em relação ao Responsável Familiar',
+        #     'renda': 'Valor da contribuição com a renda total em R$',
+        # }
+
+
+
 class FormDadosCadastro(forms.Form):
     responsavel = forms.CharField(label="Referência Familiar")
     responsavel.widget.attrs['disabled'] = 'disabled'
@@ -208,10 +226,13 @@ class FormDadosCadastro(forms.Form):
     bairro.widget.attrs["readonly"] = True
 
 
+
+
 DOCS_CHOICES = (
     ("1", "Bairros"),
     ("2", "Pessoas"),
 )
+
 
 
 class FormUploadDados(forms.Form):
