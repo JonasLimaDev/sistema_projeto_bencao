@@ -167,8 +167,8 @@ class Cadastro():
             
         }
         self.dados_renda = {            
-            "Renda Total da Familia":self.renda_total,
-            "Renda Per Capita":self.renda_per_capita,
+            "Renda Total da Familia":f"R$ {self.renda_total:.2f}".replace('.',','),
+            "Renda Per Capita": f"R$ {self.renda_per_capita:.2f}".replace('.',','),
         }
 
     def calcular_renda(self):
