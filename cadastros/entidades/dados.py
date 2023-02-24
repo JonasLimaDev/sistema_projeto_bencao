@@ -153,7 +153,7 @@ class Cadastro():
         self.data_alteracao = cadastro_bd.data_alteracao
         self.abrangencia = cadastro_bd.get_abrangencia_display()
         self.entrevistador = cadastro_bd.entrevistador
-        #self.responsavel_cadastro = cadastro_bd.responsavel_cadastro
+        self.responsavel_cadastro = cadastro_bd.responsavel_cadastro
         self.lista_membros = [Membro(membro_obj) for membro_obj in Membros.objects.all().filter(cadastro_membro=cadastro_bd)]
         self.renda_total = self.calcular_renda()
         self.renda_per_capita = self.calcular_renda_per_capita()
@@ -164,6 +164,7 @@ class Cadastro():
             "Ultima Alteração":self.data_alteracao,
             "Abrangência":self.abrangencia,
             "Entrevistador":self.entrevistador,
+            "Cadastrador":self.responsavel_cadastro,
             
         }
         self.dados_renda = {            

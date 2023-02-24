@@ -4,12 +4,12 @@ import os
 from random import randint
 
 from django.conf import settings
-# from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-# from tecnicos.models import Tecnico
+from tecnicos.models import Tecnico
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
-# from django.utils.decorators import method_decorator
+from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
 from django.core.paginator import Paginator
 from .entidades import dados
@@ -40,7 +40,7 @@ class HomePageView(TemplateView):
         return render(request, self.template_name, {'dados': dados})
 
 
-# @method_decorator(login_required, name='dispatch')
+@method_decorator(login_required, name='dispatch')
 class ListaCadastroView(TemplateView):
     template_name = 'cadastros/lista_cadastros.html'
 
@@ -89,7 +89,7 @@ class ListaCadastroView(TemplateView):
             return redirect('listar_cadastros')
 
 
-# @method_decorator(login_required, name='dispatch')
+@method_decorator(login_required, name='dispatch')
 class AdicionarCadastroView(TemplateView):
     form_referencia = FormReferencia
     form_endereco = FormEndereco
@@ -116,6 +116,7 @@ class AdicionarCadastroView(TemplateView):
                          "Informações do Endereço": form2,
                          "Informações da Moradia": form3,
                          "Informações do Cadastramento":form4}
+        tecnico = Tecnico.objects.get(usuario=request.user)
         if form1.is_valid():
             if form2.is_valid():
                 if form3.is_valid():
@@ -131,7 +132,7 @@ class AdicionarCadastroView(TemplateView):
         return render(request, self.template_name, self.context)
 
 
-# @method_decorator(login_required, name='dispatch')
+@method_decorator(login_required, name='dispatch')
 class EditarEnderecoView(TemplateView):
     form_endereco = FormEndereco
     template_name = "cadastros/forms/formulario_cadastro.html"
@@ -165,7 +166,7 @@ class EditarEnderecoView(TemplateView):
         return render(request, self.template_name, self.context)
 
 
-# @method_decorator(login_required, name='dispatch')
+@method_decorator(login_required, name='dispatch')
 class EditHabitacaoView(TemplateView):
     form_habitacao = FormHabitacao
     template_name = "cadastros/forms/formulario_cadastro.html"
@@ -211,7 +212,7 @@ class EditHabitacaoView(TemplateView):
         self.context['forms_generic'] = forms_generic
         return render(request, self.template_name, self.context)
 
-
+@method_decorator(login_required, name='dispatch')
 class ExibirFichaCadastroView(TemplateView):
     # form_habitacao = FormHabitacao
     template_name = "cadastros/dados_cadastro.html"
@@ -224,7 +225,7 @@ class ExibirFichaCadastroView(TemplateView):
         return render(request, self.template_name, self.context)
 
 
-# @method_decorator(login_required, name='dispatch')
+@method_decorator(login_required, name='dispatch')
 class EditarReferenciaView(TemplateView):
     form_referencia = FormEditarReferencia
     template_name = "cadastros/forms/formulario_cadastro.html"
@@ -259,7 +260,7 @@ class EditarReferenciaView(TemplateView):
         return render(request, self.template_name, self.context)
 
 
-# @method_decorator(login_required, name='dispatch')
+@method_decorator(login_required, name='dispatch')
 class EditarHabitacaoView(TemplateView):
     form_habitacao = FormHabitacao
     template_name = "cadastros/forms/formulario_cadastro.html"
@@ -304,7 +305,7 @@ class EditarHabitacaoView(TemplateView):
         self.context['forms_generic'] = forms_generic
         return render(request, self.template_name, self.context)
 
-
+@method_decorator(login_required, name='dispatch')
 class ExibirDadosCadastroView(TemplateView):
     template_name = "cadastros/dados_cadastro.html"
     context = {'titulo_pagina': "Dados Cadastro"}
@@ -317,7 +318,7 @@ class ExibirDadosCadastroView(TemplateView):
         return render(request, self.template_name, self.context)
 
 
-# @method_decorator(login_required, name='dispatch')
+@method_decorator(login_required, name='dispatch')
 class AdicionarMembroView(TemplateView):
     form_membro = FormMembro
     form_dados = FormDadosCadastro
@@ -366,7 +367,7 @@ class AdicionarMembroView(TemplateView):
             redirect('listar_cadastros')
 
 
-# @method_decorator(login_required, name='dispatch')
+@method_decorator(login_required, name='dispatch')
 class EditarMembroView(TemplateView):
     form_membro = FormEditarMembro
     form_dados = FormDadosCadastro
@@ -417,7 +418,7 @@ class EditarMembroView(TemplateView):
             redirect('listar_cadastros')
 
 
-# @method_decorator(login_required, name='dispatch')
+@method_decorator(login_required, name='dispatch')
 class ExcluirMembroView(TemplateView):
     template_name = "cadastros/dados_excluir.html"
     context = {'titulo_pagina': "Editar Membro"}
@@ -458,7 +459,7 @@ class ExcluirMembroView(TemplateView):
             redirect('listar_cadastros')
 
 
-# @method_decorator(login_required, name='dispatch')
+@method_decorator(login_required, name='dispatch')
 class EnviarDados(TemplateView):
     form_upload = FormUploadDados
     template_name = "modelos/formulario_beneficios.html"

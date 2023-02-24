@@ -308,7 +308,7 @@ class Cadastro(models.Model):
     responsavel_familiar = models.OneToOneField(Referencia, on_delete=models.CASCADE)
     habitacao = models.OneToOneField(Habitacao, on_delete=models.CASCADE)
     endereco = models.OneToOneField(Endereco, on_delete=models.CASCADE)
-    # responsavel_cadastro = models.ForeignKey("tecnicos.Tecnico", on_delete=models.PROTECT)
+    responsavel_cadastro = models.ForeignKey("tecnicos.Tecnico", on_delete=models.PROTECT, default=1)
     abrangencia = models.CharField(max_length=1, choices=CRAS, null=True, blank=True, verbose_name="Cras de Abrangência")
     data_cadastro = models.DateField(null=False, blank=False, default=datetime.now)
     data_alteracao = models.DateField(auto_now=True,null=False, blank=False, )

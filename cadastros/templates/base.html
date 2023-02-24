@@ -36,13 +36,15 @@
             href="{% url 'home' %}">Home</a>
             <a class="me-3 py-2 my-2 my-sm-1 btn btn-outline-dark  {%if '/cadastros/' in request.path %} active {%endif%}"
             href="{% url 'listar_cadastros' %}">Cadastros</a>
-            {% comment %}
+            
           {%if request.user.is_anonymous%}
           <a class="me-3 py-2 my-2 my-sm-1 btn btn-outline-dark  {%if '/login/entrar/' in request.path %} active {%endif%}"
             href="{% url 'logar_usuario' %}">Logar-se</a>
           <a class="me-3 py-2 my-2 my-sm-1 btn btn-outline-dark {%if '/login/registrar/' in request.path %} active {%endif%}"
             href="{% url 'criar_usuario' %}">Cadastrar-se</a>
-          {%else%}
+            {%endif%}
+            {% comment %}
+            {%else%}
           <a class="me-3 py-2 my-2 my-sm-1 btn btn-outline-dark  {%if '/cadastros/' in request.path %} active {%endif%}"
             href="{% url 'listar_cadastros' %}">Cadastros</a>
 
