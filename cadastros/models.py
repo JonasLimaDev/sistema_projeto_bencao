@@ -288,6 +288,7 @@ class Endereco(models.Model):
     numero = models.CharField(max_length=35, null=True, blank=True)
     complemento = models.CharField(max_length=170, null=True, blank=True)
     ponto_referencia = models.CharField(max_length=250, null=True, blank=True, verbose_name="Ponto de Referência")
+    
     bairro = models.ForeignKey(Bairro, on_delete=models.CASCADE)
     cep = models.CharField(max_length=15, null=True, blank=True, verbose_name="CEP")
 

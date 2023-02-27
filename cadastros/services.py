@@ -171,5 +171,18 @@ def salvar_cadastros_massivo(dados,tecnico):
 	Cadastro.objects.create(situacao_habitacao=situacao_habitacao,responsavel_familiar=responsavel_familiar,
 							responsavel_cadastro=tecnico,endereco=endereco)
 
+
+def buscar_cadastro_bairro(bairro):
+	# bairro_bd = Bairro.objects.filter(nome=bairro)
+	cadastros = Cadastro.objects.filter(endereco__bairro__nome=bairro).all()
+	lista_cadastros = []
+	for cadastro in cadastros:
+		if cadastro not in lista_cadastros:
+			lista_cadastros.append(cadastro)
+		
+	return lista_cadastros
+
+
+
 if __name__ =="__main__":
     pass

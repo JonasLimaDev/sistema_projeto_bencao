@@ -46,6 +46,7 @@ class ListaCadastroView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        bairros = Bairro.objects.all()
         argumento = None
         if 'filter' in self.kwargs:
             argumento = self.kwargs['filter']
@@ -53,7 +54,11 @@ class ListaCadastroView(TemplateView):
                 argumento = argumento.split(':')
             elif "id" in argumento:
                 argumento = argumento.split(':')
+            elif "bairro" in argumento:
+                argumento = argumento.split(':')
             elif "cpf" in argumento:
+                argumento = argumento.split(':')
+            elif "cras" in argumento:
                 argumento = argumento.split(':')
 
         if argumento:
@@ -62,6 +67,10 @@ class ListaCadastroView(TemplateView):
                 lista_cadastro = buscar_cadastro_nome(argumento[1])
             elif argumento[0] == 'cpf':
                 lista_cadastro = buscar_cadastro_cpf(argumento[1])
+            elif argumento[0] =='bairro':
+                lista_cadastro = buscar_cadastro_bairro(argumento[1])
+            elif argumento[0] =='cras':
+                lista_cadastro = Cadastro.objects.filter(abrangencia=argumento[1])
             elif argumento[0] == 'id':
                 lista_cadastro.append(get_object_or_404(Cadastro, id=argumento[1]))
 
@@ -73,11 +82,14 @@ class ListaCadastroView(TemplateView):
         page_number = self.request.GET.get('page')
         page_obj = paginator.get_page(page_number)
         context['page_obj'] = page_obj
+        context['lista_bairros'] = bairros
         return context
 
     # #@method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         busca = request.POST['busca']
+        bairro = request.POST['bairro']
+        cras = request.POST['cras']
         if busca:
             if len(busca) == 11 and busca.isdigit():
                 return redirect('listar_cadastros', "cpf:" + request.POST['busca'])
@@ -85,6 +97,10 @@ class ListaCadastroView(TemplateView):
                 return redirect('listar_cadastros', "id:" + request.POST['busca'])
             else:
                 return redirect('listar_cadastros', "name:" + request.POST['busca'])
+        elif bairro:
+            return redirect('listar_cadastros', "bairro:" + request.POST['bairro'])
+        elif cras:
+            return redirect('listar_cadastros', "cras:" + request.POST['cras'])
         else:
             return redirect('listar_cadastros')
 

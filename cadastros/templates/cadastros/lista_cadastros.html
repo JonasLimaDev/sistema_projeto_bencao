@@ -3,7 +3,6 @@
 {% block title %}Todos Cadastros{% endblock title %}
 {% block barra_titulo %}
 <div class="row align-items-center justify-content-content-between ">
-
   <div class="col-3 ">
     <h5 class="card-title ">Todos os Cadastros</h5>
   </div>
@@ -16,36 +15,13 @@
     <div class="mx-1 ">
       <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container-fluid">
-          <form class="d-flex " method="post">
-            {% csrf_token %}
-            <!-- <div class="input-group me-1">
-              <span class="input-group-text" id="basic-addon1">Bairro</span>
-              <input type="text" class="form-control rounded-end" list="datalistOptions"  aria-describedby="basic-addon1" id="exampleDataList" placeholder="Selecione um Bairro">
-              <datalist id="datalistOptions">
-                <option value="San Francisco">
-                <option value="New York">
-                <option value="Seattle">
-                <option value="Los Angeles">
-                <option value="Chicago">
-              </datalist>
-            </div> -->
-            <div class="input-group w-100">
-              <input class="form-control " name="busca" type="search" placeholder="Nome ou CPF" aria-label="Search">
-              <button class="btn btn-outline-primary" type="submit" id="button-addon2"><i
-                  class="bi bi-search mx-1"></i>Buscar</button>
-            </div>
-          </form>
+          
 
         </div>
       </nav>
 
     </div>
     <div class="ms-2">
-
-      {% comment %} <a href="{% url 'listar_cadastros' %}" type="button" class="btn btn-outline-secondary "><i
-          class="bi bi-file-text align-middle" style="font-size: 1.25rem;"></i><span
-          class="align-middle mx-1">Todos</span></a> {% endcomment %}
-
       <a href="{% url 'adicionar_cadastro' %}" type="button" class="btn btn-outline-secondary "><i
           class="bi bi-plus-circle align-middle" style="font-size: 1.25rem;"></i><span
           class="align-middle mx-1">Adicionar</span></a>
@@ -53,6 +29,46 @@
     </div>
   </div>
 </div>
+<hr>
+<form class="d-flex row  align-items-center justify-content-center py-0 p-0 " method="post">
+  {% csrf_token %}
+    <div class="col-2">
+      
+      <div class="form-floating py-0">
+      <select class="form-select rounded form-control-sm " aria-label="Default select example"  onchange="this.form.submit()" name="cras">
+        <option selected>-------</option>
+        <option value="1">CRAS I</option>
+        <option value="2">CRAS II</option>
+        <option value="3">CRAS III</option>
+      </select>
+      <label class="form-control-sm" for="floatingSelect">Abrangência</label>
+      </div>
+      </div>
+      <div class="col-3">
+        <div class="form-floating">
+          
+        <input class="form-control  form-control-sm rounded " list="datalistOptions" id="exampleDataList" placeholder="Buscar por Bairro"  onchange="this.form.submit()" autocomplete="off" name="bairro">
+        <label for="floatingSelect ">Bairro</label>
+        <datalist id="datalistOptions" >
+          {% for bairro in lista_bairros %}
+          <option value="{{bairro}}">
+          {%endfor%}
+        </datalist>
+        
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="input-group">
+        <div class="form-floating ">
+          <input class="form-control form-control-sm" name="busca" type="search" placeholder="Nome ou CPF" aria-label="Search">
+          <label for="floatingInput">Nome ou CPF</label>
+        </div>
+        <button class="btn btn-outline-primary" type="submit" id="button-addon2"><i
+          class="bi bi-search mx-1"></i>Buscar</button>
+      </div>
+    </div>
+  
+    </form>
 
 {% endblock barra_titulo %}
 {% block main %}
