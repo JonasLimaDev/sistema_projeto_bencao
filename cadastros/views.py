@@ -91,8 +91,11 @@ class ListaCadastroView(TemplateView):
         bairro = request.POST['bairro']
         cras = request.POST['cras']
         if busca:
+            if is_cpf(busca):
+                busca = busca.replace('.','').replace('-','').replace(" ",'')
+                return redirect('listar_cadastros', "cpf:" + busca)
             if len(busca) == 11 and busca.isdigit():
-                return redirect('listar_cadastros', "cpf:" + request.POST['busca'])
+                return redirect('listar_cadastros', "cpf:" + busca)
             elif busca.isdigit():
                 return redirect('listar_cadastros', "id:" + request.POST['busca'])
             else:

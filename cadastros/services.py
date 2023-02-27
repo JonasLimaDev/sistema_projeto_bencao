@@ -1,5 +1,5 @@
 from .models import *
-
+import re
 def salvar_membro(form,cadastro):
 	nome = form.cleaned_data['nome']
 	# print(nome) 
@@ -90,11 +90,11 @@ def buscar_cadastro_nome(nome):
 
 def buscar_cadastro_cpf(cpf):
 	pessoas = Pessoa.objects.filter(cpf__exact=cpf)
-	print(len(pessoas))
+	# print(len(pessoas))
 	cadastros_bd = Cadastro.objects.all()
 	lista_cadastros = []
 	for pessoa in pessoas:
-		print(pessoa)
+		# print(pessoa)
 		cadastros = cadastros_bd.filter(responsavel_familiar=pessoa)
 		for cadastro in cadastros:
 			if cadastro not in lista_cadastros:
@@ -107,7 +107,7 @@ def buscar_cadastro_cpf(cpf):
 						if cadastro not in lista_cadastros:
 								lista_cadastros.append(cadastro)
 						# lista_cadastros.append(cadastros_bd.get(id=membro.cadastro_membro.id))
-	print(lista_cadastros)
+	# print(lista_cadastros)
 	return lista_cadastros
 
 def inserir_bairros():
@@ -182,6 +182,13 @@ def buscar_cadastro_bairro(bairro):
 		
 	return lista_cadastros
 
+
+def is_cpf(cpf):
+	expressao = re.compile('\d{3}\.\d{3}\.\d{3}\-\d{2}')
+	if expressao.search(cpf):
+		return True
+	else:
+		return False
 
 
 if __name__ =="__main__":
