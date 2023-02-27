@@ -64,6 +64,7 @@ class ListaCadastroView(TemplateView):
         if argumento:
             lista_cadastro = []
             if argumento[0] == 'name':
+
                 lista_cadastro = buscar_cadastro_nome(argumento[1])
             elif argumento[0] == 'cpf':
                 lista_cadastro = buscar_cadastro_cpf(argumento[1])
@@ -149,6 +150,52 @@ class AdicionarCadastroView(TemplateView):
                         return redirect('listar_cadastros', f'id:{cadastro.id}')
         self.context['forms_generic'] = forms_generic
         return render(request, self.template_name, self.context)
+
+
+
+@method_decorator(login_required, name='dispatch')
+class EditarCadastroView(TemplateView):
+
+    form_cadastro = FormCadastroModel
+    template_name = "cadastros/forms/formulario_cadastro.html"
+    context = {'titulo_pagina': "Editar Cadastro", 'link': '/cadastros/lista/'}
+
+    def get(self, request, *args, **kwargs):
+        cadastro_bd = get_object_or_404(Cadastro,id=self.kwargs['pk'])
+        forms_generic = {"Informações do Cadastramento": self.form_cadastro(instance=cadastro_bd),
+                         }
+        self.context['forms_generic'] = forms_generic
+        return render(request, self.template_name, self.context)
+
+    def post(self, request, *args, **kwargs):
+        cadastro_bd = get_object_or_404(Cadastro,id=self.kwargs['pk'])
+        
+        form1 =  self.form_cadastro(request.post),
+        forms_generic = {
+                         "Informações do Cadastramento":form1}
+        tecnico = Tecnico.objects.get(usuario=request.user)
+        
+        if form1.is_valid():
+            atualizacao = False
+            entrevistador_form = form1.cleane_data('entrevistador')
+            abrangencia_form = form1.cleane_data('abrangencia')
+            
+            if cadastro_bd.entrevistador != entrevistador_form:
+                  cadastro_bd.entrevistador = entrevistador_form
+                  atualizacao = True
+            if cadastro_bd.abrangencia != abrangencia_form:
+                  cadastro_bd.abrangencia = abrangencia_form
+                  atualizacao = True
+            
+            if atualizacao:
+                cadastro_bd.save()
+                messages.success(request, f'Cadastro Atualizado Com Sucesso.')
+                return redirect('listar_cadastros', f'id:{cadastro_bd.id}')
+            else:
+                return redirect('listar_cadastros', f'id:{cadastro_bd.id}')
+        self.context['forms_generic'] = forms_generic
+        return render(request, self.template_name, self.context)
+
 
 
 @method_decorator(login_required, name='dispatch')
@@ -511,9 +558,10 @@ class EnviarDados(TemplateView):
                         Bairro.objects.create(nome=dado['nome'])
                     except:
                         pass
-            else:
+            elif tipo == "1":
                 for dado in dados:
-                    print(tecnico)
+                    print(dado)
+                    # print(tecnico)
             os.remove(caminho_arquivo)
         self.context['forms_generic'] = forms_generic
         return render(request, self.template_name, self.context)

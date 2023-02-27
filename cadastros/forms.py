@@ -208,7 +208,7 @@ class FormCadastroModel(forms.ModelForm):
     class Meta:
         model = Cadastro
 
-        exclude = ['responsavel_familiar', 'habitacao', 'endereco', 'data_cadastro','data_alteracao']
+        exclude = ['responsavel_familiar', 'habitacao', 'endereco', 'responsavel_cadastro', 'data_cadastro','data_alteracao']
         # help_texts = {
         #     'cpf': 'digite apenas os 11 números sem ponto ou espaço',
         #     'parentesco': 'Parentesco em relação ao Responsável Familiar',
@@ -230,7 +230,7 @@ class FormDadosCadastro(forms.Form):
 
 DOCS_CHOICES = (
     ("1", "Bairros"),
-    ("2", "Pessoas"),
+    ("2", "Cadastros"),
 )
 
 
