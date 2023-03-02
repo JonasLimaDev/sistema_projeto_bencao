@@ -203,7 +203,7 @@ class FormEditarMembro(forms.ModelForm):
 
 
 
-class FormCadastroModel(forms.ModelForm):
+class FormCadastro(forms.ModelForm):
 
     class Meta:
         model = Cadastro

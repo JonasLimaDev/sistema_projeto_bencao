@@ -71,6 +71,16 @@
     </div>
   
     </form>
+    <div class="row row-cols-auto mt-2 gy-2 gx-0 justify-content-center">
+      <div class="col">
+        <a class="btn  btn-secondary btn-sm mx-1" href="{% url 'listar_cadastros'%}" >Todos</a>
+      </div>
+      {%for letra, argumento in alfabeto.items%}
+      <div class="col">
+        <a class="btn {%if argumento in request.path %} btn-dark {%else%} btn-secondary{%endif%} btn-sm mx-1" href="{% url 'listar_cadastros' argumento%}" >{{letra}}</a>
+      </div>
+      {%endfor%}
+    </div>
  
 
 {% endblock barra_titulo %}
@@ -246,9 +256,11 @@
     </div>
 
     <div class="collapse my-1" id="collapsePerfil{{cadastro.id}}">
+      {%if cadastro.habitacao%}
       <div class="card-header text-center " style="background:#efefef;">
         <h5 class="card-title">Perfil Socieconômico</h5>
       </div>
+      
       <div class="card-body">
         <h5 class="card-title pt-2">Informações de Infraestrutura <a href="{% url 'editar_habitacao' cadastro.habitacao.id %}"
             class="link-warning  mt-2 px-2 "><i class="bi bi-pencil "></i></a></h5>
@@ -382,6 +394,16 @@
 
         </div>
       </div>
+      {%else%}
+      <div class="card-header text-center " style="background:#efefef;">
+        <a href="{%url 'adicionar_habitacao' cadastro.id%}"
+                  class="btn btn-outline-primary mt-2 btn-sm d-print-none">
+                  <i class="bi bi-plus-circle fs-6"></i>
+                  Adicionar Dados Habitacionais
+                </a>
+      </div>
+      {%endif%}
+
     </div>
 
     <div class="collapse my-1" id="collapsePendencias{{cadastro.id}}">

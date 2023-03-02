@@ -49,6 +49,7 @@ class Pessoa(models.Model):
         ('5', 'Ensino Médio Completo'),
         ('6', 'Ensino Superior Incompleto'),
         ('7', 'Ensino Superior Completo'),
+        ('8', 'Não Informado'),
     )
 
     TRABALHO = (
@@ -66,7 +67,7 @@ class Pessoa(models.Model):
     )
 
     nome = models.CharField(max_length=150, null=False, blank=False)
-    data_nascimento = models.DateField(verbose_name="Data de Nascimento")
+    data_nascimento = models.DateField(verbose_name="Data de Nascimento", null=True, blank=True)
     sexo = models.CharField(max_length=1, choices=SEXO, null=False, blank=False)
     trabalho = models.CharField(max_length=2, choices=TRABALHO, null=False, blank=False)
     cpf = models.CharField(max_length=11, null=True, blank=True, verbose_name="CPF", unique=True)
@@ -307,7 +308,7 @@ class Cadastro(models.Model):
         ordering = ('responsavel_familiar__nome',)
     
     responsavel_familiar = models.OneToOneField(Referencia, on_delete=models.CASCADE)
-    habitacao = models.OneToOneField(Habitacao, on_delete=models.CASCADE)
+    habitacao = models.OneToOneField(Habitacao, on_delete=models.CASCADE, null=True, blank=True)
     endereco = models.OneToOneField(Endereco, on_delete=models.CASCADE)
     responsavel_cadastro = models.ForeignKey("tecnicos.Tecnico", on_delete=models.PROTECT, default=1)
     abrangencia = models.CharField(max_length=1, choices=CRAS, null=True, blank=True, verbose_name="Cras de Abrangência")

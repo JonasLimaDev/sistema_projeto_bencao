@@ -23,6 +23,12 @@ def gerar_valores(mes_dict):
         mes_dict[mes] = randint(20, 249)
     return mes_dict
 
+def lista_alfabeto():
+    lista_alfabeto = {}
+    for valor in range(ord('A'), ord('Z')+1):
+        lista_alfabeto[chr(valor)] = f"inicial:{chr(valor)}"
+    return lista_alfabeto
+
 
 class HomePageView(TemplateView):
     template_name = 'base.html'
@@ -56,6 +62,8 @@ class ListaCadastroView(TemplateView):
                 argumento = argumento.split(':')
             elif "bairro" in argumento:
                 argumento = argumento.split(':')
+            elif "inicial" in argumento:
+                argumento = argumento.split(':')
             elif "cpf" in argumento:
                 argumento = argumento.split(':')
             elif "cras" in argumento:
@@ -72,13 +80,15 @@ class ListaCadastroView(TemplateView):
                 lista_cadastro = buscar_cadastro_bairro(argumento[1])
             elif argumento[0] =='cras':
                 lista_cadastro = Cadastro.objects.filter(abrangencia=argumento[1])
+            elif argumento[0] =='inicial':
+                lista_cadastro = Cadastro.objects.filter(responsavel_familiar__nome__startswith=argumento[1])
             elif argumento[0] == 'id':
                 lista_cadastro.append(get_object_or_404(Cadastro, id=argumento[1]))
 
             context['cadastros'] = [dados.Cadastro(cadastro_bd) for cadastro_bd in lista_cadastro]
         else:
             context['cadastros'] = [dados.Cadastro(cadastro_bd) for cadastro_bd in Cadastro.objects.all()]
-
+        context['alfabeto'] = lista_alfabeto()
         paginator = Paginator(context['cadastros'], 20)  # Show 25 contacts per page.
         page_number = self.request.GET.get('page')
         page_obj = paginator.get_page(page_number)
@@ -114,7 +124,7 @@ class AdicionarCadastroView(TemplateView):
     form_referencia = FormReferencia
     form_endereco = FormEndereco
     form_habitacao = FormHabitacao
-    form_cadastro = FormCadastroModel
+    form_cadastro = FormCadastro
     template_name = "cadastros/forms/formulario_cadastro.html"
     context = {'titulo_pagina': "Adicionar Cadastro", 'link': '/cadastros/lista/'}
 
@@ -131,7 +141,7 @@ class AdicionarCadastroView(TemplateView):
         form1 = self.form_referencia(request.POST)
         form2 = self.form_endereco(request.POST)
         form3 = self.form_habitacao(request.POST)
-        form4 =  self.form_cadastro(request.post),
+        form4 =  self.form_cadastro(request.POST)
         forms_generic = {"Informações da Referência Familiar": form1,
                          "Informações do Endereço": form2,
                          "Informações da Moradia": form3,
@@ -141,8 +151,8 @@ class AdicionarCadastroView(TemplateView):
             if form2.is_valid():
                 if form3.is_valid():
                     if form4.is_valid():
-                        entrevistador = form4.cleane_data('entrevistador')
-                        abrangencia = form4.cleane_data('abrangencia')
+                        entrevistador = form4.cleaned_data['entrevistador']
+                        abrangencia = form4.cleaned_data['abrangencia']
                         cadastro = Cadastro.objects.create(responsavel_familiar=form1.save(),
                                                         endereco=form2.save(), habitacao=form3.save(),
                                                         entrevistador=entrevistador,abrangencia=abrangencia)
@@ -156,7 +166,7 @@ class AdicionarCadastroView(TemplateView):
 @method_decorator(login_required, name='dispatch')
 class EditarCadastroView(TemplateView):
 
-    form_cadastro = FormCadastroModel
+    form_cadastro = FormCadastro
     template_name = "cadastros/forms/formulario_cadastro.html"
     context = {'titulo_pagina': "Editar Cadastro", 'link': '/cadastros/lista/'}
 
@@ -170,15 +180,15 @@ class EditarCadastroView(TemplateView):
     def post(self, request, *args, **kwargs):
         cadastro_bd = get_object_or_404(Cadastro,id=self.kwargs['pk'])
         
-        form1 =  self.form_cadastro(request.post),
+        form =  self.form_cadastro(request.POST)
         forms_generic = {
-                         "Informações do Cadastramento":form1}
+                         "Informações do Cadastramento":form}
         tecnico = Tecnico.objects.get(usuario=request.user)
         
-        if form1.is_valid():
+        if form.is_valid():
             atualizacao = False
-            entrevistador_form = form1.cleane_data('entrevistador')
-            abrangencia_form = form1.cleane_data('abrangencia')
+            entrevistador_form = form.cleaned_data['entrevistador']
+            abrangencia_form = form.cleaned_data['abrangencia']
             
             if cadastro_bd.entrevistador != entrevistador_form:
                   cadastro_bd.entrevistador = entrevistador_form
@@ -327,6 +337,42 @@ class EditarReferenciaView(TemplateView):
 
 
 @method_decorator(login_required, name='dispatch')
+class AdicionarHabitacaoView(TemplateView):
+    form_habitacao = FormHabitacao
+    template_name = "cadastros/forms/formulario_cadastro.html"
+    context = {'titulo_pagina': "Editar Habitação"}
+
+    def get(self, request, *args, **kwargs):
+        cadastro = get_object_or_404(Cadastro, id=self.kwargs['pk'])
+        forms_generic = {"Informações da Moradia": self.form_habitacao()}
+        
+        link = request.META.get('HTTP_REFERER')
+        if "exibir" in link:
+            self.context['url_cancelar'] = 'dados'
+            self.context['id_cancelar'] = cadastro.id
+        else:
+            self.context['url_cancelar'] = 'lista'
+            self.context['id_cancelar'] = f'id:{cadastro.id}'
+        self.context['forms_generic'] = forms_generic
+        return render(request, self.template_name, self.context)
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_habitacao(request.POST)
+        cadastro = get_object_or_404(Cadastro, id=self.kwargs['pk'])
+        # cadastro = Cadastro.objects.get(habitacao=habitacao)
+        self.context['id_cancelar'] = f'id:{cadastro.id}'
+        forms_generic = {"Informações do Endereço": form}
+        if form.is_valid():
+            habitacao = form.save()
+            cadastro.habitacao = habitacao
+            cadastro.save()
+            messages.success(request, f'Dados Cadastrados Com Sucesso.')
+            return redirect('listar_cadastros', f'id:{cadastro.id}')
+
+        self.context['forms_generic'] = forms_generic
+        return render(request, self.template_name, self.context)
+
+@method_decorator(login_required, name='dispatch')
 class EditarHabitacaoView(TemplateView):
     form_habitacao = FormHabitacao
     template_name = "cadastros/forms/formulario_cadastro.html"
@@ -370,6 +416,7 @@ class EditarHabitacaoView(TemplateView):
 
         self.context['forms_generic'] = forms_generic
         return render(request, self.template_name, self.context)
+
 
 @method_decorator(login_required, name='dispatch')
 class ExibirDadosCadastroView(TemplateView):
@@ -528,11 +575,13 @@ class ExcluirMembroView(TemplateView):
 @method_decorator(login_required, name='dispatch')
 class EnviarDados(TemplateView):
     form_upload = FormUploadDados
-    template_name = "modelos/formulario_beneficios.html"
+    template_name = "cadastros/forms/formulario_cadastro.html"
     context = {'titulo_pagina': "Enviar ", 'link': '/'}
 
     def get(self, request, *args, **kwargs):
         forms_generic = {"Dados": self.form_upload()}
+
+        # self.context['data_upload'] = data_upload
         self.context['forms_generic'] = forms_generic
         return render(request, self.template_name, self.context)
 
@@ -540,8 +589,10 @@ class EnviarDados(TemplateView):
 
         form = self.form_upload(request.POST, request.FILES)
         forms_generic = {"Informações da Solicitação": form}
+
         if form.is_valid():
-            pasta_temporaria = os.path.join(settings.BASE_DIR, "media/")
+            print("válido")
+            pasta_temporaria = os.path.join(settings.BASE_DIR, "files/media/")
             arquivo = form.cleaned_data['arquivo_dados']
             nome_arquivo = str(form.cleaned_data['arquivo_dados'])
             tipo = form.cleaned_data['tipo_informacoes']
@@ -558,10 +609,59 @@ class EnviarDados(TemplateView):
                         Bairro.objects.create(nome=dado['nome'])
                     except:
                         pass
-            elif tipo == "1":
+            elif tipo == "2":
+                print("-"*10)
+                    
                 for dado in dados:
-                    print(dado)
-                    # print(tecnico)
+                    referencia_familiar = Referencia()
+                    endereco = Endereco()
+                    cadastro = Cadastro()
+                    lista_erros = []
+                    # print(vars(referencia_familiar))
+                    for chave, valor in dado.items():
+                        if chave in vars(referencia_familiar):
+                            if valor:
+                                setattr(referencia_familiar, chave, valor)
+                        if chave in vars(endereco) or chave == 'bairro':
+                            if valor:
+                                # print(chave)
+                                if chave == 'bairro':
+                                    busca_bairro = Bairro.objects.filter(nome=valor)
+                                    # print(valor)
+                                    if busca_bairro != []:
+                                        # print(busca_bairro[0].id)
+                                        setattr(endereco, 'bairro_id', busca_bairro[0].id)
+                                    else:
+                                        bairro = Bairro.objects.create(nome=valor)
+                                        print(bairro.id)
+                                        setattr(endereco, 'bairro_id', bairro.id)
+                                else:
+                                    setattr(endereco, chave, valor)
+                        if chave in vars(cadastro):
+                            if valor:
+                                setattr(cadastro, chave, valor)
+                    try:
+                        referencia_familiar.save()
+                    except Exception as e:
+
+                        print(e)
+                        if str(e) == "UNIQUE constraint failed: cadastros_pessoa.cpf":
+                            print(f"Erro ao salvar referencia {referencia_familiar.nome}: CPF já está cadastrado")
+                        
+                        
+                        # endereco
+                        # setattr(cadastro, 'responsavel_familiar_id', referencia_familiar.id)
+                        # setattr(cadastro, 'endereco_id', endereco.id)
+                        # setattr(cadastro, 'responsavel_cadastro_id', tecnico.id)
+                        # cadastro. = tecnico.id
+                        # cadastro.save()
+                        
+                    
+                        print("-"*10)
+                    # print(vars(referencia_familiar))
+                    # print(vars(endereco))
+                    # print(vars(cadastro))
+
             os.remove(caminho_arquivo)
         self.context['forms_generic'] = forms_generic
         return render(request, self.template_name, self.context)

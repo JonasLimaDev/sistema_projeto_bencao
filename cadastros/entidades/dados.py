@@ -13,7 +13,7 @@ class Referencia():
         self.situacao_civil = referencia_bd.get_situacao_civil_display()
         self.sexo = referencia_bd.get_sexo_display()
         self.data_nascimento = referencia_bd.data_nascimento
-        self.idade = int((date.today() - self.data_nascimento).days / 365.25)
+        self.idade = int((date.today() - self.data_nascimento).days / 365.25) if self.data_nascimento else "-"
         self.cpf = self.formatar_cpf(referencia_bd.cpf)
         self.nis = referencia_bd.nis if referencia_bd.nis else "Não Informado"
         self.cadastro_unico = referencia_bd.get_cadastro_unico_display()
@@ -92,7 +92,7 @@ class Membro():
         # self.situacao_civil = "-"
         self.sexo = membro_bd.get_sexo_display()
         self.data_nascimento = membro_bd.data_nascimento
-        self.idade = int((date.today()-self.data_nascimento).days / 365.25)
+        self.idade = int((date.today()-self.data_nascimento).days / 365.25) if self.data_nascimento else "-"
         self.cpf = self.formatar_cpf(membro_bd.cpf)
         self.nis = membro_bd.nis if membro_bd.nis else "Não Informado" 
         self.escolaridade = membro_bd.get_escolaridade_display()
@@ -167,10 +167,12 @@ class Cadastro():
             "Cadastrador":self.responsavel_cadastro,
             
         }
-        self.dados_renda = {            
-            "Renda Total da Familia":f"R$ {self.renda_total:.2f}".replace('.',','),
-            "Renda Per Capita": f"R$ {self.renda_per_capita:.2f}".replace('.',','),
-        }
+        
+        self.dados_renda = {}
+
+        self.dados_renda["Renda Total da Familia"] = f"R$ {self.renda_total:.2f}".replace('.',',')
+        self.dados_renda["Renda Per Capita"]= f"R$ {self.renda_per_capita:.2f}".replace('.',',') if self.renda_per_capita else "-"
+        
 
     def calcular_renda(self):
         renda = 0
@@ -181,16 +183,19 @@ class Cadastro():
     
     def calcular_renda_per_capita(self):
         renda = self.calcular_renda()
-        renda_per_capita = renda / self.habitacao.numero_moradores
+        renda_per_capita = renda / self.habitacao.numero_moradores if self.habitacao else None
         return renda_per_capita
 
     def disparidade(self):
         membros_cd = len(self.lista_membros)+1
-        self.habitacao.numero_moradores
-        if membros_cd < self.habitacao.numero_moradores:
-            disparidade = f"Falta Membros no Cadastro {membros_cd} de {self.habitacao.numero_moradores}"
-        elif membros_cd > self.habitacao.numero_moradores:
-            disparidade = f"Mais Membros Que no  Cadastro {membros_cd} de {self.habitacao.numero_moradores}"
+        if self.habitacao:
+            self.habitacao.numero_moradores
+            if membros_cd < self.habitacao.numero_moradores:
+                disparidade = f"Falta Membros no Cadastro {membros_cd} de {self.habitacao.numero_moradores}"
+            elif membros_cd > self.habitacao.numero_moradores:
+                disparidade = f"Mais Membros Que no  Cadastro {membros_cd} de {self.habitacao.numero_moradores}"
+            else:
+                disparidade = None
         else:
             disparidade = None
         return disparidade

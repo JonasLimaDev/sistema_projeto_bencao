@@ -38,9 +38,11 @@ outros = [
     path('', HomePageView.as_view(), name='home'),
     path('cadastros/editar/endereco/<int:pk>/', EditarEnderecoView.as_view(),name='editar_endereco'),
     path('cadastros/editar/habitacao/<int:pk>/', EditarHabitacaoView.as_view(), name='editar_habitacao'),
+    path('cadastros/adicionar/habitacao/<int:pk>/', AdicionarHabitacaoView.as_view(), name='adicionar_habitacao'),
+
     path('cadastros/json/', dados_cadastro_json, name='json'),
     
-    # path('cadastros/avançado/upload/dados/', EnviarDados.as_view(), name='upload_dados'),
+    path('cadastros/avançado/upload/dados/', EnviarDados.as_view(), name='upload_dados'),
 ]
 
 urlpatterns = urls_familia + urls_cadastro + outros
