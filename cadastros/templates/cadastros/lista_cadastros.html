@@ -4,7 +4,9 @@
 {% block barra_titulo %}
 <div class="row align-items-center justify-content-content-between ">
   <div class="col-3 ">
-    <h5 class="card-title ">Todos os Cadastros</h5>
+    <h5 class="card-title ">Lista de Cadastros</h5>
+    <h6 class="card-title mt-1">Total: {{total_cadastros}}</h6>
+    
   </div>
   <div class="col d-flex align-items-center justify-content-end">
     {%if request.path != "/cadastros/lista/"  %}
@@ -31,12 +33,12 @@
 </div>
 <hr>
 
-<form class="d-flex row  align-items-center justify-content-center py-0 p-0 " method="post">
+<form class="d-flex row  align-items-center justify-content-center gy-0 py-0 p-0 " method="post">
   {% csrf_token %}
   
     <div class="col-2">
       
-      <div class="form-floating py-0">
+      <div class="form-floating ">
       <select class="form-select rounded  " aria-label="Default select example"  onchange="this.form.submit()" name="cras">
         <option selected>-------</option>
         <option value="1">CRAS I</option>
@@ -81,11 +83,13 @@
       </div>
       {%endfor%}
     </div>
- 
+
+
 
 {% endblock barra_titulo %}
 {% block main %}
 {% include 'modelos/mensagens_sucesso.html' %}
+<hr class="mt-0 pt-0">
 <div class="list-group py-1">
   {% for cadastro in page_obj %}
   <div class="card list-group-item my-2 border" aria-current="true">

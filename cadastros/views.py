@@ -12,7 +12,7 @@ from django.shortcuts import render, redirect
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
 from django.core.paginator import Paginator
-from .entidades import dados
+from .entidades.dados import *
 from .forms import *
 from .models import *
 from .services import *
@@ -54,6 +54,8 @@ class ListaCadastroView(TemplateView):
         context = super().get_context_data(**kwargs)
         bairros = Bairro.objects.all()
         argumento = None
+        
+
         if 'filter' in self.kwargs:
             argumento = self.kwargs['filter']
             if "name" in argumento:
@@ -85,10 +87,12 @@ class ListaCadastroView(TemplateView):
             elif argumento[0] == 'id':
                 lista_cadastro.append(get_object_or_404(Cadastro, id=argumento[1]))
 
-            context['cadastros'] = [dados.Cadastro(cadastro_bd) for cadastro_bd in lista_cadastro]
+            context['cadastros'] = [CadastroData(cadastro_bd) for cadastro_bd in lista_cadastro]
         else:
-            context['cadastros'] = [dados.Cadastro(cadastro_bd) for cadastro_bd in Cadastro.objects.all()]
+            context['cadastros'] = [CadastroData(cadastro_bd) for cadastro_bd in Cadastro.objects.all()]
         context['alfabeto'] = lista_alfabeto()
+        context['total_cadastros'] = len(context['cadastros'])
+        
         paginator = Paginator(context['cadastros'], 20)  # Show 25 contacts per page.
         page_number = self.request.GET.get('page')
         page_obj = paginator.get_page(page_number)
@@ -288,6 +292,7 @@ class EditHabitacaoView(TemplateView):
         self.context['forms_generic'] = forms_generic
         return render(request, self.template_name, self.context)
 
+
 @method_decorator(login_required, name='dispatch')
 class ExibirFichaCadastroView(TemplateView):
     # form_habitacao = FormHabitacao
@@ -297,7 +302,7 @@ class ExibirFichaCadastroView(TemplateView):
     def get(self, request, *args, **kwargs):
         cadastro = get_object_or_404(Cadastro, id=self.kwargs['pk'])
         self.context['id_cancelar'] = f'id:{cadastro.id}'
-        self.context['cadastro'] = dados.Cadastro(cadastro)
+        self.context['cadastro'] = CadastroData(cadastro)
         return render(request, self.template_name, self.context)
 
 
@@ -426,7 +431,7 @@ class ExibirDadosCadastroView(TemplateView):
     def get(self, request, *args, **kwargs):
         cadastro = get_object_or_404(Cadastro, id=self.kwargs['pk'])
         self.context['id_cancelar'] = f'id:{cadastro.id}'
-        self.context['cadastro'] = dados.Cadastro(cadastro)
+        self.context['cadastro'] = CadastroData(cadastro)
 
         return render(request, self.template_name, self.context)
 
@@ -575,13 +580,14 @@ class ExcluirMembroView(TemplateView):
 @method_decorator(login_required, name='dispatch')
 class EnviarDados(TemplateView):
     form_upload = FormUploadDados
-    template_name = "cadastros/forms/formulario_cadastro.html"
+    template_name = "cadastros/forms/formulario_upload.html"
     context = {'titulo_pagina': "Enviar ", 'link': '/'}
 
     def get(self, request, *args, **kwargs):
         forms_generic = {"Dados": self.form_upload()}
 
         # self.context['data_upload'] = data_upload
+        self.context["resultados"] = None
         self.context['forms_generic'] = forms_generic
         return render(request, self.template_name, self.context)
 
@@ -589,9 +595,9 @@ class EnviarDados(TemplateView):
 
         form = self.form_upload(request.POST, request.FILES)
         forms_generic = {"Informações da Solicitação": form}
-
+        
         if form.is_valid():
-            print("válido")
+            lista_erros = []
             pasta_temporaria = os.path.join(settings.BASE_DIR, "files/media/")
             arquivo = form.cleaned_data['arquivo_dados']
             nome_arquivo = str(form.cleaned_data['arquivo_dados'])
@@ -616,7 +622,7 @@ class EnviarDados(TemplateView):
                     referencia_familiar = Referencia()
                     endereco = Endereco()
                     cadastro = Cadastro()
-                    lista_erros = []
+                    
                     # print(vars(referencia_familiar))
                     for chave, valor in dado.items():
                         if chave in vars(referencia_familiar):
@@ -640,29 +646,52 @@ class EnviarDados(TemplateView):
                         if chave in vars(cadastro):
                             if valor:
                                 setattr(cadastro, chave, valor)
+                    
+                    
                     try:
                         referencia_familiar.save()
+                        setattr(cadastro, 'responsavel_familiar_id', referencia_familiar.id)
+                        try:
+                            endereco.save()
+                            setattr(cadastro, 'endereco_id', endereco.id)
+                            
+                            try:
+                                setattr(cadastro, 'responsavel_cadastro_id', tecnico.id)
+                                cadastro.save()
+                                reultado = ErrosData(referencia=f"{referencia_familiar.nome}",resultado="Salvo Com Sucesso",descricao_erro="-", erro=None)
+                                lista_erros.append(reultado)
+                            
+                            except Exception as e:
+                                
+                                referencia_familiar.delete()
+                                endereco.delete()
+                                reultado = ErrosData(referencia=f"{referencia_familiar.nome}",resultado="Erro ao Salvar",
+                                                            descricao_erro="Erro não documentado", erro=str(e))
+                                lista_erros.append(reultado)
+                                
+                        except Exception as e:
+                            referencia_familiar.delete()
+                            reultado = ErrosData(referencia=f"{referencia_familiar.nome}",resultado="Erro ao Salvar",
+                                                        descricao_erro="Erro não documentado", erro=str(e))
+                            lista_erros.append(reultado)
                     except Exception as e:
-
-                        print(e)
                         if str(e) == "UNIQUE constraint failed: cadastros_pessoa.cpf":
-                            print(f"Erro ao salvar referencia {referencia_familiar.nome}: CPF já está cadastrado")
-                        
-                        
-                        # endereco
-                        # setattr(cadastro, 'responsavel_familiar_id', referencia_familiar.id)
-                        # setattr(cadastro, 'endereco_id', endereco.id)
-                        # setattr(cadastro, 'responsavel_cadastro_id', tecnico.id)
-                        # cadastro. = tecnico.id
-                        # cadastro.save()
-                        
+                            reultado = ErrosData(referencia=f"{referencia_familiar.nome}",resultado="Erro ao Salvar",
+                                                       descricao_erro="CPF já está cadastrado", erro=str(e))
+                            lista_erros.append(reultado)
+                        else:
+                            reultado = ErrosData(referencia=f"{referencia_familiar.nome}",resultado="Erro ao Salvar",
+                                                       descricao_erro="Erro não documentado", erro=str(e))
+                            lista_erros.append(reultado)
                     
+
                         print("-"*10)
                     # print(vars(referencia_familiar))
                     # print(vars(endereco))
                     # print(vars(cadastro))
 
             os.remove(caminho_arquivo)
+        self.context["resultados"] = lista_erros
         self.context['forms_generic'] = forms_generic
         return render(request, self.template_name, self.context)
 

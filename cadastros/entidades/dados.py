@@ -143,7 +143,7 @@ class Membro():
         return value
 
 
-class Cadastro():
+class CadastroData():
     def __init__(self,cadastro_bd):
         self.id = cadastro_bd.id
         self.responsavel = Referencia(cadastro_bd.responsavel_familiar) 
@@ -199,4 +199,12 @@ class Cadastro():
         else:
             disparidade = None
         return disparidade
-            
+
+
+class ErrosData():
+    def __init__(self,referencia,resultado,descricao_erro,erro):
+        self.referencia = referencia
+        self.resultado = resultado
+        self.descricao_erro = descricao_erro
+        self.erro = erro
+        self.all_data = [str(self.referencia),str(self.resultado),str(self.descricao_erro),str(self.erro)]
