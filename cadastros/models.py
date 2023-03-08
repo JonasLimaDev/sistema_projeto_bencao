@@ -16,6 +16,33 @@ class Bairro(models.Model):
 
     def __str__(self):
         return self.nome
+# RUC ÁGUA AZUL - MUTIRÃO		JATOBÁ - MUTIRÃO		SÃO JOAQUIM - JD ALTAMIRA		CASA NOVA - LIBERDADE		LARANJEIRAS - IBIZA	
+
+class Endereco(models.Model):
+    class Meta:
+        ordering = ('bairro__nome',)
+    
+
+    RUCs = (
+        ('1', 'Nenhum'),
+        ('2', 'Água Azul'),
+        ('3', 'Jatobá'),
+        ('4', 'São Joaquim'),
+        ('5', 'Casa Nova'),
+        ('6', 'Laranjeiras'),
+    )
+    
+    logradouro = models.CharField(max_length=100, null=False, blank=False)
+    numero = models.CharField(max_length=35, null=True, blank=True)
+    complemento = models.CharField(max_length=170, null=True, blank=True)
+    
+    bairro = models.ForeignKey("Bairro", on_delete=models.CASCADE)
+    ruc = models.CharField(max_length=1, choices=RUCs, default="1", null=True, blank=True, verbose_name="RUC")
+    
+    cep = models.CharField(max_length=15, null=True, blank=True, verbose_name="CEP")
+
+    def __str__(self):
+        return self.logradouro
 
 
 class EquipamentoComunitario(models.Model):
@@ -280,21 +307,6 @@ class Habitacao(models.Model):
     def __str__(self):
         return self.situacao_moradia
 
-
-class Endereco(models.Model):
-    class Meta:
-        ordering = ('bairro__nome',)
-
-    logradouro = models.CharField(max_length=100, null=False, blank=False)
-    numero = models.CharField(max_length=35, null=True, blank=True)
-    complemento = models.CharField(max_length=170, null=True, blank=True)
-    ponto_referencia = models.CharField(max_length=250, null=True, blank=True, verbose_name="Ponto de Referência")
-    
-    bairro = models.ForeignKey(Bairro, on_delete=models.CASCADE)
-    cep = models.CharField(max_length=15, null=True, blank=True, verbose_name="CEP")
-
-    def __str__(self):
-        return self.logradouro
 
 
 class Cadastro(models.Model):

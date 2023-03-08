@@ -12,6 +12,7 @@ from django.shortcuts import render, redirect
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
 from django.core.paginator import Paginator
+
 from .entidades.dados import *
 from .forms import *
 from .models import *
@@ -70,6 +71,8 @@ class ListaCadastroView(TemplateView):
                 argumento = argumento.split(':')
             elif "cras" in argumento:
                 argumento = argumento.split(':')
+            elif "ruc" in argumento:
+                argumento = argumento.split(':')
 
         if argumento:
             lista_cadastro = []
@@ -80,6 +83,9 @@ class ListaCadastroView(TemplateView):
                 lista_cadastro = buscar_cadastro_cpf(argumento[1])
             elif argumento[0] =='bairro':
                 lista_cadastro = buscar_cadastro_bairro(argumento[1])
+            elif argumento[0] =='ruc':
+                lista_cadastro = buscar_cadastro_ruc(argumento[1])
+            
             elif argumento[0] =='cras':
                 lista_cadastro = Cadastro.objects.filter(abrangencia=argumento[1])
             elif argumento[0] =='inicial':
@@ -105,6 +111,7 @@ class ListaCadastroView(TemplateView):
         busca = request.POST['busca']
         bairro = request.POST['bairro']
         cras = request.POST['cras']
+        ruc = request.POST['ruc']
         if busca:
             if is_cpf(busca):
                 busca = busca.replace('.','').replace('-','').replace(" ",'')
@@ -117,6 +124,8 @@ class ListaCadastroView(TemplateView):
                 return redirect('listar_cadastros', "name:" + request.POST['busca'])
         elif bairro:
             return redirect('listar_cadastros', "bairro:" + request.POST['bairro'])
+        elif ruc:
+            return redirect('listar_cadastros', "ruc:" + request.POST['ruc'])
         elif cras:
             return redirect('listar_cadastros', "cras:" + request.POST['cras'])
         else:
@@ -553,17 +562,18 @@ class ExcluirMembroView(TemplateView):
             self.context['url_cancelar'] = 'lista'
             self.context['id_cancelar'] = f'id:{cadastro.id}'
         self.context['dados_cadastro'] = cadastro
-        self.context['dados_membro'] = dados.Membro(membro)
+        self.context['dados_membro'] = MembroDados(membro)
         return render(request, self.template_name, self.context)
 
     def post(self, request, *args, **kwargs):
         pk = self.get_pk()
         membro = get_object_or_404(Membros, id=pk)
         cadastro = get_object_or_404(Cadastro, id=membro.cadastro_membro.id)
+        
         self.context['id_cancelar'] = f'id:{cadastro.id}'
         self.context['dados_cadastro'] = cadastro
-        self.context['dados_membro'] = Memembro
-        print(request.POST)
+        self.context['dados_membro'] = MembroDados(membro)
+        # print(request.POST)
         if "confirmar" in request.POST:
             membro.delete()
             messages.success(request, f'Informações do Membro Foram Excluídas!')

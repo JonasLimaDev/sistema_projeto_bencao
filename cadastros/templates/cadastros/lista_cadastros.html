@@ -6,10 +6,10 @@
   <div class="col-3 ">
     <h5 class="card-title ">Lista de Cadastros</h5>
     <h6 class="card-title mt-1">Total: {{total_cadastros}}</h6>
-    
+
   </div>
   <div class="col d-flex align-items-center justify-content-end">
-    {%if request.path != "/cadastros/lista/"  %}
+    {%if request.path != "/cadastros/lista/" %}
     <a href="{% url 'listar_cadastros' %}" type="button" class="btn btn-outline-secondary "><i
         class="bi bi-list align-middle" style="font-size: 1.25rem;"></i><span class="align-middle mx-1">Lista
         Completa</span></a>
@@ -17,7 +17,7 @@
     <div class="mx-1 ">
       <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container-fluid">
-          
+
 
         </div>
       </nav>
@@ -35,54 +35,74 @@
 
 <form class="d-flex row  align-items-center justify-content-center gy-0 py-0 p-0 " method="post">
   {% csrf_token %}
-  
-    <div class="col-2">
-      
-      <div class="form-floating ">
-      <select class="form-select rounded  " aria-label="Default select example"  onchange="this.form.submit()" name="cras">
+
+  <div class="col-2">
+
+    <div class="form-floating ">
+      <select class="form-select rounded  " aria-label="Default select example" onchange="this.form.submit()"
+        name="cras">
         <option selected>-------</option>
         <option value="1">CRAS I</option>
         <option value="2">CRAS II</option>
         <option value="3">CRAS III</option>
       </select>
       <label for="floatingSelect">Abrangência</label>
-      </div>
-      </div>
-      <div class="col-3">
-        <div class="form-floating">
-          
-        <input class="form-control   rounded " list="datalistOptions" id="exampleDataList" placeholder="Buscar por Bairro"  onchange="this.form.submit()" autocomplete="off" name="bairro">
-        <label for="floatingSelect ">Bairro</label>
-        <datalist id="datalistOptions" >
-          {% for bairro in lista_bairros %}
-          <option value="{{bairro}}">
+    </div>
+  </div>
+  <div class="col-3">
+
+    <div class="form-floating ">
+      <select class="form-select rounded  " aria-label="Default select example" onchange="this.form.submit()"
+        name="ruc">
+        <option selected>-------</option>
+        <option value="1">Nenhum</option>
+        <option value="2">Água Azul</option>
+        <option value="3">Jatobá</option>
+        <option value="4">São Joaquim</option>
+        <option value="5">Casa Nova</option>
+        <option value="6">Laranjeiras</option>
+      </select>
+      <label for="floatingSelect">Ruc</label>
+    </div>
+  </div>
+  <div class="col-3">
+    <div class="form-floating">
+
+      <input class="form-control   rounded " list="datalistOptions" id="exampleDataList" placeholder="Buscar por Bairro"
+        onchange="this.form.submit()" autocomplete="off" name="bairro">
+      <label for="floatingSelect ">Bairro</label>
+      <datalist id="datalistOptions">
+        {% for bairro in lista_bairros %}
+        <option value="{{bairro}}">
           {%endfor%}
-        </datalist>
-        
-      </div>
+      </datalist>
+
     </div>
-    <div class="col-4">
-      <div class="input-group">
-        <div class="form-floating ">
-          <input class="form-control " value="" name="busca" type="search" placeholder="Nome ou CPF" aria-label="Search">
-          <label for="floatingInput">Nome ou CPF</label>
-        </div>
-        <button class="btn btn-outline-primary" type="submit" id="button-addon2"><i
-          class="bi bi-search mx-1"></i>Buscar</button>
-      </div>
-    </div>
+  </div>
   
-    </form>
-    <div class="row row-cols-auto mt-2 gy-2 gx-0 justify-content-center">
-      <div class="col">
-        <a class="btn  btn-secondary btn-sm mx-1" href="{% url 'listar_cadastros'%}" >Todos</a>
+  <div class="col-4">
+    <div class="input-group">
+      <div class="form-floating ">
+        <input class="form-control " value="" name="busca" type="search" placeholder="Nome ou CPF" aria-label="Search">
+        <label for="floatingInput">Nome ou CPF</label>
       </div>
-      {%for letra, argumento in alfabeto.items%}
-      <div class="col">
-        <a class="btn {%if argumento in request.path %} btn-dark {%else%} btn-secondary{%endif%} btn-sm mx-1" href="{% url 'listar_cadastros' argumento%}" >{{letra}}</a>
-      </div>
-      {%endfor%}
+      <button class="btn btn-outline-primary" type="submit" id="button-addon2"><i
+          class="bi bi-search mx-1"></i>Buscar</button>
     </div>
+  </div>
+
+</form>
+<div class="row row-cols-auto mt-2 gy-2 gx-0 justify-content-center">
+  <div class="col">
+    <a class="btn  btn-secondary btn-sm mx-1" href="{% url 'listar_cadastros'%}">Todos</a>
+  </div>
+  {%for letra, argumento in alfabeto.items%}
+  <div class="col">
+    <a class="btn {%if argumento in request.path %} btn-dark {%else%} btn-secondary{%endif%} btn-sm mx-1"
+      href="{% url 'listar_cadastros' argumento%}">{{letra}}</a>
+  </div>
+  {%endfor%}
+</div>
 
 
 
@@ -127,22 +147,11 @@
         <i class="bi bi-graph-up align-middle" style="font-size: 1.25rem;"></i><span class="align-middle mx-1">Dados
           Socioeconômicos</span>
       </button>
-      
+
       <a class="btn btn-primary me-md-2 btn-sm" type="button" href="{% url 'exibir_dados_cadastro' cadastro.id%}">
         <i class="bi bi-journal-text align-middle" style="font-size: 1.25rem;"></i>
         <span class="align-middle mx-1">Ver Todos os Dados</span>
       </a>
-      {%comment %}
-      <a class="btn btn-primary me-md-2 btn-sm" type="button" href="{% url 'solicitar_beneficio' cadastro.id%}">
-        <i class="bi bi-journal-plus align-middle" style="font-size: 1.25rem;"></i>
-        <span class="align-middle mx-1">Solicitar Beneficio</span>
-      </a>
-
-      <a class="btn btn-primary me-md-2 btn-sm" type="button" href="{% url 'lista_individual' cadastro.id%}">
-        <i class="bi bi-journal-text align-middle" style="font-size: 1.25rem;"></i>
-        <span class="align-middle mx-1">Solicitações Individuais</span>
-      </a>
-      {% endcomment %}
       {% if cadastro.disparidades %}
       <button class="btn btn-warning me-md-2 btn-sm" type="button" data-bs-toggle="collapse"
         data-bs-target="#collapsePendencias{{cadastro.id}}">
@@ -163,16 +172,16 @@
         <table class="table table-sm table-light  table-striped">
           <thead>
             <tr>
-              <th scope="col" >Nome</th>
-              <th scope="col" >Parentesco</th>
-             
+              <th scope="col">Nome</th>
+              <th scope="col">Parentesco</th>
+
               <th scope="col">Idade</th>
-              
+
               <th scope="col">Sexo</th>
               <th scope="col">CPF</th>
               {%comment%}
-              <th scope="col" >Situação de Trabalho</th>
-              <th scope="col" >Escolaridade</th>
+              <th scope="col">Situação de Trabalho</th>
+              <th scope="col">Escolaridade</th>
               {%endcomment%}
               <th scope="col">Contato</th>
               <th scope="col"></th>
@@ -183,18 +192,18 @@
           <tbody>
             <tr>
               <td class="text-nowrap mx-3">{{cadastro.responsavel.nome}}</td>
-              <td >Referência Familiar</td>
-              
+              <td>Referência Familiar</td>
+
               <td>{{cadastro.responsavel.idade}}</td>
-             
-              <td >{{cadastro.responsavel.sexo}}</td>
+
+              <td>{{cadastro.responsavel.sexo}}</td>
               {% if cadastro.responsavel.cpf %}
               <td class="text-nowrap">{{cadastro.responsavel.cpf}}</td>
               {% else %}
               <td class="text-center">-</td>
               {% endif %}
               {%comment%}
-              <td >{{cadastro.responsavel.trabalho}}</td>
+              <td>{{cadastro.responsavel.trabalho}}</td>
               <td class="text-nowrap">{{cadastro.responsavel.escolaridade}}</td>
               {%endcomment%}
               {% if cadastro.responsavel.contato %}
@@ -212,11 +221,11 @@
             </tr>
             {% for membro in cadastro.lista_membros %}
             <tr>
-              <td >{{membro.nome}}</td>
-              <td >{{membro.parentesco}}</td>
-             
-              <td >{{membro.idade}}</td>
-           
+              <td>{{membro.nome}}</td>
+              <td>{{membro.parentesco}}</td>
+
+              <td>{{membro.idade}}</td>
+
               <td>{{membro.sexo}}</td>
               {% if membro.cpf %}
               <td class="text-nowrap">{{membro.cpf}}</td>
@@ -224,11 +233,11 @@
               <td class="text-center">-</td>
               {% endif %}
               {%comment%}
-              <td >{{membro.trabalho}}</td>
+              <td>{{membro.trabalho}}</td>
               <td>{{membro.escolaridade}}</td>
               {%endcomment%}
               {% if membro.contato %}
-              <td >{{membro.contato}}</td>
+              <td>{{membro.contato}}</td>
               {% else %}
               <td class="text-center">-</td>
               {% endif %}
@@ -238,7 +247,7 @@
                 </a>
               </td>
               <td>
-                 <a href="{%url 'excluir_membro' membro.id%}" class="link-danger mt-2 btn-sm d-print-none">
+                <a href="{%url 'excluir_membro' membro.id%}" class="link-danger mt-2 btn-sm d-print-none">
                   <i class="bi bi-trash fs-5"></i>
                 </a>
               </td>
@@ -264,10 +273,11 @@
       <div class="card-header text-center " style="background:#efefef;">
         <h5 class="card-title">Perfil Socieconômico</h5>
       </div>
-      
+
       <div class="card-body">
-        <h5 class="card-title pt-2">Informações de Infraestrutura <a href="{% url 'editar_habitacao' cadastro.habitacao.id %}"
-            class="link-warning  mt-2 px-2 "><i class="bi bi-pencil "></i></a></h5>
+        <h5 class="card-title pt-2">Informações de Infraestrutura <a
+            href="{% url 'editar_habitacao' cadastro.habitacao.id %}" class="link-warning  mt-2 px-2 "><i
+              class="bi bi-pencil "></i></a></h5>
         <hr>
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 d-flex justify-content-between mb-2">
           <div class="col d-flex align-items-start ">
@@ -336,7 +346,7 @@
 
             </p>
           </div>
-          </div>
+        </div>
         <h5 class="card-title pt-4 ">Informações de Moradia</h5>
         <hr>
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 d-flex justify-content-start">
@@ -359,7 +369,7 @@
               {{cadastro.habitacao.tempo_ocupacao}} Anos
             </p>
           </div>
-          
+
           <div class="col d-flex justify-content-start">
             <p class="fw-bold">
               Número de Cômodos da Casa:
@@ -400,11 +410,10 @@
       </div>
       {%else%}
       <div class="card-header text-center " style="background:#efefef;">
-        <a href="{%url 'adicionar_habitacao' cadastro.id%}"
-                  class="btn btn-outline-primary mt-2 btn-sm d-print-none">
-                  <i class="bi bi-plus-circle fs-6"></i>
-                  Adicionar Dados Habitacionais
-                </a>
+        <a href="{%url 'adicionar_habitacao' cadastro.id%}" class="btn btn-outline-primary mt-2 btn-sm d-print-none">
+          <i class="bi bi-plus-circle fs-6"></i>
+          Adicionar Dados Habitacionais
+        </a>
       </div>
       {%endif%}
 
@@ -464,7 +473,7 @@
 
 </div>
 <hr>
- {% if page_obj.has_next or page_obj.has_previous %}
+{% if page_obj.has_next or page_obj.has_previous %}
 <nav aria-label="Page navigation  ">
   <ul class="pagination  justify-content-center  ">
     {% if page_obj.has_previous %}

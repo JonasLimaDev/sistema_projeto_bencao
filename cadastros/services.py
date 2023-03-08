@@ -58,6 +58,7 @@ def editar_endereco(endereco,form):
 	endereco.logradouro = form.cleaned_data['logradouro']
 	endereco.numero = form.cleaned_data['numero']
 	endereco.complemento = form.cleaned_data['complemento']
+	endereco.ruc = form.cleaned_data['ruc']
 	endereco.bairro = form.cleaned_data['bairro']
 	endereco.save()
 	return endereco
@@ -109,6 +110,7 @@ def buscar_cadastro_cpf(cpf):
 						# lista_cadastros.append(cadastros_bd.get(id=membro.cadastro_membro.id))
 	# print(lista_cadastros)
 	return lista_cadastros
+
 
 def inserir_bairros():
 	nomes = """
@@ -175,6 +177,17 @@ def salvar_cadastros_massivo(dados,tecnico):
 def buscar_cadastro_bairro(bairro):
 	# bairro_bd = Bairro.objects.filter(nome=bairro)
 	cadastros = Cadastro.objects.filter(endereco__bairro__nome=bairro).all()
+	lista_cadastros = []
+	for cadastro in cadastros:
+		if cadastro not in lista_cadastros:
+			lista_cadastros.append(cadastro)
+		
+	return lista_cadastros
+
+
+def buscar_cadastro_ruc(bairro):
+	# bairro_bd = Bairro.objects.filter(nome=bairro)
+	cadastros = Cadastro.objects.filter(endereco__ruc=bairro).all()
 	lista_cadastros = []
 	for cadastro in cadastros:
 		if cadastro not in lista_cadastros:

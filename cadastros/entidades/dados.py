@@ -84,7 +84,7 @@ class Referencia():
         return value
 
 
-class Membro():
+class MembroDados():
     def __init__(self, membro_bd):
         self.id = membro_bd.id
         self.nome = membro_bd.nome
