@@ -184,6 +184,48 @@ def buscar_cadastro_bairro(bairro):
 		
 	return lista_cadastros
 
+def total_cadastro_bairro():
+	# bairro_bd = Bairro.objects.filter(nome=bairro)
+	dados = {}
+	for bairro in Bairro.objects.all():
+		cadastros = Cadastro.objects.filter(endereco__bairro__nome=bairro).all()
+		dados[bairro] = len(cadastros)
+		
+	return dados
+
+def total_cadastro_ruc():
+	# bairro_bd = Bairro.objects.filter(nome=bairro)
+	RUCs = {'1': 'Nenhum',
+        '2': 'Água Azul',
+        '3': 'Jatobá',
+        '4': 'São Joaquim',
+        '5': 'Casa Nova',
+        '6': 'Laranjeiras',
+		}
+    
+	dados = {}
+	for codigo,ruc in RUCs.items():
+		cadastros = Cadastro.objects.filter(endereco__ruc=codigo).all()
+		dados[ruc] = len(cadastros)
+
+	return dados
+
+
+def total_cadastro_cras():
+	# bairro_bd = Bairro.objects.filter(nome=bairro)
+	CRAS = {
+        '1':'CRAS I',
+        '2':'CRAS II',
+        '3':'CRAS III',
+        }
+    
+	dados = {}
+	for codigo,cras in CRAS.items():
+		cadastros = Cadastro.objects.filter(abrangencia=codigo).all()
+		dados[cras] = len(cadastros)
+
+	return dados
+
 
 def buscar_cadastro_ruc(bairro):
 	# bairro_bd = Bairro.objects.filter(nome=bairro)
@@ -202,8 +244,6 @@ def is_cpf(cpf):
 		return True
 	else:
 		return False
-
-
 
 if __name__ =="__main__":
     pass

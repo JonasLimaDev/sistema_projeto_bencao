@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% block main %}
+<div class="row gy-3 gx-2">
+    
+    <div class="col-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="text-center card-title fw-bold">Total de Cadastros em cada Bairro</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive overflow-auto" style="height: 28rem;">
+                    <table class="table table-info  table-striped table-hover">
+                        <thead class="sticky-top">
+                          <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Bairro</th>
+                            <th scope="col">Cadastros</th>
+                          </tr>
+                        </thead>
+                        <tbody class="bg-transparent-50">
+                            {%for bairro, cadastros in dados_bairros.items%}
+                            {%if cadastros > 0 %}
+                          <tr>
+                            <th scope="row">{{forloop.counter}}</th>
+                            <td>{{bairro}}</td>
+                            <td>{{cadastros}}</td>
+                            
+                          </tr>
+                          {%endif%}
+                          {%endfor%}
+                          
+                        </tbody>
+                      </table>
+                    </div>
+            </div>
+
+
+        </div>
+
+     
+
+    </div>
+
+    <div class="col-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="text-center card-title fw-bold">Total de Cadastros em cada RUC</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive overflow-auto" >
+                    <table class="table table-info  table-striped table-hover">
+                        <thead class="sticky-top">
+                          <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">RUC</th>
+                            <th scope="col">Cadastros</th>
+                          </tr>
+                        </thead>
+                        <tbody class="bg-transparent-50">
+                            {%for ruc, cadastros in dados_rucs.items%}
+                          <tr>
+                            <th scope="row">{{forloop.counter}}</th>
+                            <td>{{ruc}}</td>
+                            <td>{{cadastros}}</td>
+                          </tr>
+                          {%endfor%}
+                          
+                        </tbody>
+                      </table>
+                    </div>
+            </div>
+
+
+        </div>
+        
+       
+
+    </div>
+
+
+    <div class="col-6 ">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="text-center card-title fw-bold">Total de Cadastros em cada CRAS</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive overflow-auto" >
+                    <table class="table table-info  table-striped table-hover">
+                        <thead class="sticky-top">
+                          <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">CRAS</th>
+                            <th scope="col">Cadastros</th>
+                          </tr>
+                        </thead>
+                        <tbody class="bg-transparent-50">
+                            {%for cras, cadastros in dados_cras.items%}
+                          <tr>
+                            <th scope="row">{{forloop.counter}}</th>
+                            <td>{{cras}}</td>
+                            <td>{{cadastros}}</td>
+                          </tr>
+                          {%endfor%}
+                          
+                        </tbody>
+                      </table>
+                    </div>
+            
+            </div>
+
+
+        </div>
+       
+       
+    </div>
+    
+</div>
+
+{% endblock main %}

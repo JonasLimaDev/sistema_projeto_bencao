@@ -2,6 +2,8 @@ import json
 import os
 # Create your views here.
 from random import randint
+
+from django.http import JsonResponse
 from .validations import is_cpf_valid
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
@@ -47,6 +49,25 @@ class HomePageView(TemplateView):
         return render(request, self.template_name, {'dados': dados})
 
 
+class RenderData(TemplateView):
+    template_name = 'tabelas_dados.html'
+
+    def get(self, request, *args, **kwargs):
+        dados_bairros = total_cadastro_bairro()
+        dados_rucs = total_cadastro_ruc()
+        dados_cras = total_cadastro_cras()
+        # inserir_bairros()
+        # orgs = ["CRAS I","CRAS II","CRAS III","CREAS","SEMAPS - SEDE","Projeto"]
+        # for org in orgs:
+        #     mes = {'Jan':0, "Fev":0,'Mar':0, "Abr":0,
+        # 'Mai':0,"Jun":0,'Jul':0, "Ago":0,
+        # 'Set':0, "Out":0,'Nov':0, "Dez":0,}
+        #     lista = gerar_valores(mes)
+        #     dados[org]=lista
+        return render(request, self.template_name, {'dados_bairros': dados_bairros,'dados_rucs':dados_rucs,'dados_cras':dados_cras})
+
+
+
 @method_decorator(login_required, name='dispatch')
 class ListaCadastroView(TemplateView):
     template_name = 'cadastros/lista_cadastros.html'
@@ -82,11 +103,14 @@ class ListaCadastroView(TemplateView):
             elif argumento[0] == 'cpf':
                 lista_cadastro = buscar_cadastro_cpf(argumento[1])
             elif argumento[0] =='bairro':
+                context["busca_bairro"] = argumento[1]
                 lista_cadastro = buscar_cadastro_bairro(argumento[1])
             elif argumento[0] =='ruc':
+                context["busca_ruc"] = argumento[1]
                 lista_cadastro = buscar_cadastro_ruc(argumento[1])
             
             elif argumento[0] =='cras':
+                context["busca_cras"] = argumento[1]
                 lista_cadastro = Cadastro.objects.filter(abrangencia=argumento[1])
             elif argumento[0] =='inicial':
                 lista_cadastro = Cadastro.objects.filter(responsavel_familiar__nome__startswith=argumento[1])
@@ -653,10 +677,7 @@ class EnviarDados(TemplateView):
                                 # print(chave)
                                 if chave == 'bairro':
                                     busca_bairro = Bairro.objects.filter(nome=valor)
-                                    # print(busca_bairro )
                                     if busca_bairro:
-                                        # print(busca_bairro.get(nome=valor).id)
-                                        # print(busca_bairro[0].id)
                                         setattr(endereco, 'bairro_id', busca_bairro.get(nome=valor).id)
                                     else:
                                         bairro = Bairro.objects.create(nome=valor)
@@ -721,8 +742,9 @@ class EnviarDados(TemplateView):
 
 def dados_cadastro_json(request):
     data_json = []
-    data_json.append(list(Cadastro.objects.values()))
-    data_json.append(list(Referencia.objects.values()))
+    lista = list(Cadastro.objects.values()) + list(Referencia.objects.values())
+    data_json.append(lista)
+    # data_json.append(list())
 
     return JsonResponse(data_json, safe=False)
 
