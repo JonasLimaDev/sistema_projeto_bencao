@@ -2,7 +2,7 @@ from ..models import Membros
 from datetime import date
 
 
-class Referencia():
+class ReferenciaDados():
     def __init__(self, referencia_bd):
         self.id = referencia_bd.id
         self.nome = referencia_bd.nome
@@ -146,7 +146,7 @@ class MembroDados():
 class CadastroData():
     def __init__(self,cadastro_bd):
         self.id = cadastro_bd.id
-        self.responsavel = Referencia(cadastro_bd.responsavel_familiar) 
+        self.responsavel = ReferenciaDados(cadastro_bd.responsavel_familiar) 
         self.endereco = cadastro_bd.endereco
         self.habitacao = cadastro_bd.habitacao
         self.data_cadastro = cadastro_bd.data_cadastro
@@ -154,7 +154,7 @@ class CadastroData():
         self.abrangencia = cadastro_bd.get_abrangencia_display()
         self.entrevistador = cadastro_bd.entrevistador
         self.responsavel_cadastro = cadastro_bd.responsavel_cadastro
-        self.lista_membros = [Membro(membro_obj) for membro_obj in Membros.objects.all().filter(cadastro_membro=cadastro_bd)]
+        self.lista_membros = [MembroDados(membro_obj) for membro_obj in Membros.objects.all().filter(cadastro_membro=cadastro_bd)]
         self.renda_total = self.calcular_renda()
         self.renda_per_capita = self.calcular_renda_per_capita()
         self.disparidades = self.disparidade()

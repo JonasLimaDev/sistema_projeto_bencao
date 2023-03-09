@@ -70,8 +70,8 @@ class Pessoa(models.Model):
 
     ESCOLARIDADE = (
         ('1', 'Não Alfabetizado'),
-        ('2', 'Fundamental Incompleto'),
-        ('3', 'Fundamental Completo'),
+        ('2', 'Ensino Fundamental Incompleto'),
+        ('3', 'Ensino Fundamental Completo'),
         ('4', 'Ensino Médio Incompleto'),
         ('5', 'Ensino Médio Completo'),
         ('6', 'Ensino Superior Incompleto'),

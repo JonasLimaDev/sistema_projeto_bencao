@@ -34,6 +34,7 @@ def validar_cpf(cpf,lista_erros,NEW=True):
         lista_erros['cpf'] = "CPF incompleto informe todos os 11 dígitos"
 
 
+
 def validar_cpf_edicao(cpf,lista_erros):
     if len(cpf) > 11:
         lista_erros['cpf'] = "Formato de CPF Inválido! digite apenas os Números"
@@ -54,6 +55,30 @@ def validar_cpf_edicao(cpf,lista_erros):
                     lista_erros['cpf'] = "Este CPF Já está Registrado"
     else:
         lista_erros['cpf'] = "CPF incompleto informe todos os 11 dígitos"
+
+def is_cpf_valid(cpf):
+    
+    if len(cpf) > 11:
+        return False 
+    elif len(cpf) == 11:
+        if not cpf.isdigit():
+            return False
+        else:
+            digitos_cpf = cpf[9:11]
+            digito_verificador1 = gerar_digito(cpf[0:9], 1)
+            sequencia = cpf[0:9]+digito_verificador1 
+            digito_verificador2 = gerar_digito(sequencia, 0)
+            resultado = digito_verificador1+digito_verificador2
+            if digitos_cpf != resultado:
+                return False
+            elif Pessoa.objects.filter(cpf=cpf):
+                return False
+            else:
+                return True
+        
+    else:
+        return False
+
 
 
 

@@ -2,7 +2,7 @@ import json
 import os
 # Create your views here.
 from random import randint
-
+from .validations import is_cpf_valid
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -92,7 +92,7 @@ class ListaCadastroView(TemplateView):
                 lista_cadastro = Cadastro.objects.filter(responsavel_familiar__nome__startswith=argumento[1])
             elif argumento[0] == 'id':
                 lista_cadastro.append(get_object_or_404(Cadastro, id=argumento[1]))
-
+            print(argumento)
             context['cadastros'] = [CadastroData(cadastro_bd) for cadastro_bd in lista_cadastro]
         else:
             context['cadastros'] = [CadastroData(cadastro_bd) for cadastro_bd in Cadastro.objects.all()]
@@ -103,6 +103,8 @@ class ListaCadastroView(TemplateView):
         page_number = self.request.GET.get('page')
         page_obj = paginator.get_page(page_number)
         context['page_obj'] = page_obj
+        context['page_range'] = paginator.get_elided_page_range(page_obj.number)
+        # print(context['page_range'])
         context['lista_bairros'] = bairros
         return context
 
@@ -110,8 +112,8 @@ class ListaCadastroView(TemplateView):
     def post(self, request, *args, **kwargs):
         busca = request.POST['busca']
         bairro = request.POST['bairro']
-        cras = request.POST['cras']
-        ruc = request.POST['ruc']
+        cras = request.POST['cras'] if request.POST['cras'] != "-------" else None 
+        ruc = request.POST['ruc'] if  request.POST['ruc'] != "-------" else None
         if busca:
             if is_cpf(busca):
                 busca = busca.replace('.','').replace('-','').replace(" ",'')
@@ -632,24 +634,33 @@ class EnviarDados(TemplateView):
                     referencia_familiar = Referencia()
                     endereco = Endereco()
                     cadastro = Cadastro()
-                    
+                    validar_cpf = None
                     # print(vars(referencia_familiar))
                     for chave, valor in dado.items():
+                        
                         if chave in vars(referencia_familiar):
-                            if valor:
-                                setattr(referencia_familiar, chave, valor)
+                            if valor:   
+                                if chave == "cpf":
+                                    cpf_arquivo = valor.replace(".","").replace("-","")
+                                    validar_cpf = is_cpf_valid(cpf_arquivo)
+                                    if validar_cpf:
+                                        setattr(referencia_familiar, chave, cpf_arquivo)
+                                else:
+                                    setattr(referencia_familiar, chave, valor)
+                                
                         if chave in vars(endereco) or chave == 'bairro':
                             if valor:
                                 # print(chave)
                                 if chave == 'bairro':
                                     busca_bairro = Bairro.objects.filter(nome=valor)
-                                    # print(valor)
-                                    if busca_bairro != []:
+                                    # print(busca_bairro )
+                                    if busca_bairro:
+                                        # print(busca_bairro.get(nome=valor).id)
                                         # print(busca_bairro[0].id)
-                                        setattr(endereco, 'bairro_id', busca_bairro[0].id)
+                                        setattr(endereco, 'bairro_id', busca_bairro.get(nome=valor).id)
                                     else:
                                         bairro = Bairro.objects.create(nome=valor)
-                                        print(bairro.id)
+                                        # print(bairro.id)
                                         setattr(endereco, 'bairro_id', bairro.id)
                                 else:
                                     setattr(endereco, chave, valor)
@@ -657,45 +668,47 @@ class EnviarDados(TemplateView):
                             if valor:
                                 setattr(cadastro, chave, valor)
                     
-                    
-                    try:
-                        referencia_familiar.save()
-                        setattr(cadastro, 'responsavel_familiar_id', referencia_familiar.id)
+                    if referencia_familiar.cpf and validar_cpf:
                         try:
-                            endereco.save()
-                            setattr(cadastro, 'endereco_id', endereco.id)
-                            
+                            referencia_familiar.save()
+                            setattr(cadastro, 'responsavel_familiar_id', referencia_familiar.id)
                             try:
-                                setattr(cadastro, 'responsavel_cadastro_id', tecnico.id)
-                                cadastro.save()
-                                reultado = ErrosData(referencia=f"{referencia_familiar.nome}",resultado="Salvo Com Sucesso",descricao_erro="-", erro=None)
-                                lista_erros.append(reultado)
-                            
+                                endereco.save()
+                                setattr(cadastro, 'endereco_id', endereco.id)
+                                
+                                try:
+                                    setattr(cadastro, 'responsavel_cadastro_id', tecnico.id)
+                                    cadastro.save()
+                                    resultado = ErrosData(referencia=f"{referencia_familiar.nome}",resultado="Salvo Com Sucesso",descricao_erro="-", erro=None)
+                                    lista_erros.append(resultado)
+                                
+                                except Exception as e:
+                                    
+                                    referencia_familiar.delete()
+                                    endereco.delete()
+                                    resultado = ErrosData(referencia=f"{referencia_familiar.nome}",resultado="Erro ao Salvar",
+                                                                descricao_erro="Erro não documentado", erro=str(e))
+                                    lista_erros.append(resultado)
+                                    
                             except Exception as e:
-                                
                                 referencia_familiar.delete()
-                                endereco.delete()
-                                reultado = ErrosData(referencia=f"{referencia_familiar.nome}",resultado="Erro ao Salvar",
+                                resultado = ErrosData(referencia=f"{referencia_familiar.nome}",resultado="Erro ao Salvar",
                                                             descricao_erro="Erro não documentado", erro=str(e))
-                                lista_erros.append(reultado)
-                                
+                                lista_erros.append(resultado)
                         except Exception as e:
-                            referencia_familiar.delete()
-                            reultado = ErrosData(referencia=f"{referencia_familiar.nome}",resultado="Erro ao Salvar",
+                            if str(e) == "UNIQUE constraint failed: cadastros_pessoa.cpf":
+                                resultado = ErrosData(referencia=f"{referencia_familiar.nome}",resultado="Erro ao Salvar",
+                                                        descricao_erro="CPF já está cadastrado", erro=str(e))
+                                lista_erros.append(resultado)
+                            else:
+                                resultado = ErrosData(referencia=f"{referencia_familiar.nome}",resultado="Erro ao Salvar",
                                                         descricao_erro="Erro não documentado", erro=str(e))
-                            lista_erros.append(reultado)
-                    except Exception as e:
-                        if str(e) == "UNIQUE constraint failed: cadastros_pessoa.cpf":
-                            reultado = ErrosData(referencia=f"{referencia_familiar.nome}",resultado="Erro ao Salvar",
-                                                       descricao_erro="CPF já está cadastrado", erro=str(e))
-                            lista_erros.append(reultado)
-                        else:
-                            reultado = ErrosData(referencia=f"{referencia_familiar.nome}",resultado="Erro ao Salvar",
-                                                       descricao_erro="Erro não documentado", erro=str(e))
-                            lista_erros.append(reultado)
-                    
+                                lista_erros.append(resultado)
+                    else:
+                        resultado = ErrosData(referencia=f"{referencia_familiar.nome}",resultado="Erro ao Salvar",
+                                                        descricao_erro="CPF inválido ou já cadastrado", erro="Validação")
+                        lista_erros.append(resultado)
 
-                        print("-"*10)
                     # print(vars(referencia_familiar))
                     # print(vars(endereco))
                     # print(vars(cadastro))

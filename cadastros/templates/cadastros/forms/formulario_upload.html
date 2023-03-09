@@ -2,6 +2,7 @@
 {% load filtros %}
 {% block title %}{{titulo_pagina}}{% endblock title %}
 {% block barra_titulo %}
+
 <div class="row py-1 align-items-center justify-content-content-between ">
 
   <div class="col-3 ">
@@ -72,9 +73,10 @@
         
     </form>
     {%else%}
-    <div class="table-responsive">
-    <table class="table table-secondary">
-      <thead>
+    <div class="container-fluid ">
+    <div class="table-responsive overflow-auto" style="height: 28rem;">
+    <table class="table table-secondary"  >
+      <thead class="sticky-top" >
         <tr>
           <th scope="col">#</th>
           <th scope="col">Referência</th>
@@ -82,10 +84,9 @@
           <th scope="col">Descrição do Erro</th>
           <th scope="col">Erro</th>
           <th scope="col"></th>
-          
         </tr>
       </thead>
-      <tbody>
+      <tbody >
         {% for resultado in resultados %}
         <tr class="{%if resultado.erro %} table-danger {%else%} table-success {%endif%}">
           <th scope="row">{{forloop.counter}}</th>
@@ -102,11 +103,10 @@
           </td>
         </tr>
         {%endfor%}
-        
-       
       </tbody>
     </table>
   </div>
+</div>
     {%endif%}
 
 <script>
