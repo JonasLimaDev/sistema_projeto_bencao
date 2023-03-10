@@ -187,6 +187,7 @@ class CadastroData():
         return renda_per_capita
 
     def disparidade(self):
+        
         membros_cd = len(self.lista_membros)+1
         if self.habitacao:
             self.habitacao.numero_moradores

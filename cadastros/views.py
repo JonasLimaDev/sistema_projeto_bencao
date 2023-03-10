@@ -74,10 +74,10 @@ class ListaCadastroView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        bairros = Bairro.objects.all()
+        bairros = Bairro.objects.select_related().all()
         argumento = None
-        
-
+        cadastros = Cadastro.objects.select_related().all()
+        # cadastros = Cadastro.objects.all()
         if 'filter' in self.kwargs:
             argumento = self.kwargs['filter']
             if "name" in argumento:
@@ -98,7 +98,6 @@ class ListaCadastroView(TemplateView):
         if argumento:
             lista_cadastro = []
             if argumento[0] == 'name':
-
                 lista_cadastro = buscar_cadastro_nome(argumento[1])
             elif argumento[0] == 'cpf':
                 lista_cadastro = buscar_cadastro_cpf(argumento[1])
@@ -108,18 +107,17 @@ class ListaCadastroView(TemplateView):
             elif argumento[0] =='ruc':
                 context["busca_ruc"] = argumento[1]
                 lista_cadastro = buscar_cadastro_ruc(argumento[1])
-            
             elif argumento[0] =='cras':
                 context["busca_cras"] = argumento[1]
-                lista_cadastro = Cadastro.objects.filter(abrangencia=argumento[1])
+                lista_cadastro = cadastros.filter(abrangencia=argumento[1])
             elif argumento[0] =='inicial':
-                lista_cadastro = Cadastro.objects.filter(responsavel_familiar__nome__startswith=argumento[1])
+                lista_cadastro = cadastros.filter(responsavel_familiar__nome__startswith=argumento[1])
             elif argumento[0] == 'id':
                 lista_cadastro.append(get_object_or_404(Cadastro, id=argumento[1]))
-            print(argumento)
+            # print(argumento)
             context['cadastros'] = [CadastroData(cadastro_bd) for cadastro_bd in lista_cadastro]
         else:
-            context['cadastros'] = [CadastroData(cadastro_bd) for cadastro_bd in Cadastro.objects.all()]
+            context['cadastros'] = [CadastroData(cadastro_bd) for cadastro_bd in cadastros]
         context['alfabeto'] = lista_alfabeto()
         context['total_cadastros'] = len(context['cadastros'])
         
@@ -132,7 +130,6 @@ class ListaCadastroView(TemplateView):
         context['lista_bairros'] = bairros
         return context
 
-    # #@method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         busca = request.POST['busca']
         bairro = request.POST['bairro']
