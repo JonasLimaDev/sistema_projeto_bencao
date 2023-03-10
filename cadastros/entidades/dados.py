@@ -158,6 +158,7 @@ class CadastroData():
         self.renda_total = self.calcular_renda()
         self.renda_per_capita = self.calcular_renda_per_capita()
         self.disparidades = self.disparidade()
+        self.ausencia = self.dados_ausentes()
 
         self.all_data = {            
             "Data do Cadastro":self.data_cadastro,
@@ -187,7 +188,6 @@ class CadastroData():
         return renda_per_capita
 
     def disparidade(self):
-        
         membros_cd = len(self.lista_membros)+1
         if self.habitacao:
             self.habitacao.numero_moradores
@@ -200,7 +200,15 @@ class CadastroData():
         else:
             disparidade = None
         return disparidade
+    
+    def dados_ausentes(self):
+        ausencias = []
+        if not self.habitacao:
+            ausencias.append("Dados Habitacionais")
+        else:
+            ausencias = None  
 
+        return ausencias
 
 class ErrosData():
     def __init__(self,referencia,resultado,descricao_erro,erro):

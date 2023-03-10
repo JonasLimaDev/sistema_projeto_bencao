@@ -53,11 +53,28 @@
             href="{% url 'dados_tabelas' %}">
             Dados
           </a>
-          
-            <a href="{% url 'deslogar' %}" type="button" class="me-3 py-2 my-2 my-sm-1 btn btn-outline-dark"><i
-              class="bi bi-person-x-fill align-middle" ></i><span class="align-middle mx-1">
-                Deslogar</span>
-            </a>
+          <div class="btn-group">
+            <button type="button" class="me-3 py-2 my-2 my-sm-1 btn btn-outline-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+              {{request.user}}
+            </button>
+            <ul class="dropdown-menu">
+              <li>
+         
+                <a href="{% url 'dados_tecnico' request.user.id %}" class="dropdown-item"><i
+                  class="bi bi-person-circle align-middle" ></i><span class="align-middle mx-1">
+                    Perfil</span>
+                </a>
+              </li>
+              <li>
+                
+                <a href="{% url 'deslogar' %}" class="dropdown-item"><i
+                  class="bi bi-person-x-fill align-middle" ></i><span class="align-middle mx-1">
+                    Deslogar</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
 
           {%endif%}
 

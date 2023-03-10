@@ -174,6 +174,9 @@ class Membros(Pessoa):
 
 
 class Identificacao(models.Model):
+    class Meta:
+        verbose_name = "Identificação"
+        verbose_name_plural = "Identificações"
     ESTADOS = (
         ("AC", "Acre"),
         ("AL", "Alagoas"),
@@ -326,6 +329,7 @@ class Cadastro(models.Model):
     abrangencia = models.CharField(max_length=1, choices=CRAS, null=True, blank=True, verbose_name="Cras de Abrangência")
     data_cadastro = models.DateField(null=False, blank=False, default=datetime.now)
     data_alteracao = models.DateField(auto_now=True,null=False, blank=False, )
+    # responsavel_cadastro = models.ForeignKey("tecnicos.Tecnico", on_delete=models.PROTECT, null=True, blank=True)
     entrevistador = models.CharField(max_length=200, null=True, blank=True, verbose_name="Entrevistador")
 
     def __str__(self):

@@ -19,7 +19,7 @@ from .entidades.dados import *
 from .forms import *
 from .models import *
 from .services import *
-
+from pprint import pprint
 
 def gerar_valores(mes_dict):
     for mes in mes_dict:
@@ -254,6 +254,7 @@ class EditarEnderecoView(TemplateView):
         endereco = get_object_or_404(Endereco, id=self.kwargs['pk'])
         cadastro = Cadastro.objects.get(endereco=endereco)
         link = request.META.get('HTTP_REFERER')
+        pprint(cadastro._meta.get_field('abrangencia').verbose_name)
         if "exibir" in link:
             self.context['url_cancelar'] = 'dados'
             self.context['id_cancelar'] = cadastro.id
