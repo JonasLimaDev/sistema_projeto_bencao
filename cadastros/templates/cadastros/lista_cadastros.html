@@ -438,19 +438,23 @@
             </p>
           </div>
           {%endif%}
+          </div>
+          
           {%if cadastro.ausencia%}
-          <div class="col d-flex align-items-start">
-            <p class="fw-bold">
-              Dados Ausentes:
-            </p>
-            {%for faltante in cadastro.ausencia %}
-            <p class="ms-2">
-              {{faltante}}
-            </p>
-            {%endfor%}
+          <p class="fw-bold">
+            Dados Ausentes:
+          </p>
+          <div class="row row-cols-auto g-3">
+        
+          {%for faltante in cadastro.ausencia %}
+          <div class="col rounded border mx-2"> {{faltante}}
+          </div>
+                                     
+
+          {%endfor%}
           </div>
           {%endif%}
-        </div>
+       
 
       </div>
     </div>

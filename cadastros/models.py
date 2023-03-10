@@ -95,17 +95,17 @@ class Pessoa(models.Model):
 
     nome = models.CharField(max_length=150, null=False, blank=False)
     data_nascimento = models.DateField(verbose_name="Data de Nascimento", null=True, blank=True)
-    sexo = models.CharField(max_length=1, choices=SEXO, null=False, blank=False)
-    trabalho = models.CharField(max_length=2, choices=TRABALHO, null=False, blank=False)
+    sexo = models.CharField(max_length=1, choices=SEXO, null=False, blank=False, verbose_name="Sexo")
+    trabalho = models.CharField(max_length=2, choices=TRABALHO, null=False, blank=False,verbose_name="Informação de Trabalho")
     cpf = models.CharField(max_length=11, null=True, blank=True, verbose_name="CPF", unique=True)
     nis = models.CharField(max_length=11, null=True, blank=True, verbose_name="NIS")
-    escolaridade = models.CharField(max_length=1, choices=ESCOLARIDADE, null=False, blank=False)
+    escolaridade = models.CharField(max_length=1, choices=ESCOLARIDADE, null=False, blank=False,  verbose_name="Escolaridade")
     # profissao = models.CharField(max_length=45, null=True, blank=True,verbose_name="Profissão ou Formação Técnica")
-    contato = models.CharField(max_length=15, null=True, blank=True)
-    renda = models.FloatField(null=True, blank=True)
-    dados_educacionais = models.OneToOneField('dados_adicionais.Educacao', null=True, blank=True, on_delete=models.CASCADE)
+    contato = models.CharField(max_length=15, null=True, blank=True, verbose_name="Contato")
+    renda = models.FloatField(null=True, blank=True, verbose_name="Renda")
+    dados_educacionais = models.OneToOneField('dados_adicionais.Educacao', null=True, blank=True, on_delete=models.CASCADE, verbose_name="Dados Educacionais")
     dados_saude = models.OneToOneField('dados_adicionais.Saude', null=True, blank=True,
-                                              on_delete=models.CASCADE)
+                                              on_delete=models.CASCADE, verbose_name="Dados de Saúde")
 
     def __str__(self):
         return self.nome
@@ -141,13 +141,13 @@ class Referencia(Pessoa):
     #apelido = models.CharField(max_length=30, null=True, blank=True)
 
     identidade_genero = models.CharField(max_length=1, choices=GENERO, null=False, blank=False, verbose_name="Identidade de Gênero")
-    apelido = models.CharField(max_length=20, null=True, blank=True)
+    apelido = models.CharField(max_length=20, null=True, blank=True,verbose_name="Apelido")
     
     nome_social = models.CharField(max_length=30, null=True, blank=True,verbose_name="Nome Social")
     situacao_civil = models.CharField(max_length=1, choices=ESTADO_CIVIL, null=False, blank=False, verbose_name="Situação Civil")
     cor_raca = models.CharField(max_length=1, choices=COR_RACA, null=False, blank=False, verbose_name="Identificação Étnico-Racial")
     
-    documentos_extras = models.OneToOneField('dados_adicionais.Identificacao', null=True, blank=True, on_delete=models.CASCADE)
+    documentos_extras = models.OneToOneField('dados_adicionais.Identificacao', null=True, blank=True, on_delete=models.CASCADE,verbose_name="Documentação Adicional")
     cadastro_unico = models.CharField(max_length=1, choices=ESCOLHA, null=False, blank=False,default='1', verbose_name="Possui Cadastro Único?")
     
     contato2 = models.CharField(max_length=15, null=True, blank=True, verbose_name="Contato Alternativo")

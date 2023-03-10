@@ -26,6 +26,8 @@ class ReferenciaDados():
         self.info_extra = referencia_bd.documentos_extras
         self.dados_educacionais = referencia_bd.dados_educacionais
         self.dados_saude = referencia_bd.dados_saude
+        self.dados_faltantes = self.get_ausentes(referencia_bd)
+       
 
         self.all_data = {            
             "Nome":self.nome,
@@ -82,8 +84,17 @@ class ReferenciaDados():
         else:
             value = "Não Informado"
         return value
-
-
+    
+    def get_ausentes(self,referencia_bd):
+        lista_ausentes = []
+        list_exclude = ["Contato Alternativo","Identidade de Gênero", "Nome Social"]
+        for nome, dado in vars(referencia_bd).items():
+            if not dado:
+                info = referencia_bd._meta.get_field(nome).verbose_name
+                if info not in list_exclude:
+                    lista_ausentes.append(info)
+        return lista_ausentes
+        
 class MembroDados():
     def __init__(self, membro_bd):
         self.id = membro_bd.id
@@ -145,6 +156,7 @@ class MembroDados():
 
 class CadastroData():
     def __init__(self,cadastro_bd):
+
         self.id = cadastro_bd.id
         self.responsavel = ReferenciaDados(cadastro_bd.responsavel_familiar) 
         self.endereco = cadastro_bd.endereco
@@ -158,8 +170,9 @@ class CadastroData():
         self.renda_total = self.calcular_renda()
         self.renda_per_capita = self.calcular_renda_per_capita()
         self.disparidades = self.disparidade()
-        self.ausencia = self.dados_ausentes()
+        self.ausencia = self.dados_ausentes() +self.responsavel.dados_faltantes
 
+        
         self.all_data = {            
             "Data do Cadastro":self.data_cadastro,
             "Ultima Alteração":self.data_alteracao,
@@ -205,9 +218,6 @@ class CadastroData():
         ausencias = []
         if not self.habitacao:
             ausencias.append("Dados Habitacionais")
-        else:
-            ausencias = None  
-
         return ausencias
 
 class ErrosData():
