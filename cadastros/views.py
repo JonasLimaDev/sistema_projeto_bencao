@@ -19,8 +19,10 @@ from .entidades.dados import *
 from .forms import *
 from .models import *
 from .services import *
+from .filters import *
 from pprint import pprint
-
+from change_control.services import create_change_campos
+from change_control.classes_change_control import ChangeCampoData
 def gerar_valores(mes_dict):
     for mes in mes_dict:
         mes_dict[mes] = randint(20, 249)
@@ -56,14 +58,6 @@ class RenderData(TemplateView):
         dados_bairros = total_cadastro_bairro()
         dados_rucs = total_cadastro_ruc()
         dados_cras = total_cadastro_cras()
-        # inserir_bairros()
-        # orgs = ["CRAS I","CRAS II","CRAS III","CREAS","SEMAPS - SEDE","Projeto"]
-        # for org in orgs:
-        #     mes = {'Jan':0, "Fev":0,'Mar':0, "Abr":0,
-        # 'Mai':0,"Jun":0,'Jul':0, "Ago":0,
-        # 'Set':0, "Out":0,'Nov':0, "Dez":0,}
-        #     lista = gerar_valores(mes)
-        #     dados[org]=lista
         return render(request, self.template_name, {'dados_bairros': dados_bairros,'dados_rucs':dados_rucs,'dados_cras':dados_cras})
 
 
@@ -218,25 +212,28 @@ class EditarCadastroView(TemplateView):
     def post(self, request, *args, **kwargs):
         cadastro_bd = get_object_or_404(Cadastro,id=self.kwargs['pk'])
         
-        form =  self.form_cadastro(request.POST)
-        forms_generic = {
-                         "Informações do Cadastramento":form}
+        form = self.form_cadastro(request.POST)
+        forms_generic = {"Informações do Cadastramento": form}
         tecnico = Tecnico.objects.get(usuario=request.user)
         
         if form.is_valid():
             atualizacao = False
             entrevistador_form = form.cleaned_data['entrevistador']
             abrangencia_form = form.cleaned_data['abrangencia']
-            
+            lista_alteracoes = []
             if cadastro_bd.entrevistador != entrevistador_form:
+                  lista_alteracoes.append(ChangeCampoData(campo="Entrevistador", valor_antigo=cadastro_bd.entrevistador, valor_novo=entrevistador_form ))
                   cadastro_bd.entrevistador = entrevistador_form
                   atualizacao = True
             if cadastro_bd.abrangencia != abrangencia_form:
-                  cadastro_bd.abrangencia = abrangencia_form
-                  atualizacao = True
+                lista_alteracoes.append(ChangeCampoData(campo="Abrangência", valor_antigo=cadastro_bd.abrangencia,
+                                                        valor_novo=abrangencia_form))
+                cadastro_bd.abrangencia = abrangencia_form
+                atualizacao = True
             
             if atualizacao:
                 cadastro_bd.save()
+                create_change_campos(lista_alteracoes, tecnico)
                 messages.success(request, f'Cadastro Atualizado Com Sucesso.')
                 return redirect('listar_cadastros', f'id:{cadastro_bd.id}')
             else:
@@ -273,9 +270,12 @@ class EditarEnderecoView(TemplateView):
         endereco = get_object_or_404(Endereco, id=self.kwargs['pk'])
         cadastro = Cadastro.objects.get(endereco=endereco)
         forms_generic = {"Informações do Endereço": form}
+        tecnico = Tecnico.objects.get(usuario=request.user)
         if form.is_valid():
-            editar_endereco(endereco, form)
-            messages.success(request, f'Endereço Atualizado Com Sucesso.')
+            atualizacao, lista_alteracoes = editar_endereco(endereco, form)
+            if atualizacao:
+                create_change_campos(lista_alteracoes, tecnico)
+                messages.success(request, f'Endereço Atualizado Com Sucesso.')
             return redirect('listar_cadastros', f'id:{cadastro.id}')
         self.context['forms_generic'] = forms_generic
         return render(request, self.template_name, self.context)
@@ -731,9 +731,7 @@ class EnviarDados(TemplateView):
                                                         descricao_erro="CPF inválido ou já cadastrado", erro="Validação")
                         lista_erros.append(resultado)
 
-                    # print(vars(referencia_familiar))
-                    # print(vars(endereco))
-                    # print(vars(cadastro))
+
 
             os.remove(caminho_arquivo)
         self.context["resultados"] = lista_erros

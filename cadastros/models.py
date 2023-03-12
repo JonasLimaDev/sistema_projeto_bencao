@@ -32,11 +32,11 @@ class Endereco(models.Model):
         ('6', 'Laranjeiras'),
     )
     
-    logradouro = models.CharField(max_length=100, null=False, blank=False)
-    numero = models.CharField(max_length=35, null=True, blank=True)
-    complemento = models.CharField(max_length=170, null=True, blank=True)
+    logradouro = models.CharField(max_length=100, null=False, blank=False, verbose_name="Logradouro")
+    numero = models.CharField(max_length=35, null=True, blank=True, verbose_name="Número")
+    complemento = models.CharField(max_length=170, null=True, blank=True, verbose_name="Complemento")
     
-    bairro = models.ForeignKey("Bairro", on_delete=models.CASCADE)
+    bairro = models.ForeignKey("Bairro", on_delete=models.CASCADE,  verbose_name="Bairro")
     ruc = models.CharField(max_length=1, choices=RUCs, default="1", null=True, blank=True, verbose_name="RUC")
     
     cep = models.CharField(max_length=15, null=True, blank=True, verbose_name="CEP")
@@ -93,8 +93,8 @@ class Pessoa(models.Model):
         ('11', 'Pensionista'),
     )
 
-    nome = models.CharField(max_length=150, null=False, blank=False)
-    data_nascimento = models.DateField(verbose_name="Data de Nascimento", null=True, blank=True)
+    nome = models.CharField(max_length=150, null=False, blank=False, verbose_name="Nome")
+    data_nascimento = models.DateField( null=True, blank=True, verbose_name="Data de Nascimento")
     sexo = models.CharField(max_length=1, choices=SEXO, null=False, blank=False, verbose_name="Sexo")
     trabalho = models.CharField(max_length=2, choices=TRABALHO, null=False, blank=False,verbose_name="Informação de Trabalho")
     cpf = models.CharField(max_length=11, null=True, blank=True, verbose_name="CPF", unique=True)
@@ -116,7 +116,6 @@ class Referencia(Pessoa):
         verbose_name = "Referência Familiar"
         verbose_name_plural = "Referências Familiares"
 
-    
     ESTADO_CIVIL = (
         ('1', 'Solteiro(a)'),
         ('2', 'Casado(a)'),
@@ -314,9 +313,9 @@ class Habitacao(models.Model):
 
 class Cadastro(models.Model):
     CRAS = (
-        ('1','CRAS I'),
-        ('2','CRAS II'),
-        ('3','CRAS III'),
+        ('1', 'CRAS I'),
+        ('2', 'CRAS II'),
+        ('3', 'CRAS III'),
         )
 
     class Meta:

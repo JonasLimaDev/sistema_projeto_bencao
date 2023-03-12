@@ -59,7 +59,6 @@ class ListaModificacoesView(TemplateView):
         #     context['cadastros'] = [CadastroData(cadastro_bd) for cadastro_bd in lista_cadastro]
         # else:
         context['dados_modificacoes'] = [DataAcoes(modificacao_bd) for modificacao_bd in modificacoes]
-        context['dados_modificacoes'] = context['dados_modificacoes']
         return context
 
     def post(self, request, *args, **kwargs):

@@ -81,7 +81,7 @@ let password = $('#id_password').val();
     }else{
     $.ajax({
         type:"POST",
-         beforeSend: function() {
+        beforeSend: function() {
         spinner.classList.remove("visually-hidden");
         },
         success: function(){
@@ -90,4 +90,5 @@ let password = $('#id_password').val();
     });
 }
 });
+
 

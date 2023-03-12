@@ -1,5 +1,7 @@
 from .models import *
 import re
+from change_control.classes_change_control import ChangeCampoData
+
 def salvar_membro(form,cadastro):
 	nome = form.cleaned_data['nome']
 	# print(nome) 
@@ -54,62 +56,47 @@ def editar_pessoa(pessoa_bd, form):
 	return pessoa_bd
 
 
-def editar_endereco(endereco,form):
-	endereco.logradouro = form.cleaned_data['logradouro']
-	endereco.numero = form.cleaned_data['numero']
-	endereco.complemento = form.cleaned_data['complemento']
-	endereco.ruc = form.cleaned_data['ruc']
-	endereco.bairro = form.cleaned_data['bairro']
-	endereco.save()
-	return endereco
+def editar_endereco(endereco, form):
+	has_change = False
+	lista_alteracoes = []
+	if endereco.logradouro != form.cleaned_data['logradouro']:
+		lista_alteracoes.append(ChangeCampoData(campo=endereco._meta.get_field('logradouro').verbose_name,
+													valor_antigo=endereco.logradouro, valor_novo=form.cleaned_data['logradouro']))
+		endereco.logradouro = form.cleaned_data['logradouro']
+		has_change = True
 
+	if endereco.numero != form.cleaned_data['numero']:
+		lista_alteracoes.append(ChangeCampoData(campo=endereco._meta.get_field('numero').verbose_name,
+												valor_antigo=endereco.numero,
+												valor_novo=form.cleaned_data['numero']))
+		endereco.numero = form.cleaned_data['numero']
+		has_change = True
 
-def buscar_cadastro_nome(nome):
-	pessoas = Pessoa.objects.all()
-	cadastros_bd = Cadastro.objects.all()
-	lista_encontrados =[]
-	lista_cadastros = []
-	for pessoa in pessoas:
-		if nome.lower() in pessoa.nome.lower():
-			lista_encontrados.append(pessoa)
-	if lista_encontrados:
-		for pessoa in lista_encontrados:
-			cadastros = cadastros_bd.filter(responsavel_familiar=pessoa)
-			if cadastros:
-				for cadastro in cadastros:
-					if cadastro not in lista_cadastros:
-						lista_cadastros.append(cadastro)
-			else:
-				membros = Membros.objects.filter(id=pessoa.id)
-				if membros:
-					for membro in membros:
-						cadastro = cadastros_bd.get(id=membro.cadastro_membro.id)
-						if cadastro not in lista_cadastros:
-							lista_cadastros.append(cadastro)
-	return lista_cadastros
-	
+	if endereco.complemento != form.cleaned_data['complemento']:
+		lista_alteracoes.append(ChangeCampoData(campo=endereco._meta.get_field('complemento').verbose_name,
+												valor_antigo=endereco.complemento,
+												valor_novo=form.cleaned_data['complemento']))
+		endereco.complemento = form.cleaned_data['complemento']
+		has_change = True
 
-def buscar_cadastro_cpf(cpf):
-	pessoas = Pessoa.objects.filter(cpf__exact=cpf)
-	# print(len(pessoas))
-	cadastros_bd = Cadastro.objects.all()
-	lista_cadastros = []
-	for pessoa in pessoas:
-		# print(pessoa)
-		cadastros = cadastros_bd.filter(responsavel_familiar=pessoa)
-		for cadastro in cadastros:
-			if cadastro not in lista_cadastros:
-				lista_cadastros.append(cadastro)
-			else:
-				membros = Membros.objects.filter(id=pessoa.id)
-				if membros:
-					for membro in membros:
-						cadastro = cadastros_bd.get(id=membro.cadastro_membro.id)
-						if cadastro not in lista_cadastros:
-								lista_cadastros.append(cadastro)
-						# lista_cadastros.append(cadastros_bd.get(id=membro.cadastro_membro.id))
-	# print(lista_cadastros)
-	return lista_cadastros
+	if endereco.ruc != form.cleaned_data['ruc']:
+		lista_alteracoes.append(ChangeCampoData(campo=endereco._meta.get_field('ruc').verbose_name,
+												valor_antigo=endereco.ruc,
+												valor_novo=form.cleaned_data['ruc']))
+		endereco.ruc = form.cleaned_data['ruc']
+		has_change = True
+
+	if endereco.bairro != form.cleaned_data['bairro']:
+		lista_alteracoes.append(ChangeCampoData(campo=endereco._meta.get_field('bairro').verbose_name,
+												valor_antigo=endereco.bairro,
+												valor_novo=form.cleaned_data['bairro']))
+		endereco.bairro = form.cleaned_data['bairro']
+		has_change = True
+	if has_change:
+		endereco.save()
+
+	return has_change, lista_alteracoes
+
 
 
 def inserir_bairros():
@@ -174,68 +161,6 @@ def salvar_cadastros_massivo(dados,tecnico):
 							responsavel_cadastro=tecnico,endereco=endereco)
 
 
-def buscar_cadastro_bairro(bairro):
-	# bairro_bd = Bairro.objects.filter(nome=bairro)
-	cadastros = Cadastro.objects.filter(endereco__bairro__nome=bairro).all()
-	lista_cadastros = []
-	for cadastro in cadastros:
-		if cadastro not in lista_cadastros:
-			lista_cadastros.append(cadastro)
-		
-	return lista_cadastros
-
-def total_cadastro_bairro():
-	# bairro_bd = Bairro.objects.filter(nome=bairro)
-	dados = {}
-	for bairro in Bairro.objects.all():
-		cadastros = Cadastro.objects.filter(endereco__bairro__nome=bairro).all()
-		dados[bairro] = len(cadastros)
-		
-	return dados
-
-def total_cadastro_ruc():
-	# bairro_bd = Bairro.objects.filter(nome=bairro)
-	RUCs = {'1': 'Nenhum',
-        '2': 'Água Azul',
-        '3': 'Jatobá',
-        '4': 'São Joaquim',
-        '5': 'Casa Nova',
-        '6': 'Laranjeiras',
-		}
-    
-	dados = {}
-	for codigo,ruc in RUCs.items():
-		cadastros = Cadastro.objects.filter(endereco__ruc=codigo).all()
-		dados[ruc] = len(cadastros)
-
-	return dados
-
-
-def total_cadastro_cras():
-	# bairro_bd = Bairro.objects.filter(nome=bairro)
-	CRAS = {
-        '1':'CRAS I',
-        '2':'CRAS II',
-        '3':'CRAS III',
-        }
-    
-	dados = {}
-	for codigo,cras in CRAS.items():
-		cadastros = Cadastro.objects.filter(abrangencia=codigo).all()
-		dados[cras] = len(cadastros)
-
-	return dados
-
-
-def buscar_cadastro_ruc(bairro):
-	# bairro_bd = Bairro.objects.filter(nome=bairro)
-	cadastros = Cadastro.objects.filter(endereco__ruc=bairro).all()
-	lista_cadastros = []
-	for cadastro in cadastros:
-		if cadastro not in lista_cadastros:
-			lista_cadastros.append(cadastro)
-		
-	return lista_cadastros
 
 
 def is_cpf(cpf):
