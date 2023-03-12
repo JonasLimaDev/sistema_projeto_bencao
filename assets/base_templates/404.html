@@ -1,7 +1,9 @@
 {% extends 'base.html' %}%}
 {%load static %}
+
+{% block title %}Erro 404{% endblock title %}
 {% block main %}
 <div class="text-center p-5">
-    <img src="{%static 'img/500.png'%}" class="rounded" alt="...">
+    <img src="{% static 'img/404.png' %}" class="rounded" alt="...">
 </div>
 {%endblock main%}

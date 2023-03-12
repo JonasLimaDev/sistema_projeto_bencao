@@ -28,7 +28,7 @@
 
     {% endblock barra_titulo %}
     {% block main %}
-    {% include 'modelos/mensagens_erros.html' %}
+    {% include 'mensagens_erros.html' %}
     {%if not resultados%}
     <form method="post" enctype="multipart/form-data" class="py-1 ">
         {% csrf_token %}

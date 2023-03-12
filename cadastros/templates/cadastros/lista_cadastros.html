@@ -42,7 +42,7 @@
   <div class="col-2">
 
     <div class="form-floating  ">
-      <select class="form-select rounded  my-0 pb-0" style="height: 48px;" aria-label="Default select example" onchange="this.form.submit()"
+      <select class="form-select rounded  my-0 pb-0" id="abrangenciaSelect" style="height: 50px;" aria-label="Default select example" onchange="this.form.submit()"
         name="cras">
         <option selected>-------</option>
         <option value="1">CRAS I</option>
@@ -55,7 +55,7 @@
   <div class="col-3">
 
     <div class="form-floating ">
-      <select class="form-select rounded   my-0 pb-0" style="height: 48px;" aria-label="Default select example" onchange="this.form.submit()"
+      <select class="form-select rounded   my-0 pb-0" id="rucSelect" style="height: 50px;" aria-label="Default select example" onchange="this.form.submit()"
         name="ruc">
         <option selected>-------</option>
         <option value="1">Nenhum</option>
@@ -71,7 +71,7 @@
   <div class="col-3">
     <div class="form-floating">
 
-      <input class="form-control   rounded  my-0 pb-0" style="height: 48px;" list="datalistOptions" id="exampleDataList" placeholder="Buscar por Bairro"
+      <input class="form-control   rounded  my-0 pb-0" style="height: 50px;" list="datalistOptions" id="bairroDataList" placeholder="Buscar por Bairro"
         onchange="this.form.submit()" autocomplete="off" name="bairro">
       <label for="floatingSelect ">Bairro</label>
       <datalist id="datalistOptions">
@@ -86,10 +86,10 @@
   <div class="col-4">
     <div class="input-group">
       <div class="form-floating ">
-        <input class="form-control  my-0 pb-0" style="height: 48px;" value="" name="busca" type="search" placeholder="Nome ou CPF" aria-label="Search">
+        <input class="form-control  my-0 pb-0" style="height: 50px;" value="" id="busca" name="busca" type="search" required="busca" placeholder="Nome ou CPF" aria-label="Search">
         <label for="floatingInput">Nome ou CPF</label>
       </div>
-      <button class="btn btn-outline-primary" type="submit" id="button-addon2"><i
+      <button class="btn btn-outline-primary" type="submit" id="button-busca"><i
           class="bi bi-search mx-1"></i>Buscar</button>
     </div>
   </div>
@@ -111,7 +111,7 @@
 
 {% endblock barra_titulo %}
 {% block main %}
-{% include 'modelos/mensagens_sucesso.html' %}
+{% include 'mensagens_sucesso.html' %}
 <hr class="mt-0 pt-0">
 <div class="list-group py-1">
   {% for cadastro in page_obj %}

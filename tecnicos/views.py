@@ -16,7 +16,7 @@ from django.contrib.auth.decorators import login_required
 class CriarUsusarioView(TemplateView):
     form_class_usuario = SignUpForm
     form_class_tecnico = FormTecnico
-    template_name = "modelos/formulario_login.html"
+    template_name = "tecnicos/formulario_login.html"
     context = {'titulo_pagina': "Cadastro de Usuário do Sistema"}
 
     def get(self, request, *args, **kwargs):
@@ -48,7 +48,7 @@ class CriarUsusarioView(TemplateView):
 
 
 class LoginView(TemplateView):
-    template_name = "modelos/formulario_login.html"
+    template_name = "tecnicos/formulario_login.html"
     form_class_logar = AuthenticationForm
     context = {'titulo_pagina': "Logar-se no Sistema",'login':True}
 

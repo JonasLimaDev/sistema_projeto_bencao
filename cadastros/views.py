@@ -14,7 +14,7 @@ from django.shortcuts import render, redirect
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
 from django.core.paginator import Paginator
-
+from time import sleep
 from .entidades.dados import *
 from .forms import *
 from .models import *
@@ -73,6 +73,7 @@ class ListaCadastroView(TemplateView):
     template_name = 'cadastros/lista_cadastros.html'
 
     def get_context_data(self, **kwargs):
+
         context = super().get_context_data(**kwargs)
         bairros = Bairro.objects.select_related().all()
         argumento = None
@@ -132,6 +133,7 @@ class ListaCadastroView(TemplateView):
 
     def post(self, request, *args, **kwargs):
         busca = request.POST['busca']
+
         bairro = request.POST['bairro']
         cras = request.POST['cras'] if request.POST['cras'] != "-------" else None 
         ruc = request.POST['ruc'] if  request.POST['ruc'] != "-------" else None
@@ -333,6 +335,7 @@ class ExibirFichaCadastroView(TemplateView):
     context = {'titulo_pagina': "Dados Cadastro"}
 
     def get(self, request, *args, **kwargs):
+
         cadastro = get_object_or_404(Cadastro, id=self.kwargs['pk'])
         self.context['id_cancelar'] = f'id:{cadastro.id}'
         self.context['cadastro'] = CadastroData(cadastro)
@@ -752,4 +755,4 @@ def handler500(request):
 
 
 def handler404(request, exception):
-    return render(request, '404.html')
+    return render(request, 'base_templates/404.html')

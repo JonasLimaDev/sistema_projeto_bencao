@@ -26,7 +26,7 @@ urls_familia = [
 
 urls_cadastro =[
     path('cadastros/adicionar/', AdicionarCadastroView.as_view(), name='adicionar_cadastro'),
-    path('cadastros/exibir/dados/<int:pk>/', ExibirFichaCadastroView.as_view(), name='exibir_dados_cadastro'),
+    path('cadastros/exibir/informacoes/<int:pk>/', ExibirFichaCadastroView.as_view(), name='exibir_dados_cadastro'),
     path('cadastros/lista/', ListaCadastroView.as_view(), name='listar_cadastros'),
     path('cadastros/lista/<str:filter>/', ListaCadastroView.as_view(), name='listar_cadastros'),
     path('cadastro/editar/<int:pk>/', EditarCadastroView.as_view(), name='editar_cadastro'),

@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="pt-br">
+{%load static %}
+{% load filtros %}
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="{%static 'img/logo.png' %}"/>
+    <!-- Bootstrap CSS -->
+    <!-- <link href="{% static 'css/bootstrap.min.css'%}" rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous"> -->
+    <link href="{%static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    {% block add_componentes %}
+    {% endblock add_componentes %}
+
+    <title>{% block title %} Home{% endblock title %}</title>
+    <style>
+    body {
+      background-image: linear-gradient(180deg, #9cc4e4, #e9f2f9 100px, #e9f2f9);
+    }
+
+
+.Mybackdrop {
+  position: fixed;
+  top:0;
+  right:0;
+  bottom:0;
+  left:0;
+  width: 100%;
+  height: 100%;
+  overflow-y: hidden;
+  z-index: 999;
+  background-color: rgb(0,0,0,0.2);
+}
+.disable-scroll{
+  overflow-y: hidden;
+}
+    </style>
+</head>
+
+<body class="d-flex h-100 " id="body-content">
+<div class="d-flex w-100 h-100 p-3 mx-auto flex-column">
+    <header class="d-print-none" id="top">
+        {%include 'navbar-menu.html'%}
+
+        <div id="spinner" class="Mybackdrop "
+           >
+            <div class=" d-flex justify-content-center align-items-center  h-100">
+                <div class="spinner-border text-primary" style="width: 12rem; height: 12rem;" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        </div>
+        <div id="content-extra" class="container  py-1 px-1 my-2 pb-md-3 ">
+            {%block barra_titulo%}
+
+            {%endblock barra_titulo%}
+        </div>
+    </header>
+
+    <main id="content" class="px-3" style="min-height: 32em;">
+        {%block main%}
+        <div class="d-flex justify-content-center align-items-center">
+            <div class=" card text-center mt-5 border-info " style="max-width: 38.2rem;">
+                <div class="card-header ">
+                    <h1>Programa Bênção</h1>
+                </div>
+                <div class="card-body  text-primary">
+                    <p class="lead">O Programa Bênção é uma iniciativa da nova gestão da cidade. O Programa é Benefício
+                        Suplementar de Renda voltado para as Famílias de baixa renda de Altamira.</p>
+                    <p class="lead">
+                        <a href="https://altamira.pa.leg.br/wp-content/uploads/2022/06/Lei-n%C2%B0.-3.395-Programa-de-Beneficio-Suplementar-para-Familias.pdf"
+                           target="_blank" class="btn btn-lg btn-info text-light ">Projeto de Lei</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% comment %}
+        <table class="table table-responsive caption-top border-success table-success table-striped">
+            <caption class=" ps-1 bg-success text-light">Quantitativos Mensais Por Órgão - Todos os Benefícios
+                <small class="text-warning pt-0" style="font-size:12px">*Dados Gerados
+                    Aleatóriamente</small>
+            </caption>
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Orgão</th>
+                <th scope="col">Jan</th>
+                <th scope="col">Fev</th>
+                <th scope="col">Mar</th>
+                <th scope="col">Abr</th>
+                <th scope="col">Mai</th>
+                <th scope="col">Jun</th>
+                <th scope="col">Jul</th>
+                <th scope="col">Ago</th>
+                <th scope="col">Set</th>
+                <th scope="col">Out</th>
+                <th scope="col">Nov</th>
+                <th scope="col">Dez</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            {%for orgao, info in dados.items %}
+            <tr>
+                <th scope="row">{{forloop.counter}}</th>
+                <td>{{orgao}}</td>
+                {%for valor in info.values%}
+                <td>{{valor}}</td>
+                {%endfor%}
+
+            </tr>
+            {%endfor%}
+
+            </tbody>
+        </table>
+        {% endcomment %}
+        {% comment %}
+        <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
+            <div class="col-12">
+                <p class="fs-5 text-muted">Quickly build an effective pricing table for your potential customers with
+                    this
+                    Bootstrap example. It’s built with default Bootstrap components and utilities with little
+                    customization.
+                </p>
+            </div>
+        </div>
+        {% endcomment %}
+        {%endblock main%}
+    </main>
+
+    <footer class="mt-5 pt-3 pb-1 text-center border-top d-print-none">
+        <div class="row row-cols-md-3 row-cols-sm-2 row-cols-auto justify-content-center">
+            <div class="col">
+                <p>Construido por Jonas Lima <a href="{% url 'sobre'%}" target="_blank"
+                                                class="text-decoration-none text-info">Saiba mais</a>.</p>
+                {% comment %} <p>Construido por Jonas Lima.</p> {% endcomment %}
+            </div>
+            <!-- <div class="col">
+              <p>Tecnologias usadas:</p>
+              <p>
+                <ul class="list-group-numbered">
+                  <li class="list-group-item">Django</li>
+                  <li class="list-group-item">Bootstrap</li>
+                </ul>
+              </p>
+
+            {% comment %} <p>Construido por Jonas Lima.</p> {% endcomment %}
+            </div> -->
+
+        </div>
+
+
+    </footer>
+</div>
+
+
+<!-- Optional JavaScript; choose one of the two! -->
+
+<!-- Option 1: Bootstrap Bundle with Popper -->
+<!-- <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script> -->
+<script src="{% static 'js/bootstrap.bundle.min.js'%}"></script>
+<script src="{% static 'js/jquery-3.6.4.min.js'%}"></script>
+
+<!---->
+<!-- Option 2: Separate Popper and Bootstrap JS -->
+<!--
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+  integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous">
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+  integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous">
+</script>
+-->
+
+<script>
+
+    var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+    var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+      return new bootstrap.Popover(popoverTriggerEl)
+    });
+
+</script>
+<script src="{% static 'js/function_load_spinner.js'%}"></script>
+</body>
+
+</html>
