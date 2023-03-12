@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'cadastros',
     'tecnicos',
     'dados_adicionais',
+    'change_control',
 ]
 
 MIDDLEWARE = [

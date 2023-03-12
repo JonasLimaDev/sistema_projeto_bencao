@@ -23,9 +23,14 @@
            href="{% url 'listar_cadastros' %}">
             Cadastros
         </a>
+
         <a class="me-3 py-2 my-2 my-sm-1 btn btn-outline-dark  {%if '/dados/' in request.path %} active {%endif%}"
            href="{% url 'dados_tabelas' %}">
             Dados
+        </a>
+        <a class="me-3 py-2 my-2 my-sm-1 btn btn-outline-dark  {%if '/cadastros/' in request.path %} active {%endif%}"
+           href="{% url 'lista_alteracoes' %}">
+            Alterações
         </a>
         <div class="btn-group">
             <button type="button" class="me-3 py-2 my-2 my-sm-1 btn btn-outline-dark dropdown-toggle"

@@ -179,7 +179,7 @@ class AdicionarCadastroView(TemplateView):
         form1 = self.form_referencia(request.POST)
         form2 = self.form_endereco(request.POST)
         form3 = self.form_habitacao(request.POST)
-        form4 =  self.form_cadastro(request.POST)
+        form4 = self.form_cadastro(request.POST)
         forms_generic = {"Informações da Referência Familiar": form1,
                          "Informações do Endereço": form2,
                          "Informações da Moradia": form3,
