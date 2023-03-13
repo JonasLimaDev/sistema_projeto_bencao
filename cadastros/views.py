@@ -233,7 +233,7 @@ class EditarCadastroView(TemplateView):
             
             if atualizacao:
                 cadastro_bd.save()
-                create_change_campos(lista_alteracoes, tecnico)
+                # create_change_campos(lista_alteracoes, tecnico)
                 messages.success(request, f'Cadastro Atualizado Com Sucesso.')
                 return redirect('listar_cadastros', f'id:{cadastro_bd.id}')
             else:
@@ -274,7 +274,7 @@ class EditarEnderecoView(TemplateView):
         if form.is_valid():
             atualizacao, lista_alteracoes = editar_endereco(endereco, form)
             if atualizacao:
-                create_change_campos(lista_alteracoes, tecnico)
+                # create_change_campos(lista_alteracoes, tecnico)
                 messages.success(request, f'Endereço Atualizado Com Sucesso.')
             return redirect('listar_cadastros', f'id:{cadastro.id}')
         self.context['forms_generic'] = forms_generic
@@ -368,9 +368,13 @@ class EditarReferenciaView(TemplateView):
         forms_generic = {"Informações da Referência Familiar": form1}
         cadastro_bd = Cadastro.objects.get(responsavel_familiar=referencia)
         self.context['id_cancelar'] = f'id:{cadastro_bd.id}'
+        tecnico = Tecnico.objects.get(usuario=request.user)
         if form1.is_valid():
-            editar_pessoa(referencia, form1)
-            messages.success(request, f'Informações Atualizadas Com Sucesso.')
+
+            atualizacao, lista_alteracoes = editar_pessoa(referencia, form1)
+            if atualizacao:
+                # create_change_campos(lista_alteracoes, tecnico)
+                messages.success(request, f'Informações Atualizadas Com Sucesso.')
             return redirect('listar_cadastros', f'id:{cadastro_bd.id}')
 
         self.context['forms_generic'] = forms_generic

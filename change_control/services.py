@@ -1,8 +1,8 @@
 from . models import *
 
 
-def create_change_campos(lista_dados, tecnico):
-    acao_change = Acao.objects.create(tipo_acao="2", responsavel=tecnico)
+def create_change_campos(lista_dados, tecnico,id_alterado,indicador):
+    acao_change = DataAlteracoes.objects.create(tipo_acao="2",id_alterado=id_alterado,indicador_alterado=indicador, responsavel=tecnico)
     for data_change in lista_dados:
         CampoChange.objects.create(campo=data_change.campo, novo_valor=data_change.valor_novo,
                                    antigo_valor=data_change.valor_antigo, modificacao=acao_change)

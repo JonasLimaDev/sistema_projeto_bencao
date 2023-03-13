@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
 from django.core.paginator import Paginator
-from .classes_change_control import DataAcoes
+from .classes_change_control import DataAlteracoes
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 # from .classes_change_control import DataAcoes
@@ -15,7 +15,7 @@ class ListaModificacoesView(TemplateView):
 
         context = super().get_context_data(**kwargs)
         argumento = None
-        modificacoes = Acao.objects.select_related().all()
+        modificacoes = Alteracao.objects.select_related().all()
         # l = [DataAcoes(modificacao_bd) for modificacao_bd in modificacoes]
         # print(l)
         # # cadastros = Cadastro.objects.all()
@@ -58,7 +58,7 @@ class ListaModificacoesView(TemplateView):
         #
         #     context['cadastros'] = [CadastroData(cadastro_bd) for cadastro_bd in lista_cadastro]
         # else:
-        context['dados_modificacoes'] = [DataAcoes(modificacao_bd) for modificacao_bd in modificacoes]
+        context['dados_modificacoes'] = [DataAlteracoes(modificacao_bd) for modificacao_bd in modificacoes]
         return context
 
     def post(self, request, *args, **kwargs):

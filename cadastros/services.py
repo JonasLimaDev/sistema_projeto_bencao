@@ -37,38 +37,125 @@ def editar_membro(membro_bd, form):
 	return membro_bd
 
 def editar_pessoa(pessoa_bd, form):
-
+	has_change = False
+	lista_alteracoes = []
 	if pessoa_bd.nome != form.cleaned_data['nome'] and form.cleaned_data['nome']:
+		lista_alteracoes.append(ChangeCampoData(campo=pessoa_bd._meta.get_field('nome').verbose_name,
+												valor_antigo=pessoa_bd.nome if pessoa_bd.nome else "-",
+												valor_novo=form.cleaned_data['nome']))
 		pessoa_bd.nome = form.cleaned_data['nome']
+		has_change = True
+
 	if pessoa_bd.apelido != form.cleaned_data['apelido']:
+		lista_alteracoes.append(ChangeCampoData(campo=pessoa_bd._meta.get_field('apelido').verbose_name,
+												valor_antigo=pessoa_bd.apelido if pessoa_bd.apelido else "-",
+												valor_novo=form.cleaned_data['apelido']))
 		pessoa_bd.apelido = form.cleaned_data['apelido']
+		has_change = True
+
 	if pessoa_bd.nome_social != form.cleaned_data['nome_social']:
+		lista_alteracoes.append(ChangeCampoData(campo=pessoa_bd._meta.get_field('nome_social').verbose_name,
+												valor_antigo=pessoa_bd.nome_social if pessoa_bd.nome_social else "-",
+												valor_novo=form.cleaned_data['nome_social']))
 		pessoa_bd.nome_social = form.cleaned_data['nome_social']
+		has_change = True
+
 	if pessoa_bd.situacao_civil != form.cleaned_data['situacao_civil']:
+		lista_alteracoes.append(ChangeCampoData(campo=pessoa_bd._meta.get_field('situacao_civil').verbose_name,
+												valor_antigo=pessoa_bd.situacao_civil if pessoa_bd.situacao_civil else "-",
+												valor_novo=form.cleaned_data['situacao_civil']))
 		pessoa_bd.situacao_civil = form.cleaned_data['situacao_civil']
+		has_change = True
+
 	if pessoa_bd.identidade_genero != form.cleaned_data['identidade_genero']:
+		lista_alteracoes.append(ChangeCampoData(campo=pessoa_bd._meta.get_field('identidade_genero').verbose_name,
+												valor_antigo=pessoa_bd.identidade_genero if pessoa_bd.identidade_genero else "-",
+												valor_novo=form.cleaned_data['identidade_genero']))
 		pessoa_bd.identidade_genero = form.cleaned_data['identidade_genero']
+		has_change = True
+
 	if pessoa_bd.cor_raca != form.cleaned_data['cor_raca']:
+		lista_alteracoes.append(ChangeCampoData(campo=pessoa_bd._meta.get_field('cor_raca').verbose_name,
+												valor_antigo=pessoa_bd.cor_raca,
+												valor_novo=form.cleaned_data['cor_raca']))
 		pessoa_bd.cor_raca = form.cleaned_data['cor_raca']
-	
+		has_change = True
+
 	if pessoa_bd.sexo != form.cleaned_data['sexo']:
+		lista_alteracoes.append(ChangeCampoData(campo=pessoa_bd._meta.get_field('sexo').verbose_name,
+												valor_antigo=pessoa_bd.sexo,
+												valor_novo=form.cleaned_data['sexo']))
 		pessoa_bd.sexo = form.cleaned_data['sexo']
+		has_change = True
 
 	if pessoa_bd.data_nascimento != form.cleaned_data['data_nascimento']:
+		lista_alteracoes.append(ChangeCampoData(campo=pessoa_bd._meta.get_field('data_nascimento').verbose_name,
+												valor_antigo=pessoa_bd.data_nascimento,
+												valor_novo=form.cleaned_data['data_nascimento']))
 		pessoa_bd.data_nascimento = form.cleaned_data['data_nascimento']
-	if pessoa_bd.cpf != form.cleaned_data['cpf'] and form.cleaned_data['cpf']:
-		pessoa_bd.cpf = form.cleaned_data['cpf']
-	if pessoa_bd.nis != form.cleaned_data['nis'] and form.cleaned_data['nis']:
-		pessoa_bd.nis = form.cleaned_data['nis']
-	if pessoa_bd.escolaridade != form.cleaned_data['escolaridade']:
-		pessoa_bd.escolaridade = form.cleaned_data['escolaridade']
-	if pessoa_bd.contato != form.cleaned_data['contato']:
-		pessoa_bd.contato = form.cleaned_data['contato']
-	if pessoa_bd.renda != form.cleaned_data['renda']:
-		pessoa_bd.renda = form.cleaned_data['renda']
+		has_change = True
 
-	pessoa_bd.save(force_update=True)
-	return pessoa_bd
+	if pessoa_bd.cpf != form.cleaned_data['cpf'] and form.cleaned_data['cpf']:
+		lista_alteracoes.append(ChangeCampoData(campo=pessoa_bd._meta.get_field('cpf').verbose_name,
+												valor_antigo=pessoa_bd.cpf,
+												valor_novo=form.cleaned_data['cpf']))
+		pessoa_bd.cpf = form.cleaned_data['cpf']
+		has_change = True
+
+	if pessoa_bd.nis != form.cleaned_data['nis'] and form.cleaned_data['nis']:
+		lista_alteracoes.append(ChangeCampoData(campo=pessoa_bd._meta.get_field('nis').verbose_name,
+												valor_antigo=pessoa_bd.nis,
+												valor_novo=form.cleaned_data['nis']))
+		pessoa_bd.nis = form.cleaned_data['nis']
+		has_change = True
+
+	if pessoa_bd.escolaridade != form.cleaned_data['escolaridade']:
+		dict_data = dict(form.fields['escolaridade']._choices)
+		lista_alteracoes.append(ChangeCampoData(campo=pessoa_bd._meta.get_field('escolaridade').verbose_name,
+												valor_antigo=pessoa_bd.get_escolaridade_display(),
+												valor_novo=dict_data[form.cleaned_data['escolaridade']]))
+		pessoa_bd.escolaridade = form.cleaned_data['escolaridade']
+		has_change = True
+
+	if pessoa_bd.contato != form.cleaned_data['contato']:
+		lista_alteracoes.append(ChangeCampoData(campo=pessoa_bd._meta.get_field('contato').verbose_name,
+												valor_antigo=pessoa_bd.contato,
+												valor_novo=form.cleaned_data['contato']))
+		pessoa_bd.contato = form.cleaned_data['contato']
+		has_change = True
+
+	if pessoa_bd.contato2 != form.cleaned_data['contato2']:
+		lista_alteracoes.append(ChangeCampoData(campo=pessoa_bd._meta.get_field('contato2').verbose_name,
+													valor_antigo=pessoa_bd.contato2,
+													valor_novo=form.cleaned_data['contato2']))
+		pessoa_bd.contato2 = form.cleaned_data['contato2']
+		has_change = True
+
+	if pessoa_bd.renda != form.cleaned_data['renda']:
+		lista_alteracoes.append(ChangeCampoData(campo=pessoa_bd._meta.get_field('renda').verbose_name,
+												valor_antigo=pessoa_bd.renda,
+												valor_novo=form.cleaned_data['renda']))
+		pessoa_bd.renda = form.cleaned_data['renda']
+		has_change = True
+	if pessoa_bd.cadastro_unico != form.cleaned_data['cadastro_unico']:
+		dict_data = dict(form.fields['cadastro_unico']._choices)
+		lista_alteracoes.append(ChangeCampoData(campo=pessoa_bd._meta.get_field('cadastro_unico').verbose_name,
+												valor_antigo=pessoa_bd.get_cadastro_unico_display(),
+												valor_novo=dict_data[form.cleaned_data['cadastro_unico']]))
+
+		pessoa_bd.cadastro_unico = form.cleaned_data['cadastro_unico']
+		has_change = True
+
+	if pessoa_bd.trabalho != form.cleaned_data['trabalho']:
+		lista_alteracoes.append(ChangeCampoData(campo=pessoa_bd._meta.get_field('trabalho').verbose_name,
+												valor_antigo=pessoa_bd.trabalho,
+												valor_novo=form.cleaned_data['trabalho']))
+		pessoa_bd.trabalho = form.cleaned_data['trabalho']
+		has_change = True
+
+	if has_change:
+		pessoa_bd.save(force_update=True)
+	return has_change, lista_alteracoes
 
 
 def editar_endereco(endereco, form):

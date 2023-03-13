@@ -13,12 +13,13 @@ class ChangeTableData():
         # self.valor_novo = valor_novo
 
 
-class DataAcoes():
-    def __init__(self,acao_bd):
-        self.id = acao_bd.id
-        self.tipo_acao = acao_bd.get_tipo_acao_display()
-        self.data_modificacao = acao_bd.data_modificacao
-        self.responsavel = acao_bd.responsavel
+class DataAlteracoes():
+    def __init__(self,alteracao_bd):
+        self.id = alteracao_bd.id
+        self.tipo_acao = alteracao_bd.get_tipo_acao_display()
+        self.data_modificacao = alteracao_bd.data_modificacao
+        self.responsavel = alteracao_bd.responsavel
+
         self.campos_modificados = self.get_data_campo_modified()
         self.tablas_modificadas = self.get_data_table_modified()
 
