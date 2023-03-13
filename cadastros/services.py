@@ -17,17 +17,16 @@ def salvar_membro(form,cadastro):
 	renda = form.cleaned_data['renda']
 	parentesco = form.cleaned_data['parentesco']
 	Membros.objects.create(nome=nome, sexo=sexo,
-	data_nascimento=data_nascimento,cpf=cpf,nis=nis,trabalho=trabalho,escolaridade=escolaridade,
-	contato=contato,
-	renda=renda,parentesco=parentesco,cadastro_membro=cadastro)
+	data_nascimento=data_nascimento, cpf=cpf, nis=nis, trabalho=trabalho, escolaridade=escolaridade,
+	contato=contato, renda=renda, parentesco=parentesco, cadastro_membro=cadastro)
 
-def editar_membro(membro_bd,form):
+def editar_membro(membro_bd, form):
 	membro_bd.nome = form.cleaned_data['nome'] if form.cleaned_data['nome'] else membro_bd.nome
 	# membro_bd.situacao_civil =  form.cleaned_data['situacao_civil']
 	membro_bd.sexo = form.cleaned_data['sexo']
 	membro_bd.data_nascimento = form.cleaned_data['data_nascimento']
-	membro_bd.cpf = form.cleaned_data['cpf']  if form.cleaned_data['cpf'] else membro_bd.cpf
-	membro_bd.nis = form.cleaned_data['nis']  if form.cleaned_data['nis'] else membro_bd.nis
+	membro_bd.cpf = form.cleaned_data['cpf'] if form.cleaned_data['cpf'] else membro_bd.cpf
+	membro_bd.nis = form.cleaned_data['nis'] if form.cleaned_data['nis'] else membro_bd.nis
 	membro_bd.escolaridade = form.cleaned_data['escolaridade']
 	membro_bd.contato = form.cleaned_data['contato']
 	# membro_bd.contato2 = form.cleaned_data['contato2']
@@ -38,20 +37,36 @@ def editar_membro(membro_bd,form):
 	return membro_bd
 
 def editar_pessoa(pessoa_bd, form):
-	pessoa_bd.nome = form.cleaned_data['nome'] if form.cleaned_data['nome'] else pessoa_bd.nome
-	pessoa_bd.apelido = form.cleaned_data['apelido'] if form.cleaned_data['apelido'] else pessoa_bd.apelido
-	pessoa_bd.nome_social= form.cleaned_data['nome_social'] if form.cleaned_data['nome_social'] else pessoa_bd.nome_social
-	pessoa_bd.situacao_civil =  form.cleaned_data['situacao_civil']
-	pessoa_bd.identidade_genero =  form.cleaned_data['identidade_genero']
-	pessoa_bd.cor_raca =  form.cleaned_data['cor_raca']
+
+	if pessoa_bd.nome != form.cleaned_data['nome'] and form.cleaned_data['nome']:
+		pessoa_bd.nome = form.cleaned_data['nome']
+	if pessoa_bd.apelido != form.cleaned_data['apelido']:
+		pessoa_bd.apelido = form.cleaned_data['apelido']
+	if pessoa_bd.nome_social != form.cleaned_data['nome_social']:
+		pessoa_bd.nome_social = form.cleaned_data['nome_social']
+	if pessoa_bd.situacao_civil != form.cleaned_data['situacao_civil']:
+		pessoa_bd.situacao_civil = form.cleaned_data['situacao_civil']
+	if pessoa_bd.identidade_genero != form.cleaned_data['identidade_genero']:
+		pessoa_bd.identidade_genero = form.cleaned_data['identidade_genero']
+	if pessoa_bd.cor_raca != form.cleaned_data['cor_raca']:
+		pessoa_bd.cor_raca = form.cleaned_data['cor_raca']
 	
-	pessoa_bd.sexo = form.cleaned_data['sexo']
-	pessoa_bd.data_nascimento = form.cleaned_data['data_nascimento']
-	pessoa_bd.cpf = form.cleaned_data['cpf']  if form.cleaned_data['cpf'] else pessoa_bd.cpf
-	pessoa_bd.nis = form.cleaned_data['nis']  if form.cleaned_data['nis'] else pessoa_bd.nis
-	pessoa_bd.escolaridade = form.cleaned_data['escolaridade']
-	pessoa_bd.contato = form.cleaned_data['contato']
-	pessoa_bd.renda = form.cleaned_data['renda']
+	if pessoa_bd.sexo != form.cleaned_data['sexo']:
+		pessoa_bd.sexo = form.cleaned_data['sexo']
+
+	if pessoa_bd.data_nascimento != form.cleaned_data['data_nascimento']:
+		pessoa_bd.data_nascimento = form.cleaned_data['data_nascimento']
+	if pessoa_bd.cpf != form.cleaned_data['cpf'] and form.cleaned_data['cpf']:
+		pessoa_bd.cpf = form.cleaned_data['cpf']
+	if pessoa_bd.nis != form.cleaned_data['nis'] and form.cleaned_data['nis']:
+		pessoa_bd.nis = form.cleaned_data['nis']
+	if pessoa_bd.escolaridade != form.cleaned_data['escolaridade']:
+		pessoa_bd.escolaridade = form.cleaned_data['escolaridade']
+	if pessoa_bd.contato != form.cleaned_data['contato']:
+		pessoa_bd.contato = form.cleaned_data['contato']
+	if pessoa_bd.renda != form.cleaned_data['renda']:
+		pessoa_bd.renda = form.cleaned_data['renda']
+
 	pessoa_bd.save(force_update=True)
 	return pessoa_bd
 
@@ -61,20 +76,20 @@ def editar_endereco(endereco, form):
 	lista_alteracoes = []
 	if endereco.logradouro != form.cleaned_data['logradouro']:
 		lista_alteracoes.append(ChangeCampoData(campo=endereco._meta.get_field('logradouro').verbose_name,
-													valor_antigo=endereco.logradouro, valor_novo=form.cleaned_data['logradouro']))
+													valor_antigo=endereco.logradouro if endereco.logradouro else "-", valor_novo=form.cleaned_data['logradouro']))
 		endereco.logradouro = form.cleaned_data['logradouro']
 		has_change = True
 
 	if endereco.numero != form.cleaned_data['numero']:
 		lista_alteracoes.append(ChangeCampoData(campo=endereco._meta.get_field('numero').verbose_name,
-												valor_antigo=endereco.numero,
+												valor_antigo=endereco.numero if endereco.numero else "-",
 												valor_novo=form.cleaned_data['numero']))
 		endereco.numero = form.cleaned_data['numero']
 		has_change = True
 
 	if endereco.complemento != form.cleaned_data['complemento']:
 		lista_alteracoes.append(ChangeCampoData(campo=endereco._meta.get_field('complemento').verbose_name,
-												valor_antigo=endereco.complemento,
+												valor_antigo=endereco.complemento if endereco.complemento else "-",
 												valor_novo=form.cleaned_data['complemento']))
 		endereco.complemento = form.cleaned_data['complemento']
 		has_change = True
