@@ -39,6 +39,7 @@ class Alteracao(models.Model):
         ('2', 'Edição'),
         ('3', 'Exclusão'),
     )
+    
     tipo_acao = models.CharField(max_length=1, choices=TIPOS, null=False, blank=False, verbose_name="Tipo da Alteração")
     data_modificacao = models.DateTimeField(auto_now=True, verbose_name="Data de Modificação")
     id_alterado = models.IntegerField(null=False, blank=False, verbose_name="ID Alterado")

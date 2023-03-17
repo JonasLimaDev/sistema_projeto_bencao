@@ -19,6 +19,7 @@ class DataAlteracoes():
         self.tipo_acao = alteracao_bd.get_tipo_acao_display()
         self.data_modificacao = alteracao_bd.data_modificacao
         self.responsavel = alteracao_bd.responsavel
+        self.indicador = alteracao_bd.indicador_alterado
 
         self.campos_modificados = self.get_data_campo_modified()
         self.tablas_modificadas = self.get_data_table_modified()

@@ -4,7 +4,7 @@
         <span class="ps-2 fs-3 text-uppercase">Programa Bênção</span>
     </a>
     <nav class="d-md-inline-flex  align-items-center mt-1 mt-md-0  ms-md-auto ">
-        <a class="me-3 my-3 py-2 btn btn-outline-dark {%if request.path == '/'%} active {%endif%}" href="{% url 'home' %}">
+        <a class="me-3 my-3 py-2 btn btn-outline-dark {%if request.path == '/'%} active {%endif%}" href="{% url 'home' %}" id="nav-home">
             Home
         </a>
         {%if request.user.is_anonymous%}
@@ -20,16 +20,16 @@
 
 
         <a class="me-3 py-2 my-2 my-sm-1 btn btn-outline-dark  {%if '/cadastros/' in request.path %} active {%endif%}"
-           href="{% url 'listar_cadastros' %}">
+           href="{% url 'listar_cadastros' %}" id="nav-cadastros">
             Cadastros
         </a>
 
         <a class="me-3 py-2 my-2 my-sm-1 btn btn-outline-dark  {%if '/dados/' in request.path %} active {%endif%}"
-           href="{% url 'dados_tabelas' %}">
+           href="{% url 'dados_tabelas' %}" id="nav-dados">
             Dados
         </a>
         <a class="me-3 py-2 my-2 my-sm-1 btn btn-outline-dark  {%if '/alteracoes/' in request.path %} active {%endif%}"
-           href="{% url 'lista_alteracoes' %}">
+           href="{% url 'lista_alteracoes' %}" id="nav-alteracoes">
             Alterações
         </a>
         <div class="btn-group">

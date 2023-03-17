@@ -13,7 +13,7 @@
   </div>
   <div class="col d-flex align-items-center justify-content-end">
     {%if request.path != "/cadastros/lista/" %}
-    <a href="{% url 'listar_cadastros' %}" type="button" class="btn btn-outline-secondary "><i
+    <a href="{% url 'listar_cadastros' %}" type="button" class="btn btn-outline-secondary " id="lista-completa-cad"><i
         class="bi bi-list align-middle" style="font-size: 1.25rem;"></i><span class="align-middle mx-1">Lista
         Completa</span></a>
     {%endif%}

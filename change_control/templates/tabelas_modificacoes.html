@@ -4,7 +4,7 @@
 {%if dados_modificacoes %}
 <div class="card bg-transparent my-2">
 <div class="card-header">
-    <h5 class="text-center card-title fw-bold my-2">Histórioco de Alterações</h5>
+    <h5 class="text-center card-title fw-bold my-2">Histórico de Alterações</h5>
 </div>
 </div>
 
@@ -16,6 +16,7 @@
                 <th scope="col">Tipo de Ação</th>
                 <th scope="col">Responsável</th>
                 <th scope="col">Data</th>
+                <th scope="col">Referência</th>
                 <th scope="col"></th>
             </tr>
             </thead>
@@ -26,6 +27,7 @@
                 <td>{{modificacao.tipo_acao}}</td>
                 <td>{{modificacao.responsavel}}</td>
                 <td>{{modificacao.data_modificacao}}</td>
+                <td>{{modificacao.indicador}}</td>
                 <td>
                     <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
                             data-bs-target="#collapseData{{modificacao.id}}" aria-expanded="false"
@@ -37,7 +39,7 @@
             <!--            <div id="collapseData{{modificacao.id}}" class="collapse collapse-horizontal">-->
             <tr id="collapseData{{modificacao.id}}"
                 class="collapse  collapse-horizontal {%if modificacao.tipo_acao == 'Adição' %} table-success {% elif modificacao.tipo_acao == 'Edição' %} table-warning {%else%} table-danger {%endif%}">
-                <td colspan="5" class="px-3 mx-3 ">
+                <td colspan="6" class="px-3 mx-3 ">
                     {%if modificacao.campos_modificados %}
                     <table class="table table-dark table-bordered my-0 py-0">
                         <thead class="sticky-top table-dark ">
@@ -73,7 +75,7 @@
 {%else%}
 <div class="card bg-transparent my-2">
 <div class="card-header">
-    <h5 class="text-center card-title fw-bold my-2">Não Há Histórioco de Alterações</h5>
+    <h5 class="text-center card-title fw-bold my-2">Não Há Histórico de Alterações</h5>
 </div>
 </div>
 {%endif%}

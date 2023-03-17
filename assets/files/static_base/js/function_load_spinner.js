@@ -1,16 +1,12 @@
- const spinner = document.getElementById("spinner");
+$(document).ready(function() {
+    $("#spinner").toggleClass("visually-hidden");
+    function hideSpinner() {
+        $("#spinner").remmoveClass("visually-hidden")
+    }
+    window.onload = hideSpinner();
+});
 
-    console.log(spinner);
-    $.ajax({
-    type:'GET',
-    url:'/',
-    success: function(res){
-    spinner.classList.add("visually-hidden")
-
-    },
-   });
-
-
+const spinner = document.getElementById("spinner");
 $('#button-busca').on("click", function(){
     let busca_valor = $('#busca').val();
     console.log(busca_valor);
@@ -19,12 +15,15 @@ $('#button-busca').on("click", function(){
     }else{
      $.ajax({
         type:"POST",
-         beforeSend: function() {
+        beforeSend: function() {
         spinner.classList.remove("visually-hidden");
         },
         success: function(){
             spinner.classList.add("visually-hidden");
             },
+        complete: function () {
+                $('#spinner-div').hide();//Request is complete so hide spinner
+            }
     });
     }
 });
@@ -42,7 +41,6 @@ $('#bairroDataList').on("change", function(){
     });
 });
 $('#abrangenciaSelect').on("change", function(){
-    spinner.classList.remove("visually-hidden");
 
     $.ajax({
         type:"POST",
@@ -56,8 +54,6 @@ $('#abrangenciaSelect').on("change", function(){
 });
 
 $('#rucSelect').on("change", function(){
-    spinner.classList.remove("visually-hidden");
-
     $.ajax({
         type:"POST",
          beforeSend: function() {
@@ -92,3 +88,62 @@ let password = $('#id_password').val();
 });
 
 
+$('#nav-home').on("click", function(){
+    $.ajax({
+        type:"POST",
+         beforeSend: function() {
+        spinner.classList.remove("visually-hidden");
+        },
+        success: function(){
+            spinner.classList.add("visually-hidden");
+            },
+    });
+});
+
+$('#nav-dados').on("click", function(){
+    $.ajax({
+        type:"POST",
+         beforeSend: function() {
+        spinner.classList.remove("visually-hidden");
+        },
+        success: function(){
+            spinner.classList.add("visually-hidden");
+            },
+    });
+});
+
+$('#nav-alteracoes').on("click", function(){
+    $.ajax({
+        type:"POST",
+         beforeSend: function() {
+        spinner.classList.remove("visually-hidden");
+        },
+        success: function(){
+            spinner.classList.add("visually-hidden");
+            },
+    });
+});
+
+$('#nav-cadastros').on("click", function(){
+    $.ajax({
+        type:"POST",
+         beforeSend: function() {
+        spinner.classList.remove("visually-hidden");
+        },
+        success: function(){
+            spinner.classList.add("visually-hidden");
+            },
+    });
+});
+// 
+$('#lista-completa-cad').on("click", function(){
+    $.ajax({
+        type:"POST",
+         beforeSend: function() {
+        spinner.classList.remove("visually-hidden");
+        },
+        success: function(){
+            spinner.classList.add("visually-hidden");
+            },
+    });
+});
