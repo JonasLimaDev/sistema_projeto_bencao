@@ -445,22 +445,28 @@ class EditarHabitacaoView(TemplateView):
         cadastro = Cadastro.objects.get(habitacao=habitacao)
         self.context['id_cancelar'] = f'id:{cadastro.id}'
         forms_generic = {"Informações do Endereço": form}
+        tecnico = Tecnico.objects.get(usuario=request.user)
         if form.is_valid():
-            # editar_habitacao(habitacao,form)
-            editar_model_data(habitacao,form)
-            # habitacao.situacao_moradia = form.cleaned_data['situacao_moradia']
-            # habitacao.tipo_construcao = form.cleaned_data['tipo_construcao']
-            # habitacao.rede_eletrica = form.cleaned_data['rede_eletrica']
-            # habitacao.possui_abastecimento = form.cleaned_data['possui_abastecimento']
-            # habitacao.possui_rede_esgoto = form.cleaned_data['possui_rede_esgoto']
-            # habitacao.possui_coleta = form.cleaned_data['possui_coleta']
-            # habitacao.pavimentacao = form.cleaned_data['pavimentacao']
-            # habitacao.tempo_ocupacao = form.cleaned_data['tempo_ocupacao']
-            # habitacao.equipamento_comunitario.set(form.cleaned_data['equipamento_comunitario'])
-            # habitacao.numero_comodos = form.cleaned_data['numero_comodos']
-            # habitacao.numero_moradores = form.cleaned_data['numero_moradores']
-            # habitacao.save(force_update=True)
-            # messages.success(request, f'Dados Atualizados Com Sucesso.')
+            # editar_model_data(habitacao,form)
+            atualizacao, lista_alteracoes = editar_model_data(habitacao, form,["equipamento_comunitario"])
+            
+            #Converte em lista os dados da relação N:N
+            lista_equipamentos_form = [item for item in form.cleaned_data['equipamento_comunitario']]
+            lista_equipamentos_bd = [item for item in habitacao.equipamento_comunitario.all()]
+
+            if lista_equipamentos_form != lista_equipamentos_bd:
+                """Verifica se as listas são diferentes para gerar alteração"""
+                equipamentos_str_bd = lista_objeto_str(lista_equipamentos_bd)
+                equipamentos_str_form = lista_objeto_str(lista_equipamentos_form)
+                habitacao.equipamento_comunitario.set(form.cleaned_data['equipamento_comunitario'])
+                atualizacao = True
+                lista_alteracoes.append(ChangeCampoData(campo="Equipamentos Comunitários Próximos",
+												valor_antigo=equipamentos_str_bd  if equipamentos_str_bd  else "-",
+												valor_novo=equipamentos_str_form))
+                habitacao.save()
+            if atualizacao:
+                create_change_campos(lista_alteracoes, tecnico, 'Dados Habitacionais', habitacao.id, str(cadastro) )
+                messages.success(request, f'Dados Atualizados Com Sucesso.')
             return redirect('listar_cadastros', f'id:{cadastro.id}')
 
         self.context['forms_generic'] = forms_generic

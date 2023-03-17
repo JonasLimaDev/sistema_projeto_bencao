@@ -304,7 +304,7 @@ class Habitacao(models.Model):
     tempo_ocupacao = models.IntegerField(null=False, blank=False, verbose_name="Tempo de Ocupação do Imóvel")
     numero_moradores = models.IntegerField(null=False, blank=False, verbose_name="Número de Moradores")
     numero_comodos = models.IntegerField(null=False, blank=False, verbose_name="Número de Cômodos")
-    equipamento_comunitario = models.ManyToManyField(EquipamentoComunitario,verbose_name="Equipamento Comunitários Próximos")
+    equipamento_comunitario = models.ManyToManyField(EquipamentoComunitario,verbose_name="Equipamentos Comunitários Próximos")
     
     def __str__(self):
         return self.situacao_moradia

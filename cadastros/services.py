@@ -299,9 +299,14 @@ def salvar_cadastros_massivo(dados,tecnico):
 	# 	habitacao.numero_moradores = form.cleaned_data['numero_moradores']
 	
 	# if habitacao.equipamento_cohabitacao.numero_moradoresmunitario.set(form.cleaned_data['equipamento_comunitario'])
+def lista_objeto_str(lista):
+	conjunto_str=""
+	for item in lista:
+		conjunto_str += f"{item}, "
+	conjunto_str = conjunto_str[:-2]
+	return conjunto_str
 
-
-def editar_model_data(inst_model,inst_form):
+def editar_model_data(inst_model,inst_form,ignore=[]):
 	"""Função para edição da tabela de dados habitacionais"""
 	has_change = False # Variável pra identificar se houve alteração
 	lista_alteracoes = [] # lista com a classe de alterações
@@ -309,7 +314,7 @@ def editar_model_data(inst_model,inst_form):
 	
 	for field in inst_form:
 		"""Percore todos os campos do formulário"""
-		if inst_model._meta.get_field(field.name).is_relation:
+		if inst_model._meta.get_field(field.name).is_relation and field.name not in ignore:
 			""" Verifica se o campo possui alguma relação"""
 			valor_atual = inst_form.fields[field.name]._queryset.get(id=inst_model_data[f"{field.name}_id"])
 			valor_form = inst_form.cleaned_data[field.name]
@@ -319,7 +324,7 @@ def editar_model_data(inst_model,inst_form):
 												valor_novo=valor_form))
 				setattr(inst_model, f"{field.name}_id", valor_form.id)
 				has_change = True
-		elif inst_model_data[field.name] != inst_form.cleaned_data[field.name]:
+		elif field.name not in ignore and  inst_model_data[field.name] != inst_form.cleaned_data[field.name]:
 			if hasattr(inst_form.fields[field.name], "_choices"):
 				"""Verifica se o Campo e do tipo CHOICES"""	
 				dict_data_form = dict(inst_form.fields[field.name]._choices) # gera o dicionário de valores e alternativas do choices
