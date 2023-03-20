@@ -7,7 +7,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="shortcut icon" href="{%static 'img/logo.png' %}"/>
+    <link rel="shortcut icon"  href="{% static 'img/logo.ico' %}" type="image/x-icon"/>
     <!-- Bootstrap CSS -->
     <!-- <link href="{% static 'css/bootstrap.min.css'%}" rel="stylesheet"
       integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous"> -->
@@ -19,7 +19,9 @@
     <title>{% block title %} Home{% endblock title %}</title>
     <style>
     body {
-      background-image: linear-gradient(180deg, #9cc4e4, #e9f2f9 100px, #e9f2f9);
+        /* background-image: linear-gradient( 180deg,  #9cc4e4,  #e9f2f9  100px,  #e9f2f9 ); */
+        background-image: linear-gradient(180deg, #40B0DF, #9cc4e4 100px, #e9f2f9);
+        
     }
 
 
@@ -42,7 +44,7 @@
 </head>
 
 <body class="">
-<div class="d-flex w-100 h-100 p-3 mx-auto flex-column">
+<div class="d-flex w-100 h-100 px-3 py-2 mx-auto flex-column">
     <header class="d-print-none" id="top">
         {%include 'navbar-menu.html'%}
 
@@ -65,6 +67,7 @@
         <div class="d-flex justify-content-center align-items-center">
             <div class=" card text-center mt-5 border-info " style="max-width: 38.2rem;">
                 <div class="card-header ">
+                    
                     <h1>Programa Bênção</h1>
                 </div>
                 <div class="card-body  text-primary">
