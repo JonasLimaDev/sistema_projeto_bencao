@@ -282,53 +282,6 @@ class EditarEnderecoView(TemplateView):
         return render(request, self.template_name, self.context)
 
 
-# @method_decorator(login_required, name='dispatch')
-# class EditHabitacaoView(TemplateView):
-#     form_habitacao = FormHabitacao
-#     template_name = "cadastros/forms/formulario_cadastro.html"
-#     context = {'titulo_pagina': "Editar Habitação"}
-
-#     def get(self, request, *args, **kwargs):
-#         habitacao = get_object_or_404(Habitacao, id=self.kwargs['pk'])
-#         forms_generic = {"Informações da Moradia": self.form_habitacao(instance=habitacao)}
-#         cadastro = Cadastro.objects.get(habitacao=habitacao)
-#         link = request.META.get('HTTP_REFERER')
-#         if "exibir" in link:
-#             self.context['url_cancelar'] = 'dados'
-#             self.context['id_cancelar'] = cadastro.id
-#         else:
-#             self.context['url_cancelar'] = 'lista'
-#             self.context['id_cancelar'] = f'id:{cadastro.id}'
-#         self.context['forms_generic'] = forms_generic
-
-#         return render(request, self.template_name, self.context)
-
-#     def post(self, request, *args, **kwargs):
-#         form = self.form_habitacao(request.POST)
-#         habitacao = get_object_or_404(Habitacao, id=self.kwargs['pk'])
-#         cadastro = Cadastro.objects.get(habitacao=habitacao)
-#         self.context['id_cancelar'] = f'id:{cadastro.id}'
-#         forms_generic = {"Informações do Endereço": form}
-#         if form.is_valid():
-#             habitacao.situacao_moradia = form.cleaned_data['situacao_moradia']
-#             habitacao.tipo_construcao = form.cleaned_data['tipo_construcao']
-#             habitacao.rede_eletrica = form.cleaned_data['rede_eletrica']
-#             habitacao.possui_abastecimento = form.cleaned_data['possui_abastecimento']
-#             habitacao.possui_rede_esgoto = form.cleaned_data['possui_rede_esgoto']
-#             habitacao.possui_coleta = form.cleaned_data['possui_coleta']
-#             habitacao.pavimentacao = form.cleaned_data['pavimentacao']
-#             habitacao.tempo_ocupacao = form.cleaned_data['tempo_ocupacao']
-#             habitacao.equipamento_comunitario.set(form.cleaned_data['equipamento_comunitario'])
-#             habitacao.numero_comodos = form.cleaned_data['numero_comodos']
-#             habitacao.numero_moradores = form.cleaned_data['numero_moradores']
-
-#             habitacao.save(force_update=True)
-#             messages.success(request, f'Dados Atualizados Com Sucesso.')
-#             return redirect('listar_cadastros', f'id:{cadastro.id}')
-#         self.context['forms_generic'] = forms_generic
-#         return render(request, self.template_name, self.context)
-
-
 @method_decorator(login_required, name='dispatch')
 class ExibirFichaCadastroView(TemplateView):
     # form_habitacao = FormHabitacao
