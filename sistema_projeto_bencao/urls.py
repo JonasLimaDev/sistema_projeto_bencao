@@ -23,5 +23,5 @@ urlpatterns = [
     path('cadastros/extras/', include('dados_adicionais.urls')),
     path('tecnico/', include('tecnicos.urls')),
     path('alteracoes/', include('change_control.urls')),
-    path('sobre/', TemplateView.as_view(template_name="modelos/sobre.html"), name='sobre'),
+    path('sobre/', TemplateView.as_view(template_name="sobre.html"), name='sobre'),
 ]

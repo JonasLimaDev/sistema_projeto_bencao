@@ -8,9 +8,9 @@
 </div>
 </div>
 
-    <div class="table-responsive overflow-auto " style="height: 36rem;">
+    <div class="table-responsive overflow-auto " style="height: 35rem;">
         <table class="table  table-hover bg-dark table-bordered ">
-            <thead class="sticky-top table-dark">
+            <thead class="sticky-top table-dark " style="height: 30px !important;">
             <tr>
                 <th scope="col">#</th>
                 <th scope="col">Tipo de Ação</th>
@@ -20,7 +20,7 @@
                 <th scope="col"></th>
             </tr>
             </thead>
-            <tbody class="">
+            <tbody class="table-group-divider">
             {%for modificacao in dados_modificacoes%}
             <tr class="{%if modificacao.tipo_acao == 'Adição' %} table-success {% elif modificacao.tipo_acao == 'Edição' %} table-warning {%else%} table-danger {%endif%} border-dark">
                 <th scope="row">{{forloop.counter}}</th>
@@ -29,19 +29,22 @@
                 <td>{{modificacao.data_modificacao}}</td>
                 <td>{{modificacao.indicador}}</td>
                 <td>
-                    <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
+                    <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse"
                             data-bs-target="#collapseData{{modificacao.id}}" aria-expanded="false"
                             aria-controls="collapseExample">
                         ver modificações
                     </button>
                 </td>
             </tr>
-            <!--            <div id="collapseData{{modificacao.id}}" class="collapse collapse-horizontal">-->
-            <tr id="collapseData{{modificacao.id}}"
-                class="collapse  collapse-horizontal {%if modificacao.tipo_acao == 'Adição' %} table-success {% elif modificacao.tipo_acao == 'Edição' %} table-warning {%else%} table-danger {%endif%}">
-                <td colspan="6" class="px-3 mx-3 ">
+            
+            <tr
+                class=" {%if modificacao.tipo_acao == 'Adição' %} table-success {% elif modificacao.tipo_acao == 'Edição' %} table-warning {%else%} table-danger {%endif%}">
+                
+                <td colspan="6" class="px-3 mx-3 my-0 py-0">
+                    <div id="collapseData{{modificacao.id}}"
+                    class="collapse ">
                     {%if modificacao.campos_modificados %}
-                    <table class="table table-dark table-bordered my-0 py-0">
+                    <table class="table table-dark table-bordered my-2 py-1">
                         <thead class="sticky-top table-dark ">
                         <tr>
                             <th scope="col">#</th>
@@ -63,9 +66,10 @@
                         </tbody>
                     </table>
                     {%endif%}
+                </div>
                 </td>
             </tr>
-            <!--                </div>-->
+                          
 
 
             {%endfor%}
