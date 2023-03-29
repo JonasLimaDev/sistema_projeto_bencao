@@ -1,12 +1,10 @@
-$(document).ready(function() {
-    $("#spinner").toggleClass("visually-hidden");
-    function hideSpinner() {
-        $("#spinner").remmoveClass("visually-hidden")
-    }
-    window.onload = hideSpinner();
-});
-
 const spinner = document.getElementById("spinner");
+spinner.classList.remove("visually-hidden");
+$(window).on('load', function () {
+    spinner.classList.add("visually-hidden");
+  });
+
+
 $('#button-busca').on("click", function(){
     let busca_valor = $('#busca').val();
     console.log(busca_valor);
@@ -147,3 +145,5 @@ $('#lista-completa-cad').on("click", function(){
             },
     });
 });
+
+

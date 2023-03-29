@@ -3,6 +3,7 @@
 {%load static %}
 {% load filtros %}
 
+
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -21,7 +22,7 @@
     body {
         /* background-image: linear-gradient( 180deg,  #9cc4e4,  #e9f2f9  100px,  #e9f2f9 ); */
         background-image: linear-gradient(180deg, #40B0DF, #9cc4e4 100px, #e9f2f9);
-        
+
     }
     
 
@@ -48,7 +49,7 @@
     <header class="d-print-none" id="top">
         {%include 'navbar-menu.html'%}
 
-        <div id="spinner" class="Mybackdrop ">
+        <div id="spinner" class="Mybackdrop">
             <div class=" d-flex justify-content-center align-items-center  h-100">
                 <div class="spinner-border text-primary" style="width: 8.75rem; height: 8.75rem;" role="status">
                     <span class="visually-hidden">Loading...</span>
@@ -179,6 +180,12 @@
 -->
 
 <script>
+    $('#spinner').ajaxStart(function () {
+$(this).fadeIn('fast');
+//Set time interval
+}).ajaxStop(function () {
+$(this).stop().fadeOut('fast');
+});
 
     var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
     var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {

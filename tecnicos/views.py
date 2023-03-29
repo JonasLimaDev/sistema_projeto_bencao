@@ -101,9 +101,15 @@ class PerfilUsuarioView(TemplateView):
 class EquipeTecnicaView(TemplateView):
     template_name = "tecnicos/equipe.html"
     def get(self,request, *args, **kwargs):
-        supervisor = True if request.user.groups.filter(name='Supervisor').exists() else False
-        tecnicos = Tecnico.objects.all()
-        return render(request,self.template_name,{'tecnicos':tecnicos,'supervisor':supervisor})
+        user = User.objects.get(id=int(request.user.id))
+        if user.groups.filter(name='Supervisor').exists():
+            supervisor = True if request.user.groups.filter(name='Supervisor').exists() else False
+            tecnicos = Tecnico.objects.all()
+            return render(request,self.template_name,{'tecnicos':tecnicos,'supervisor':supervisor})
+        else:
+            return redirect('dados_tecnico', user.id)
+        
+    
     def post(self,request, *args, **kwargs):
         supervisor = True if request.user.groups.filter(name='Supervisor').exists() else False
         tecnicos = Tecnico.objects.all()
