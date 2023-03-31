@@ -66,7 +66,7 @@ def total_cadastro_bairro():
     for bairro in Bairro.objects.all():
         cadastros = Cadastro.objects.filter(endereco__bairro__nome=bairro).all()
         dados[bairro] = len(cadastros)
-
+    # print(dados)
     return dados
 
 

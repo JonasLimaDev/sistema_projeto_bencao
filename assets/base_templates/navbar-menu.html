@@ -57,6 +57,9 @@
         <a class="mx-2 py-2 my-2 my-sm-1 btn btn-outline-personal  {%if '/tecnico/equipe/' in request.path %} active {%endif%}"
            href="{% url 'equipe_tecnica' %}" id="nav-alteracoes">
             Equipe
+            {%if request.user.id|tecnicos_pendentes%}
+            <span class="badge text-bg-danger">{{request.user.id|tecnicos_pendentes}}</span>
+            {%endif%}
         </a>
         {%endif%}
         <div class="btn-group">

@@ -44,6 +44,8 @@ outros = [
     path('cadastros/avançado/upload/dados/', EnviarDados.as_view(), name='upload_dados'),
 
     path('dados/tabelas/', RenderData.as_view(), name='dados_tabelas'),
+    path('dados/tabelas/quantitativos/bairro/pdf', GerarTabela.as_view(), name='dados_pdf'),
+    
 ]
 
 urlpatterns = urls_familia + urls_cadastro + outros

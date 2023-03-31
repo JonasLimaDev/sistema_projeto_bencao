@@ -2,6 +2,22 @@ from .models import *
 import re
 from change_control.classes_change_control import ChangeCampoData
 
+
+
+from datetime import date
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.pdfbase.pdfmetrics import registerFontFamily
+from django.conf import settings
+
+from reportlab.platypus import BaseDocTemplate, Frame, PageTemplate, Paragraph,Image,Table, TableStyle
+# from functools import partial
+from reportlab.lib.units import inch, cm
+import io,os
+from django.conf import settings
+from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
+
+
 def salvar_membro(form,cadastro):
 	nome = form.cleaned_data['nome']
 	sexo = form.cleaned_data['sexo']
@@ -109,5 +125,80 @@ def is_cpf(cpf):
 	else:
 		return False
 
+
+def header_footer(canvas, doc):
+    styles = getSampleStyleSheet()
+    styleF = ParagraphStyle('rodape',
+                           
+                           fontSize=10,
+                           parent=styles['Normal'],
+                           alignment=1,
+                           spaceAfter=14)
+    
+	
+    # path = os.path.join(, uri.replace(settings.MEDIA_URL, ""))
+    # Save the state of our canvas so we can draw on it
+    canvas.saveState()
+    local = "img/timbre.jpg"
+    path = os.path.join(settings.STATIC_ROOT, local)
+    # print(path)
+    # open(local,'rb')
+    # logo = "logos.png"
+    # print(logo)
+    im = Image(path, 10*cm,1.5*cm)
+
+
+    # Header
+    imagem =  im
+    
+    w, h = imagem.wrap(doc.width, doc.topMargin)
+    imagem.drawOn(canvas, doc.leftMargin+doc.rightMargin, doc.height + doc.topMargin -h/2)
+    # header =  Paragraph('Prefeitura Municipal de Altamira<br/>Secretaria Municipal de Assistência e Promoção Social<br/>Projeto Galileu', styleHeader)
+    
+    # w, h = header.wrap(doc.width, doc.topMargin)
+    # header.drawOn(canvas, doc.leftMargin, doc.height + doc.topMargin - h/2)
+
+
+    # Footer
+    footer = Paragraph('Rua. Prof. Joelina Pedrosa de Farias, 370 - Esplanada do Xingu - Telefone: (93) 3515-2416<br/>CEP 68372-855 Altamira/PA -  assistenciasocial.atm.gab@gmail.com', styleF)
+    w, h = footer.wrap(doc.width, doc.bottomMargin)
+    footer.drawOn(canvas, doc.leftMargin, doc.bottomMargin - h)
+    # Release the canvas
+    canvas.restoreState()
+
+def gerar_doc(text_param):
+    """Função que constroi o documento do termo. 
+    Recebe uma lista com os parágrafos para adicionar no documento.
+    Retorna os Bytes para renderizar o documento."""
+
+    # cria os bytes pra receber os dados do documento
+    buffer = io.BytesIO()
+    
+    
+    
+    TopMargin = 2 * cm
+    #Cria a instância do documento
+    doc = BaseDocTemplate(buffer, author="Web System", title="TERMO LOTE")
+
+    # definição das margens
+    frame = Frame(2.5*cm, 1*cm, doc.width+1.5*cm, doc.height+3.5*cm)
+    
+    template = PageTemplate(id='termo_entrega_orgão', frames=frame,)
+    
+    doc.addPageTemplates([template])
+    text = []
+    doc = BaseDocTemplate(buffer,author="Sistema Projeto Bênção",title="Quantitativos Por Bairro", topMargin=TopMargin)
+    frame = Frame(doc.leftMargin, doc.bottomMargin, doc.width, doc.height-2*cm, id='normal')
+    template = PageTemplate(id='evolução', frames=frame, onPage=header_footer)
+    doc.addPageTemplates([template])
+
+    #insere a imagem no documento
+    # text.append(img)
+    
+    #constroi o documento passando a lista de base e a lista de parágarfos do parâmetro
+    doc.build(text+text_param)
+  
+    buffer.seek(0)
+    return buffer 
 if __name__ =="__main__":
     pass

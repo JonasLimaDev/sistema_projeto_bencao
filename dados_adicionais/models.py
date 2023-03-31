@@ -97,3 +97,13 @@ class Saude(models.Model):
     tipo_deficiencia = models.CharField(max_length=1, choices=TIPO_DEFICIENCIA, null=True, blank=True,
                                         verbose_name="Especifique o Tipo de Deficiência")
     gravidez = models.CharField(max_length=1, choices=GRAVIDEZ, null=True, blank=True, verbose_name="Gravidez")
+
+
+class DadosBanco(models.Model):
+    class Meta:
+        verbose_name = "Dados de Banco"
+        verbose_name_plural = "Dados Bancários"
+
+    conta = models.CharField(max_length=15,  null=False, blank=False,
+                                        verbose_name="Nº da Conta")
+    agencia = models.CharField(max_length=15,  null=False, blank=False, verbose_name="Agência")

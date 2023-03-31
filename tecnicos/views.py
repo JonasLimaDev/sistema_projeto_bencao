@@ -141,7 +141,6 @@ class EquipeTecnicaView(TemplateView):
         return render(request,self.template_name,{'tecnicos':tecnicos,'supervisor':supervisor})
 
 
-
 def logout_view(request):
     logout(request)
     return redirect('home')
