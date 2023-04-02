@@ -1,13 +1,14 @@
 from django.views import View
 from django.http import FileResponse
-
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 ### ------ reportlab imports ------ ###
 from reportlab.platypus import Paragraph, Table, TableStyle
 from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 
 from reportlab.lib import colors
 from .printer_data import *
-from .services import gerar_doc
+
 
 styles = getSampleStyleSheet()
 set_fonts()
@@ -23,13 +24,11 @@ styleTableBairro = TableStyle([('BOX', (0, 0), (-1, -1), 0.25, colors.black),
                                ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
 
                                ('FONTNAME', (0, 0), (-1, -1), 'Arial'),
-                               ('FONTNAME', (0,0), (-1,0), 'ArialN'),
+                               ('FONTNAME', (0, 0), (-1,0), 'ArialN'),
 
                                # posições são baseadas matriz
                                # posição M[2][0] até M[2][-1]. -1 faz referencia ao fim
                                ('SPAN', (2, 0), (2, -1)),  # faz o span em uma coluna
-                               ('SPAN', (5, 0), (5, -1)),
-
 
                                ('FONTSIZE', (0, 0), (-1, -1), 12),
                                ('FONTSIZE', (0, 0), (-1, 0), 14),
@@ -49,7 +48,7 @@ styleTableNormal = TableStyle([('BOX', (0, 0), (-1, -1), 0.25, colors.black),
                                ('TEXTCOLOR', (0, 0), (1, -1), colors.black)]
                               )
 
-
+@method_decorator(login_required, name='dispatch')
 class PrinterTableView(View):
     def get(self, request, *args, **kwargs):
         argumento = self.kwargs['filter']

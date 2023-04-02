@@ -1,7 +1,30 @@
 {% extends 'base.html' %}
 {% block main %}
+
+<div class="row align-items-center justify-content-content-between ">
+  <div class="col-3 ">
+    <h5 class="card-title ">Dados e Informações</h5>
+
+  </div>
+  <div class="col d-flex align-items-center justify-content-end">
+
+      <div class="ms-2">
+          <a href="{% url 'dados_pdf' 'tudo' %}" type="button" target="_blank" class="btn btn-outline-secondary mx-2 "><i
+                  class="bi bi-printer-fill align-middle" style="font-size: 1.25rem;"></i><span
+                  class="align-middle mx-1">Imprimir</span>
+          </a>
+          <a href="{% url 'upload_dados'%}" type="button" class="btn btn-outline-secondary mx-2 "><i
+                  class="bi bi-cloud-upload-fill align-middle" style="font-size: 1.25rem;"></i><span
+                  class="align-middle mx-1">Upload</span>
+          </a>
+      </div>
+    </div>
+</div>
+<hr>
+
 <div class="row gy-3 gx-2">
-    
+
+
     <div class="col-6">
         <div class="card">
             <div class="card-header d-flex justify-content-around">
@@ -35,11 +58,7 @@
                       </table>
                     </div>
             </div>
-
-
         </div>
-
-     
 
     </div>
 
@@ -73,11 +92,7 @@
                       </table>
                     </div>
             </div>
-
-
         </div>
-        
-       
 
     </div>
 

@@ -21,9 +21,9 @@
                 <h4>{{title_form}}</h4>
             </div>
             {{messages.erros}}
-            <div class=" card-body row d-flex py-1 mb-3  justify-content-start align-items-baseline">
+            <div class=" card-body row d-flex py-1 mb-3  justify-content-center align-items-baseline">
                 {% for campo in form %}
-                <div class="{%if title_form == " Informações de Acesso "%} col-6 p-1 {%else%} col-4 p-1 {%endif%} ">
+                <div class=" {%if title_form == 'Informações de Acesso' %} col-6 p-1 {%else%} col-4 p-1 {%endif%} ">
                 <div class="mb-2 ms-2">
                     {% if campo.errors %}
                     <label class="form-label" for="{{campo.id_for_label}}">{{campo.label}}</label>

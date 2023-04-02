@@ -26,13 +26,6 @@ from change_control.services import create_change_campos
 from change_control.classes_change_control import ChangeCampoData
 
 
-from reportlab.platypus import  Paragraph, Table
-    
-from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
-from django.http import FileResponse
-from reportlab.lib import colors
-
-
 def gerar_valores(mes_dict):
     for mes in mes_dict:
         mes_dict[mes] = randint(20, 249)
@@ -61,6 +54,7 @@ class HomePageView(TemplateView):
         return render(request, self.template_name, {'dados': dados})
 
 
+@method_decorator(login_required, name='dispatch')
 class RenderData(TemplateView):
     template_name = 'tabelas_dados.html'
 
@@ -726,91 +720,6 @@ def dados_cadastro_json(request):
     # data_json.append(list())
 
     return JsonResponse(data_json, safe=False)
-
-
-
-
-class GerarTabela(View):
-
-
-# Create your views here.
-    # set_fonts()
-    # styles = getSampleStyleSheet()
-    # styleAS = ParagraphStyle('assinatura',
-    #                        fontFamily="Arial",
-    #                        fontSize=11,
-    #                        parent=styles['Normal'],
-    #                        alignment=1,
-    #                      spaceBefore=0,
-    #                        spaceAfter=14)
-    # styleLinha = ParagraphStyle('linha',
-    #                        fontFamily="Arial",
-    #                        fontSize=8,
-    #                        parent=styles['Normal'],
-    #                        alignment=1,
-    #                      spaceBefore=0,
-    #                        spaceAfter=0)
-    
-    # styleData = ParagraphStyle('data', fontFamily="Arial", fontSize=11,
-    #             parent=styles['Normal'], alignment=2, spaceBefore=0, spaceAfter=18)
-                
-    # styleNormal = ParagraphStyle('corpo_normal', fontFamily="Arial", fontSize=11,
-    #                 parent=styles['Normal'], alignment=4, leading=18, spaceBefore=0, spaceAfter=12)
-
-    def get(self, request, *args, **kwargs):
-
-        # lote = get_object_or_404(LoteEntrega, id=self.kwargs['pk'])
-        dados_bairros = total_cadastro_bairro()
-        text = []
-        # ---- Adiciona os parágrafos do documento em uma lista
-        data = []
-        counter = 0
-        for chave, valor in dados_bairros.items():
-            if counter == 0:
-                linha = []
-            linha.append(chave)
-            linha.append(valor)
-            linha.append("")    
-            counter +=1 
-            if counter == 3:
-                data.append(linha)
-                counter=0
-            
-            
-            print(data)
-        # text.append(Paragraph(f"<br/>", self.styleNormal))
-        # text.append(Paragraph(f"<b>Lote Nº:</b> {lote.codigo_lote} <br/>  <b>Orgão Destino:</b> {lote.orgao_receptor}", self.styleNormal))
-        # text.append(Paragraph(f"Eu, {'_'*75}, Representante do(a) {lote.orgao_receptor}.\
-        #         Declaro que este orgão recebeu os itens referentes aos benefícios eventuais conforme listagem Listagem Abaixo:", self.styleNormal))
-        # lista_beneficios = [["Código Beneficio","Beneficiado","Técnico Responsável","Data da Solicitação"]]
-        
-        # for beneficio in lote.registros.all():
-        #     lista_beneficios.append([beneficio.codigo_registro,beneficio.beneficiado,beneficio.solicitante,beneficio.data_solicitacao.strftime('%d/%m/%Y')])
-        
-        tabela=Table(data)
-        
-        tabela.setStyle(TableStyle([('BOX', (0,0), (-1,-1), 0.25, colors.black),
-                       ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
-                       ('ALIGN',(0,0),(-1,-1),'RIGHT'),
-                       ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
-                       # span é uma matriz
-                       # posição M[2][0] até M[2][-1] -1 é o fim
-                       ('SPAN', (2, 0), (2, -1)),
-                       ('SPAN', (5, 0), (5, -1)),
-                       ('SPAN', (8, 0), (8, -1)),
-                       ('FONTSIZE', (0,0), (-1,-1), 12),
-                       ('TEXTCOLOR',(0,0),(1,-1),colors.black)]
-                       
-                       ))
-        text.append(tabela)
-        # text.append(Paragraph(f"<br/><br/>Altamira-PA, _______ de ________________ de __________", self.styleData))
-        # text.append(Paragraph(f"{'_'*60}", self.styleLinha))
-        # text.append(Paragraph(f"Responsável Pelo Recebimento", self.styleAS))
-    
-
-        buffer = gerar_doc(text)
-        
-        return FileResponse(buffer, filename=f'termo_entrega_orgão.pdf')
 
 
 def handler500(request):

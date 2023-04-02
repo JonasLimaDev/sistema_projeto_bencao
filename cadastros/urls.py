@@ -45,8 +45,8 @@ outros = [
     path('cadastros/editar/habitacao/<int:pk>/', EditarHabitacaoView.as_view(), name='editar_habitacao'),
     path('cadastros/adicionar/habitacao/<int:pk>/', AdicionarHabitacaoView.as_view(), name='adicionar_habitacao'),
 
-    path('cadastros/json/', dados_cadastro_json, name='json'),
-    path('cadastros/avançado/upload/dados/', EnviarDados.as_view(), name='upload_dados'),
+    path('dados/json/', dados_cadastro_json, name='json'),
+    path('dados/uploads/', EnviarDados.as_view(), name='upload_dados'),
 
     path('dados/tabelas/', RenderData.as_view(), name='dados_tabelas'),
 
