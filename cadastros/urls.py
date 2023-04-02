@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.urls import path
 from .views import *
-
+from .views_printer import PrinterTableView
 
 urls_familia = [
     path('cadastros/editar/referencia/<int:pk>/', EditarReferenciaView.as_view(),name='editar_referencia'),
@@ -33,6 +33,11 @@ urls_cadastro =[
 
 ]
 
+printer = [
+
+    path('printer/dados/tabela/total/<str:filter>/', PrinterTableView.as_view(), name='dados_pdf'),
+
+]
 
 outros = [
     path('', HomePageView.as_view(), name='home'),
@@ -44,8 +49,8 @@ outros = [
     path('cadastros/avançado/upload/dados/', EnviarDados.as_view(), name='upload_dados'),
 
     path('dados/tabelas/', RenderData.as_view(), name='dados_tabelas'),
-    path('dados/tabelas/quantitativos/bairro/pdf', GerarTabela.as_view(), name='dados_pdf'),
+
     
 ]
 
-urlpatterns = urls_familia + urls_cadastro + outros
+urlpatterns = urls_familia + urls_cadastro +printer+ outros

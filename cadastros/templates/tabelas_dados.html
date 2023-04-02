@@ -6,7 +6,7 @@
         <div class="card">
             <div class="card-header d-flex justify-content-around">
                 <h5 class="text-center card-title fw-bold">Total de Cadastros em cada Bairro</h5>
-                <a href="{% url 'dados_pdf' %}" target="_blank" class="link-secondary text-decoration-none" ><i
+                <a href="{% url 'dados_pdf' 'por_bairros' %}" target="_blank" class="link-secondary text-decoration-none" ><i
                   class="bi bi-printer align-middle   " style="font-size: 1.5rem;"></i><span class="align-middle mx-1"></span></a>
             </div>
             <div class="card-body">
@@ -45,8 +45,10 @@
 
     <div class="col-6">
         <div class="card">
-            <div class="card-header">
+            <div class="card-header d-flex justify-content-around">
                 <h5 class="text-center card-title fw-bold">Total de Cadastros em cada RUC</h5>
+                <a href="{% url 'dados_pdf' 'por_ruc' %}" target="_blank" class="link-secondary text-decoration-none" ><i
+                  class="bi bi-printer align-middle   " style="font-size: 1.5rem;"></i><span class="align-middle mx-1"></span></a>
             </div>
             <div class="card-body">
                 <div class="table-responsive overflow-auto" >
@@ -82,8 +84,10 @@
 
     <div class="col-6 ">
         <div class="card">
-            <div class="card-header">
+            <div class="card-header d-flex justify-content-around">
                 <h5 class="text-center card-title fw-bold">Total de Cadastros em cada CRAS</h5>
+                <a href="{% url 'dados_pdf' 'por_cras' %}" target="_blank" class="link-secondary text-decoration-none" ><i
+                  class="bi bi-printer align-middle   " style="font-size: 1.5rem;"></i><span class="align-middle mx-1"></span></a>
             </div>
             <div class="card-body">
                 <div class="table-responsive overflow-auto" >
