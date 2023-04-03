@@ -1,4 +1,5 @@
-from .filters import total_cadastro_bairro, total_cadastro_ruc, total_cadastro_cras
+# from .filters import total_cadastro_bairro, total_cadastro_ruc, total_cadastro_cras
+from .filters import *
 from pprint import pprint
 
 from django.conf import settings
@@ -103,6 +104,39 @@ def gerar_doc(text_param):
 
     buffer.seek(0)
     return buffer
+def gerar_doc2(text_param):
+    """Função que constroi o documento em pdf.
+    Recebe uma lista com os parágrafos para adicionar no documento.
+    Retorna os Bytes para renderizar o documento."""
+
+    # cria os bytes pra receber os dados do documento
+    buffer = io.BytesIO()
+
+    TopMargin = 2 * cm
+    #Cria a instância do documento
+    doc = BaseDocTemplate(buffer, author="Web System", title="TERMO LOTE")
+
+    # definição das margens
+    frame = Frame(2.5*cm, 1*cm, doc.width+1.5*cm, doc.height+3.5*cm)
+
+    template = PageTemplate(id='termo_entrega_orgão', frames=frame,)
+
+    doc.addPageTemplates([template])
+    text = []
+    doc = BaseDocTemplate(buffer,author="Sistema Projeto Bênção", title="Dados do Sistema", topMargin=TopMargin)
+    frame = Frame(doc.leftMargin, doc.bottomMargin, doc.width, doc.height-2*cm, id='normal')
+    template = PageTemplate(id='dados', frames=frame, onPage=header_footer)
+    doc.addPageTemplates([template])
+
+    #insere a imagem no documento
+    # text.append(img)
+
+    #constroi o documento passando a lista de base e a lista de parágarfos do parâmetro
+    doc.build(text+text_param)
+
+    buffer.seek(0)
+    return buffer
+
 
 
 def printer_total_bairro():
@@ -141,4 +175,24 @@ def printer_total_cras():
     for chave, valor in dados.items():
         lista.append([chave, valor])
 
+    return lista
+
+
+def printer_referecias():
+    dados = buscar_cadastro()
+    styles = getSampleStyleSheet()
+    styleNormal = ParagraphStyle('corpo_normal', fontFamily="Arial", fontSize=12,
+                                 parent=styles['Normal'], alignment=0, leading=18, spaceBefore=0, spaceAfter=0)
+
+    lista = [["Ord.", "Nome", "Bairro", "Endereco", "Telefone"]]
+    contador = 1
+
+    for cadastro in dados:
+        endereco = f"{cadastro.endereco.logradouro}, Nº {cadastro.endereco.numero}"
+        lista.append([Paragraph(str(contador), styleNormal),
+                      Paragraph(str(cadastro.responsavel_familiar), styleNormal),
+                      Paragraph(str(cadastro.endereco.bairro), styleNormal),
+                      Paragraph(endereco,  styleNormal),
+                      Paragraph(str(cadastro.responsavel_familiar.contato if cadastro.responsavel_familiar.contato else '--------' ), styleNormal)])
+        contador += 1
     return lista

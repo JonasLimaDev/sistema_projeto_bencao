@@ -113,3 +113,11 @@ def buscar_cadastro_ruc(bairro):
             lista_cadastros.append(cadastro)
 
     return lista_cadastros
+def buscar_cadastro(filter=None):
+    # bairro_bd = Bairro.objects.filter(nome=bairro)
+    if filter:
+        cadastros = Cadastro.objects.filter(endereco__ruc=bairro).all()
+    else:
+        cadastros = Cadastro.objects.select_related().all()
+
+    return cadastros
