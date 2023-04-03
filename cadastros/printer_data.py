@@ -16,22 +16,42 @@ from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 import io,os
 def set_fonts():
     """Função para carregar a fonte Arial para poder usar nos documentos"""
-    arial_normal = "fonts/arial.ttf"
+    lista_fontes = [
+        "fonts/arial.ttf",
+        "fonts/arial-bold.ttf",
+        "fonts/arial-italic.ttf",
+        "fonts/arial-bold-italic.ttf"
+    ]
+    lista_fontes2 = [
+        "fonts\\arial.ttf",
+        "fonts\\arial-bold.ttf",
+        "fonts\\arial-italic.ttf",
+        "fonts\\arial-bold-italic.ttf"
+    ]
+    path = os.path.join(settings.STATIC_ROOT, lista_fontes[0])
+    try:
+        pdfmetrics.registerFont(TTFont('Arial', str(path)))
+    except:
+        pdfmetrics.registerFont(TTFont('Arial', str(path).replace('/', '\\')))
+    path = os.path.join(settings.STATIC_ROOT, lista_fontes[1])
+    try:
+        pdfmetrics.registerFont(TTFont('ArialN', str(path)))
+    except:
+        pdfmetrics.registerFont(TTFont('ArialN',  str(path).replace('/', '\\')))
 
-    path = os.path.join(settings.STATIC_ROOT, arial_normal)
-    pdfmetrics.registerFont(TTFont('Arial', path))
+    path = os.path.join(settings.STATIC_ROOT, lista_fontes[2])
+    try:
+        pdfmetrics.registerFont(TTFont('ArialI',  str(path)))
+    except:
+        # path = os.path.join(settings.STATIC_ROOT, lista_fontes2[2])
+        pdfmetrics.registerFont(TTFont('ArialI',  str(path).replace('/', '\\')))
 
-    arial_negrito = "fonts/arial-bold.ttf"
-    path = os.path.join(settings.STATIC_ROOT, arial_negrito)
-    pdfmetrics.registerFont(TTFont('ArialN', path))
-
-    arial_italico = "fonts/arial-italic.ttf"
-    path = os.path.join(settings.STATIC_ROOT, arial_italico)
-    pdfmetrics.registerFont(TTFont('ArialI', path))
-
-    arial_italico_negrito = "fonts/arial-bold-italic.ttf"
-    path = os.path.join(settings.STATIC_ROOT, arial_italico_negrito)
-    pdfmetrics.registerFont(TTFont('ArialNI', path))
+    path = os.path.join(settings.STATIC_ROOT, lista_fontes[3])
+    try:
+        pdfmetrics.registerFont(TTFont('ArialNI',  str(path)))
+    except:
+        # path = os.path.join(settings.STATIC_ROOT, lista_fontes2[3])
+        pdfmetrics.registerFont(TTFont('ArialNI',  str(path).replace('/', '\\')))
 
     registerFontFamily('Arial', normal='ArialR', bold='ArialN', italic='ArialI', boldItalic='ArialNI')
 
