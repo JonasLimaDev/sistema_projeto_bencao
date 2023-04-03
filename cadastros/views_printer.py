@@ -53,11 +53,15 @@ styleTableNormal = [('BOX', (0, 0), (-1, -1), 0.25, colors.black),
                     ('TEXTCOLOR', (0, 0), (1, -1), colors.black)]
 
 styleTableReferencia = [('BOX', (0, 0), (-1, -1), 0.25, colors.black),
-                        ('FONTNAME', (0, 0), (-1, 0), 'ArialN'),
+                        ('FONTNAME', (0, 1), (-1, -1), 'Arial'),
+
+                        
+                        # ('FONTNAME', (4, 0), (4, 0), 'ArialN'),
+
+                        ('SPAN', (1, 0), (3, 0)),
                         ('BOTTOMPADDING', (0, 0), (0, -1), 6),
                         ('RIGHTPADDING', (0, 0), (-1, -1), 8),
                         ('LEFTPADDING', (0, 0), (-1, -1), 8),
-                        ('FONTNAME', (0, 1), (-1, -1), 'Arial'),
 
                         ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
 
@@ -65,7 +69,7 @@ styleTableReferencia = [('BOX', (0, 0), (-1, -1), 0.25, colors.black),
                         ('VALIGN', (0, 0), (-1, -1), 'TOP'),
 
                         ('FONTSIZE', (0, 0), (-1, -1), 12),
-                        ('FONTSIZE', (0, 0), (-1, 0), 14),
+                        
                         ('TEXTCOLOR', (0, 0), (1, -1), colors.black)]
 
 
@@ -74,6 +78,7 @@ class PrinterTableView(View):
     def get(self, request, *args, **kwargs):
         argumento = self.kwargs['filter']
         print(argumento)
+        printer_ficha(2865)
         data = []
         text = []
         if argumento == "por_bairros":
@@ -107,10 +112,30 @@ class PrinterTableView(View):
 
         elif argumento == "referencias":
             data = printer_referecias()
-            tabela = LongTable(data, colWidths=[40, 170, 100, 100, 120])
+            tabela = LongTable(data, colWidths=[45, 170, 80, 120, 110])
             tabela.setStyle(styleTableReferencia)
             text.append(tabela)
         else:
             text.append(Paragraph(f"ERRO na geração do documento", styleErro))
         buffer = gerar_doc(text)
+        
+        return FileResponse(buffer, filename=f'termo_entrega_orgão.pdf')
+
+
+@method_decorator(login_required, name='dispatch')
+class PrinterFichaView(View):
+    def get(self, request, *args, **kwargs):
+        argumento = self.kwargs['pk']
+        
+        data = printer_ficha(self.kwargs['pk'])
+        text = []
+        if data:
+            # data = printer_referecias()
+            tabela = Table(data, colWidths=[70, 80, 90, 100, 65,80])
+            tabela.setStyle(styleTableReferencia)
+            text.append(tabela)
+        else:
+            text.append(Paragraph(f"ERRO na geração do documento", styleErro))
+        buffer = gerar_doc(text)
+        
         return FileResponse(buffer, filename=f'termo_entrega_orgão.pdf')

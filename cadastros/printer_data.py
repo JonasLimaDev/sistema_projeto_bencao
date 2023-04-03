@@ -92,6 +92,7 @@ def header_footer(canvas, doc):
     # Release the canvas
     canvas.restoreState()
 
+
 def gerar_doc(text_param):
     """Função que constroi o documento em pdf.
     Recebe uma lista com os parágrafos para adicionar no documento.
@@ -124,39 +125,6 @@ def gerar_doc(text_param):
 
     buffer.seek(0)
     return buffer
-def gerar_doc2(text_param):
-    """Função que constroi o documento em pdf.
-    Recebe uma lista com os parágrafos para adicionar no documento.
-    Retorna os Bytes para renderizar o documento."""
-
-    # cria os bytes pra receber os dados do documento
-    buffer = io.BytesIO()
-
-    TopMargin = 2 * cm
-    #Cria a instância do documento
-    doc = BaseDocTemplate(buffer, author="Web System", title="TERMO LOTE")
-
-    # definição das margens
-    frame = Frame(2.5*cm, 1*cm, doc.width+1.5*cm, doc.height+3.5*cm)
-
-    template = PageTemplate(id='termo_entrega_orgão', frames=frame,)
-
-    doc.addPageTemplates([template])
-    text = []
-    doc = BaseDocTemplate(buffer,author="Sistema Projeto Bênção", title="Dados do Sistema", topMargin=TopMargin)
-    frame = Frame(doc.leftMargin, doc.bottomMargin, doc.width, doc.height-2*cm, id='normal')
-    template = PageTemplate(id='dados', frames=frame, onPage=header_footer)
-    doc.addPageTemplates([template])
-
-    #insere a imagem no documento
-    # text.append(img)
-
-    #constroi o documento passando a lista de base e a lista de parágarfos do parâmetro
-    doc.build(text+text_param)
-
-    buffer.seek(0)
-    return buffer
-
 
 
 def printer_total_bairro():
@@ -189,6 +157,7 @@ def printer_total_ruc():
 
     return lista
 
+
 def printer_total_cras():
     dados = total_cadastro_cras()
     lista = [["CRAS","Quantidade"]]
@@ -216,3 +185,37 @@ def printer_referecias():
                       Paragraph(str(cadastro.responsavel_familiar.contato if cadastro.responsavel_familiar.contato else '--------' ), styleNormal)])
         contador += 1
     return lista
+
+
+def printer_ficha(id):
+    cadastro = buscar_cadastro(id)
+    styles = getSampleStyleSheet()
+    styleNormal = ParagraphStyle('corpo_normal', fontFamily="Arial", fontSize=12,
+                                 parent=styles['Normal'], alignment=0, leading=12, spaceBefore=0, spaceAfter=0)
+    p_nome = Paragraph(str(cadastro.responsavel.nome), styleNormal)
+    p_apelido = Paragraph(str(cadastro.responsavel.apelido), styleNormal)
+    p_sexo = Paragraph(str(cadastro.responsavel.sexo), styleNormal)
+    p_genero = Paragraph(str(cadastro.responsavel.nome), styleNormal)
+    p_nome_social = Paragraph(str(cadastro.responsavel.nome), styleNormal)
+    p_situacao_civil = Paragraph(str(cadastro.responsavel.nome), styleNormal)
+    p_data_nascimento= Paragraph(str(cadastro.responsavel.nome), styleNormal)
+    p_idade =  Paragraph(str(cadastro.responsavel.idade), styleNormal)
+    linhas = [
+        [
+            Paragraph("<b>Nome:</b>",styleNormal), p_nome, "", "", Paragraph("<b>Apelido:</b>", styleNormal), p_apelido
+        ],        
+        [
+            Paragraph("<b>Sexo:</b>",styleNormal), p_sexo,
+            Paragraph("<b>Identidade de Gênero:</b>",styleNormal), cadastro.responsavel.identidade_genero,
+            Paragraph("<b>Nome Social:</b>",styleNormal), cadastro.responsavel.nome_social
+        ],
+        [
+        Paragraph("<b>Situação Civil:</b>",styleNormal), cadastro.responsavel.situacao_civil,
+        Paragraph("<b>Data de Nascimento:</b>",styleNormal),
+        cadastro.responsavel.data_nascimento.strftime("%d/%m/%Y") if cadastro.responsavel.data_nascimento else "-" ,
+        Paragraph("<b>Idade:</b>",styleNormal), p_idade ],
+        
+        ]
+    # linhas[0][1] = 
+    
+    return linhas

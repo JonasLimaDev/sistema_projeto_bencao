@@ -1,5 +1,6 @@
 from .models import *
 import re
+from .entidades.dados import CadastroData
 
 def buscar_cadastro_nome(nome):
     pessoas = Pessoa.objects.all()
@@ -32,7 +33,6 @@ def buscar_cadastro_cpf(cpf):
     cadastros_bd = Cadastro.objects.all()
     lista_cadastros = []
     for pessoa in pessoas:
-        # print(pessoa)
         cadastros = cadastros_bd.filter(responsavel_familiar=pessoa)
         for cadastro in cadastros:
             if cadastro not in lista_cadastros:
@@ -44,8 +44,6 @@ def buscar_cadastro_cpf(cpf):
                         cadastro = cadastros_bd.get(id=membro.cadastro_membro.id)
                         if cadastro not in lista_cadastros:
                             lista_cadastros.append(cadastro)
-                    # lista_cadastros.append(cadastros_bd.get(id=membro.cadastro_membro.id))
-    # print(lista_cadastros)
     return lista_cadastros
 
 
@@ -56,7 +54,6 @@ def buscar_cadastro_bairro(bairro):
     for cadastro in cadastros:
         if cadastro not in lista_cadastros:
             lista_cadastros.append(cadastro)
-
     return lista_cadastros
 
 
@@ -113,10 +110,14 @@ def buscar_cadastro_ruc(bairro):
             lista_cadastros.append(cadastro)
 
     return lista_cadastros
+
+
 def buscar_cadastro(filter=None):
     # bairro_bd = Bairro.objects.filter(nome=bairro)
     if filter:
-        cadastros = Cadastro.objects.filter(endereco__ruc=bairro).all()
+        cadastro = Cadastro.objects.get(id=filter)
+        return CadastroData(cadastro)
+
     else:
         cadastros = Cadastro.objects.select_related().all()
 
