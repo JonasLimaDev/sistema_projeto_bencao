@@ -13,10 +13,19 @@ styles = getSampleStyleSheet()
 set_fonts()
 styleErro = ParagraphStyle('erro',
                            fontSize=20,
+                           textColor="Red",
                            parent=styles['Normal'],
                            alignment=1,
                            spaceBefore=0,
                            spaceAfter=14)
+
+styleTitulo = ParagraphStyle('titulo',
+                           fontSize=16,
+                           parent=styles['Normal'],
+                           alignment=1,
+                           spaceBefore=10,
+                           spaceAfter=16)
+
 styleTableBairro = TableStyle([('BOX', (0, 0), (-1, -1), 0.25, colors.black),
                                ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
                                ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
@@ -52,16 +61,41 @@ styleTableNormal = [('BOX', (0, 0), (-1, -1), 0.25, colors.black),
                     ('FONTSIZE', (0, 0), (-1, 0), 14),
                     ('TEXTCOLOR', (0, 0), (1, -1), colors.black)]
 
+
 styleTableReferencia = [('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+                        ('FONTNAME', (0, 0), (-1, 0), 'ArialN'),
+                        ('BOTTOMPADDING', (0, 0), (0, -1), 6),
+                        ('RIGHTPADDING', (0, 0), (-1, -1), 8),
+                        ('LEFTPADDING', (0, 0), (-1, -1), 8),
+                        ('FONTNAME', (0, 1), (-1, -1), 'Arial'),
+
+                        ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
+
+
+                        ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+
+                        ('FONTSIZE', (0, 0), (-1, -1), 12),
+                        ('FONTSIZE', (0, 0), (-1, 0), 14),
+                        ('TEXTCOLOR', (0, 0), (1, -1), colors.black)]
+
+
+styleFicha = [('BOX', (0, 0), (-1, -1), 0.25, colors.black),
                         ('FONTNAME', (0, 1), (-1, -1), 'Arial'),
 
                         
                         # ('FONTNAME', (4, 0), (4, 0), 'ArialN'),
 
-                        ('SPAN', (1, 0), (3, 0)),
+                        ('SPAN', (1, 0), (2, 0)), # nome
+
+                        ('SPAN', (4, 0), (5, 0)),  #apelido
+                        ('SPAN', (0, 4), (1, 4)),  #Labe cor raca
+                        ('SPAN', (4, 4), (5, 4)), # escolaridade
+                        ('SPAN', (0, 5), (1, 5)),  #Labe trabalho
+                        ('SPAN', (4, 5), (5, 5)), # renda
+
                         ('BOTTOMPADDING', (0, 0), (0, -1), 6),
-                        ('RIGHTPADDING', (0, 0), (-1, -1), 8),
-                        ('LEFTPADDING', (0, 0), (-1, -1), 8),
+                        ('RIGHTPADDING', (0, 0), (-1, -1), 6),
+                        ('LEFTPADDING', (0, 0), (-1, -1), 6),
 
                         ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
 
@@ -112,7 +146,7 @@ class PrinterTableView(View):
 
         elif argumento == "referencias":
             data = printer_referecias()
-            tabela = LongTable(data, colWidths=[45, 170, 80, 120, 110])
+            tabela = LongTable(data, colWidths=[45, 170, 80, 120, 110],repeatRows=1)
             tabela.setStyle(styleTableReferencia)
             text.append(tabela)
         else:
@@ -129,13 +163,14 @@ class PrinterFichaView(View):
         
         data = printer_ficha(self.kwargs['pk'])
         text = []
+        text.append(Paragraph(f"<b>Ficha Cadastral</b>", styleTitulo))
         if data:
             # data = printer_referecias()
-            tabela = Table(data, colWidths=[70, 80, 90, 100, 65,80])
-            tabela.setStyle(styleTableReferencia)
+            tabela = Table(data, colWidths=[65,100, 110, 95, 70,90])
+            tabela.setStyle(styleFicha)
             text.append(tabela)
         else:
             text.append(Paragraph(f"ERRO na geração do documento", styleErro))
-        buffer = gerar_doc(text)
+        buffer = gerar_doc(text,"Ficha - Dados Cadastrais")
         
         return FileResponse(buffer, filename=f'termo_entrega_orgão.pdf')

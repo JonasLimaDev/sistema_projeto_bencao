@@ -63,7 +63,7 @@ def header_footer(canvas, doc):
                            fontSize=10,
                            parent=styles['Normal'],
                            alignment=1,
-                           spaceAfter=14)
+                           spaceAfter=12)
     canvas.saveState()
     local = "img/timbre.jpg"
     path = os.path.join(settings.STATIC_ROOT, local)
@@ -78,7 +78,7 @@ def header_footer(canvas, doc):
     imagem =  im
 
     w, h = imagem.wrap(doc.width, doc.topMargin)
-    imagem.drawOn(canvas, doc.leftMargin+doc.rightMargin, doc.height + doc.topMargin -h/2)
+    imagem.drawOn(canvas, doc.leftMargin+doc.rightMargin, doc.height + doc.topMargin)
     # header =  Paragraph('Prefeitura Municipal de Altamira<br/>Secretaria Municipal de Assistência e Promoção Social<br/>Projeto Galileu', styleHeader)
 
     # w, h = header.wrap(doc.width, doc.topMargin)
@@ -93,7 +93,7 @@ def header_footer(canvas, doc):
     canvas.restoreState()
 
 
-def gerar_doc(text_param):
+def gerar_doc(text_param, titulo="Dados Sistema"):
     """Função que constroi o documento em pdf.
     Recebe uma lista com os parágrafos para adicionar no documento.
     Retorna os Bytes para renderizar o documento."""
@@ -103,17 +103,17 @@ def gerar_doc(text_param):
 
     TopMargin = 2 * cm
     #Cria a instância do documento
-    doc = BaseDocTemplate(buffer, author="Web System", title="TERMO LOTE")
+    doc = BaseDocTemplate(buffer, author="Web System", title=titulo)
 
     # definição das margens
-    frame = Frame(2.5*cm, 1*cm, doc.width+1.5*cm, doc.height+3.5*cm)
+    frame = Frame(2*cm, 1*cm, doc.width+1.5*cm, doc.height+2*cm)
 
     template = PageTemplate(id='termo_entrega_orgão', frames=frame,)
 
     doc.addPageTemplates([template])
     text = []
-    doc = BaseDocTemplate(buffer,author="Sistema Projeto Bênção", title="Dados do Sistema", topMargin=TopMargin)
-    frame = Frame(doc.leftMargin, doc.bottomMargin, doc.width, doc.height-2*cm, id='normal')
+    doc = BaseDocTemplate(buffer,author="Sistema Projeto Bênção", title=titulo, topMargin=TopMargin)
+    frame = Frame(doc.leftMargin, doc.bottomMargin, doc.width, doc.height-1*cm, id='normal')
     template = PageTemplate(id='dados', frames=frame, onPage=header_footer)
     doc.addPageTemplates([template])
 
@@ -188,34 +188,67 @@ def printer_referecias():
 
 
 def printer_ficha(id):
+
     cadastro = buscar_cadastro(id)
+    
     styles = getSampleStyleSheet()
+    
+    #configuração do texto da célula
     styleNormal = ParagraphStyle('corpo_normal', fontFamily="Arial", fontSize=12,
                                  parent=styles['Normal'], alignment=0, leading=12, spaceBefore=0, spaceAfter=0)
+    
+    # Definição dos parágrafos para inserir nas células
+
     p_nome = Paragraph(str(cadastro.responsavel.nome), styleNormal)
     p_apelido = Paragraph(str(cadastro.responsavel.apelido), styleNormal)
     p_sexo = Paragraph(str(cadastro.responsavel.sexo), styleNormal)
-    p_genero = Paragraph(str(cadastro.responsavel.nome), styleNormal)
-    p_nome_social = Paragraph(str(cadastro.responsavel.nome), styleNormal)
-    p_situacao_civil = Paragraph(str(cadastro.responsavel.nome), styleNormal)
-    p_data_nascimento= Paragraph(str(cadastro.responsavel.nome), styleNormal)
+    p_genero = Paragraph(str(cadastro.responsavel.identidade_genero), styleNormal)
+    p_nome_social = Paragraph(str(cadastro.responsavel.nome_social), styleNormal)
+    p_situacao_civil = Paragraph(str(cadastro.responsavel.situacao_civil), styleNormal)
+    p_data_nascimento= Paragraph(str(cadastro.responsavel.data_nascimento.strftime("%d/%m/%Y") if cadastro.responsavel.data_nascimento else "-" ), styleNormal)
     p_idade =  Paragraph(str(cadastro.responsavel.idade), styleNormal)
+
+    p_cpf = Paragraph(str(cadastro.responsavel.cpf), styleNormal)
+    p_nis = Paragraph(str(cadastro.responsavel.nis), styleNormal)
+    p_cadunico = Paragraph(str(cadastro.responsavel.cadastro_unico), styleNormal)
+
+
+    p_cor_raca = Paragraph(str(cadastro.responsavel.cor_raca), styleNormal)
+    p_escolaridade = Paragraph(str(cadastro.responsavel.escolaridade), styleNormal)
+    p_trabalho = Paragraph(str(cadastro.responsavel.trabalho), styleNormal)
+    p_renda = Paragraph(f"R$ {str(cadastro.responsavel.renda).replace('.',',')}", styleNormal)
+
+    p_contato = Paragraph(str(cadastro.responsavel.contato), styleNormal)
+    p_contato2 = Paragraph(str(cadastro.responsavel.contato2), styleNormal)
+
     linhas = [
         [
-            Paragraph("<b>Nome:</b>",styleNormal), p_nome, "", "", Paragraph("<b>Apelido:</b>", styleNormal), p_apelido
+            Paragraph("<b>Nome:</b>",styleNormal), p_nome, "",  Paragraph("<b>Apelido:</b>", styleNormal), p_apelido,""
         ],        
         [
             Paragraph("<b>Sexo:</b>",styleNormal), p_sexo,
-            Paragraph("<b>Identidade de Gênero:</b>",styleNormal), cadastro.responsavel.identidade_genero,
-            Paragraph("<b>Nome Social:</b>",styleNormal), cadastro.responsavel.nome_social
+            Paragraph("<b>Identidade de Gênero:</b>",styleNormal), p_genero,
+            Paragraph("<b>Nome Social:</b>",styleNormal), p_nome_social,
         ],
         [
-        Paragraph("<b>Situação Civil:</b>",styleNormal), cadastro.responsavel.situacao_civil,
-        Paragraph("<b>Data de Nascimento:</b>",styleNormal),
-        cadastro.responsavel.data_nascimento.strftime("%d/%m/%Y") if cadastro.responsavel.data_nascimento else "-" ,
-        Paragraph("<b>Idade:</b>",styleNormal), p_idade ],
-        
-        ]
+            Paragraph("<b>Situação Civil:</b>",styleNormal), p_situacao_civil,
+            Paragraph("<b>Data de Nascimento:</b>",styleNormal), p_data_nascimento,
+            Paragraph("<b>Idade:</b>",styleNormal), p_idade 
+        ],
+        [
+            Paragraph("<b>CPF:</b>",styleNormal), p_cpf,
+            Paragraph("<b>Possui Cadastro Único:</b>",styleNormal), p_cadunico,
+            Paragraph("<b>NIS:</b>",styleNormal), p_nis
+        ],
+        [
+            Paragraph("<b>Identificação Étnico-Racial:</b>",styleNormal),"", p_cor_raca,
+            Paragraph("<b>Escolaridade:</b>",styleNormal), p_escolaridade,  
+        ],
+        [
+            Paragraph("<b>Situação de Trabalho:</b>",styleNormal),"", p_trabalho,
+            Paragraph("<b>Renda:</b>",styleNormal), p_renda,
+        ],
+    ]
     # linhas[0][1] = 
     
     return linhas
