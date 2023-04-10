@@ -35,8 +35,7 @@ class AddExtrasView(TemplateView):
         if form.is_valid():
             extra = form.save()
             referencia.documentos_extras = extra
-            referencia.save()
-            # editar_endereco(endereco,form)
+            referencia.save()q
             messages.success(request, f'Informações Salvas com Sucesso.')
             return redirect('listar_cadastros', f'id:{cadastro.id}')
 
@@ -48,9 +47,6 @@ class EditExtrasView(TemplateView):
     form_extra = FormInfoExtra
     template_name = "cadastros/forms/formulario_cadastro.html"
     context = {'titulo_pagina': "Informações Adicionais", 'url_cancelar': 'dados'}
-
-    # dados_bd = None
-
     def get(self, request, *args, **kwargs):
         dados_bd = get_object_or_404(Identificacao, id=self.kwargs['pk'])
         cadastro = Cadastro.objects.get(responsavel_familiar__documentos_extras=dados_bd)
@@ -69,7 +65,6 @@ class EditExtrasView(TemplateView):
         cadastro = Cadastro.objects.get(responsavel_familiar__documentos_extras=dados_bd)
 
         self.context['url_cancelar'] = ''
-        # print(dados_bd.rg)
         referencia = Referencia.objects.get(documentos_extras=dados_bd)
         forms_generic = {"Informações Extras": form}
         if form.is_valid():
@@ -82,11 +77,6 @@ class EditExtrasView(TemplateView):
             dados_bd.natural_cidade = form.cleaned_data['natural_cidade']
             dados_bd.natural_estado = form.cleaned_data['natural_estado']
             dados_bd.save()
-            #     # extra = form.save()
-            #     # referencia.documentos_extras = extra
-            #     # referencia.save()
-
-            #     # editar_endereco(endereco,form)
             messages.success(request, f'Informações Salvas com Sucesso.')
             return redirect('listar_cadastros', f'id:{cadastro.id}')
 
@@ -225,7 +215,7 @@ class AddDadosBancariosView(TemplateView):
 
     def post(self, request, *args, **kwargs):
         form = self.form_banco(request.POST)
-        referencia = get_object_or_404(Referencia, id=self.kwargs['sk'])
+        referencia = get_object_or_404(Referencia, id=self.kwargs['pk'])
         self.context['id_cancelar'] = self.kwargs['pk']
         forms_generic = {"Informações Bancárias": form}
         if form.is_valid():
