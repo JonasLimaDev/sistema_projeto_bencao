@@ -188,9 +188,7 @@ def printer_referecias():
 
 
 def printer_ficha(id):
-
     cadastro = buscar_cadastro(id)
-    
     styles = getSampleStyleSheet()
     
     #configuração do texto da célula

@@ -37,3 +37,10 @@ class FormDadosSaude(forms.ModelForm):
         # 'natural_cidade': 'Cidade em que a pessoa nasceu',
         # 'complemento': 'Casa 05; 2º Andar; Chácara Conceição',
         }
+
+
+class FormDadosBancarios(forms.ModelForm):
+    class Meta:
+        model = DadosBanco
+        fields = '__all__'
+

@@ -111,8 +111,7 @@ styleFicha = [('BOX', (0, 0), (-1, -1), 0.25, colors.black),
 class PrinterTableView(View):
     def get(self, request, *args, **kwargs):
         argumento = self.kwargs['filter']
-        print(argumento)
-        printer_ficha(2865)
+        # print(argumento)
         data = []
         text = []
         if argumento == "por_bairros":
@@ -166,11 +165,11 @@ class PrinterFichaView(View):
         text.append(Paragraph(f"<b>Ficha Cadastral</b>", styleTitulo))
         if data:
             # data = printer_referecias()
-            tabela = Table(data, colWidths=[65,100, 110, 95, 70,90])
+            tabela = Table(data, colWidths=[65, 100, 110, 95, 70, 90])
             tabela.setStyle(styleFicha)
             text.append(tabela)
         else:
             text.append(Paragraph(f"ERRO na geração do documento", styleErro))
-        buffer = gerar_doc(text,"Ficha - Dados Cadastrais")
+        buffer = gerar_doc(text, "Ficha - Dados Cadastrais")
         
         return FileResponse(buffer, filename=f'termo_entrega_orgão.pdf')

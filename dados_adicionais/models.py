@@ -104,6 +104,5 @@ class DadosBanco(models.Model):
         verbose_name = "Dados de Banco"
         verbose_name_plural = "Dados Bancários"
 
-    conta = models.CharField(max_length=15,  null=False, blank=False,
-                                        verbose_name="Nº da Conta")
-    agencia = models.CharField(max_length=15,  null=False, blank=False, verbose_name="Agência")
+    conta = models.CharField(max_length=9,  null=False, blank=False, verbose_name="Nº da Conta")
+    agencia = models.CharField(max_length=5,  null=False, blank=False, verbose_name="Agência")

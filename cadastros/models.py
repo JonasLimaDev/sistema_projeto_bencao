@@ -147,6 +147,9 @@ class Referencia(Pessoa):
     cor_raca = models.CharField(max_length=1, choices=COR_RACA, null=False, blank=False, verbose_name="Identificação Étnico-Racial")
     
     documentos_extras = models.OneToOneField('dados_adicionais.Identificacao', null=True, blank=True, on_delete=models.CASCADE,verbose_name="Documentação Adicional")
+    dados_bancarios = models.OneToOneField('dados_adicionais.DadosBanco', null=True, blank=True,
+                                             on_delete=models.CASCADE, verbose_name="Dados Bancários")
+
     cadastro_unico = models.CharField(max_length=1, choices=ESCOLHA, null=False, blank=False,default='1', verbose_name="Possui Cadastro Único?")
     
     contato2 = models.CharField(max_length=15, null=True, blank=True, verbose_name="Contato Alternativo")
@@ -317,7 +320,11 @@ class Cadastro(models.Model):
         ('2', 'CRAS II'),
         ('3', 'CRAS III'),
         )
-
+    STATUS = (
+        ("1", "Ativo"),
+        ("2", "Suspenso"),
+        ("3", "Desligado")
+    )
     class Meta:
         ordering = ('responsavel_familiar__nome',)
     
@@ -327,10 +334,9 @@ class Cadastro(models.Model):
     responsavel_cadastro = models.ForeignKey("tecnicos.Tecnico", on_delete=models.PROTECT, default=1)
     abrangencia = models.CharField(max_length=1, choices=CRAS, null=True, blank=True, verbose_name="Cras de Abrangência")
     data_cadastro = models.DateField(null=False, blank=False, default=datetime.now)
-    data_alteracao = models.DateField(auto_now=True,null=False, blank=False, )
-    # responsavel_cadastro = models.ForeignKey("tecnicos.Tecnico", on_delete=models.PROTECT, null=True, blank=True)
+    data_alteracao = models.DateField(auto_now=True, null=False, blank=False)
     entrevistador = models.CharField(max_length=200, null=True, blank=True, verbose_name="Entrevistador")
-
+    status = models.CharField(max_length=1, choices=STATUS, null=False, blank=False, default="1", verbose_name="Status do Cadastro")
     def __str__(self):
         return self.responsavel_familiar.nome
 
