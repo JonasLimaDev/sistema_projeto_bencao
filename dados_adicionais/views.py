@@ -35,12 +35,13 @@ class AddExtrasView(TemplateView):
         if form.is_valid():
             extra = form.save()
             referencia.documentos_extras = extra
-            referencia.save()q
+            referencia.save()
             messages.success(request, f'Informações Salvas com Sucesso.')
             return redirect('listar_cadastros', f'id:{cadastro.id}')
 
         self.context['forms_generic'] = forms_generic
         return render(request, self.template_name, self.context)
+
 
 @method_decorator(login_required, name='dispatch')
 class EditExtrasView(TemplateView):

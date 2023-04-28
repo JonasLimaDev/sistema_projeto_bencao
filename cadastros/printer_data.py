@@ -246,6 +246,10 @@ def printer_ficha(id):
             Paragraph("<b>Situação de Trabalho:</b>",styleNormal),"", p_trabalho,
             Paragraph("<b>Renda:</b>",styleNormal), p_renda,
         ],
+        [
+            Paragraph("<b>Contato:</b>",styleNormal),"", p_contato,
+            Paragraph("<b>Contato Alternativo:</b>",styleNormal), p_contato2,
+        ],
     ]
     # linhas[0][1] = 
     
