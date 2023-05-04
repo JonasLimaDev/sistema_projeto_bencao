@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load filtros %}
+{% block title %}{{titulo_pagina}}{% endblock title %}
+{% block barra_titulo %}
+<div class="row align-items-center justify-content-content-between">
+    <div class="col-4 ">
+        <h5 class="card-title ">{{titulo_pagina}}</h5>
+    </div>
+    <div class="col d-flex align-items-center justify-content-end">
+    </div>
+    {% endblock barra_titulo %}
+    {% block main %}
+    {% include 'mensagens/erros.html' %}
+    <form class="px-5" method="post">
+        {% csrf_token %}
+
+        <div class="card">
+            {%for title_form, form in forms_generic.items %}
+
+            <div class="card-header  border text-center mb-3">
+                <h4>{{title_form}}</h4>
+            </div>
+            {{messages.erros}}
+            <div class=" card-body row d-flex py-1 mb-3  justify-content-center align-items-baseline">
+                {% for campo in form %}
+                <div class=" {%if title_form == 'Informações de Acesso' %} col-6 p-1 {%else%} col-4 p-1 {%endif%} ">
+                <div class="mb-2 ms-2">
+                    {% if campo.errors %}
+                    <label class="form-label" for="{{campo.id_for_label}}">{{campo.label}}</label>
+                    {{campo|addclass:'form-control border-danger'}}
+                    {% else %}
+                    <label class="form-label" for="{{campo.id_for_label}}">{{campo.label}}</label>
+                    {{campo|addclass:'form-control'}}
+                    {% endif %}
+                    <div class="form-text">{{campo.help_text}}</div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {%endfor%}
+        <div class="card-footer py-2 m-1  text-center ">
+
+            <div class="d-grid gap-2 col-4 mx-auto">
+                {%if login%}
+                <button type="submit" class="btn btn-outline-success " id="buttonLogar">Logar</button>
+                {%else%}
+                <button type="submit" class="btn btn-outline-success " id="buttonSalveUser" >Salvar</button>
+                {%endif%}
+            </div>
+        </div>
+</div>
+
+</form>
+
+
+{% endblock main %}

@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load filtros %}
+{% block title %}Dados do Técnico{% endblock title %}
+{% block barra_titulo %}
+
+        <h5 class="card-title mx-2">Seu Perfil </h5>
+
+{% endblock barra_titulo %}
+{% block main %}
+<div class="card">
+    <div class="card-header  text-center mb-2">
+        <h4>Informações</h4>
+    </div>
+    <div class=" card-body row row-cols-md-4 d-flex py-1  justify-content-start align-items-baseline">
+        <div class="col d-flex">
+            <p class="card-text">Nome: </p>
+            <p class="card-text ps-2 text-nowrap">{{tecnico}}</p>
+        </div>
+        <div class="col d-flex">
+            <p class="card-text">Órgão: </p>
+            <p class="card-text ps-2">{{tecnico.orgao}}</p>
+        </div>
+        <div class="col d-flex">
+            <p class="card-text">Cargo: </p>
+            <p class="card-text ps-2">{{tecnico.cargo}}</p>
+        </div>
+        <div class="col d-flex">
+            <p class="card-text">E-mail: </p>
+            <p class="card-text ps-2">
+                {%if tecnico.usuario.email %}
+                {{tecnico.usuario.email}}
+                {%endif%}
+            </p>
+        </div>
+        <div class="col d-flex">
+            <p class="card-text">Contato: </p>
+            <p class="card-text ps-2">
+                {%if tecnico.contato %}
+                {{tecnico.contato}}
+                {%endif%}
+                </p>
+        </div>
+    </div>
+</div>
+
+<div class="card my-3">
+    <div class="card-header  text-center mb-2">
+        <h4>Acesso</h4>
+    </div>
+    <div class=" card-body row row-cols-md-2 d-flex py-1  justify-content-start align-items-baseline">
+        <div class="col d-flex">
+            <p class="card-text">Nome de Usuário: </p>
+            <p class="card-text ps-2 text-nowrap">{{tecnico.usuario.username}}</p>
+        </div>
+        <div class="col d-flex">
+            <p class="card-text">Data do Cadastro: </p>
+            <p class="card-text ps-2">{{tecnico.data_registro|date:'d, \d\e M \d\e Y'}}</p>
+        </div>
+    </div>
+</div>
+
+
+{% endblock main %}

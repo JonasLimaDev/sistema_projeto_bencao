@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load filtros %}
+{% block title %}{{titulo_pagina}}{% endblock title %}
+{% block barra_titulo %}
+<div class="row py-1 align-items-center justify-content-content-between ">
+
+  <div class="col-3 ">
+    <h5 class="card-title ">{{titulo_pagina}}</h5>
+  </div>
+  <div class="col d-flex align-items-center justify-content-end">
+    <div class="mx-1 ">
+      <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container-fluid">
+
+        </div>
+      </nav>
+
+    </div>
+    <div class="mx-2">
+         {%if link %}
+
+      <a href="{{link}}" type="button" class="btn btn-outline-secondary "><i
+          class="bi bi-card-list align-middle" style="font-size: 1.25rem;"></i><span
+          class="align-middle mx-1">Todos</span></a>
+        {%endif%}
+
+    </div>
+  </div>
+</div>
+
+    {% endblock barra_titulo %}
+    {% block main %}
+    {% include 'mensagens/erros.html' %}
+    <form method="post" enctype="multipart/form-data" class="py-1 ">
+        {% csrf_token %}
+        <div class="card mb-3 bg-transparent border-light">
+            {%for title_form, form in forms_generic.items %}
+            <div class="card mb-3">
+            <div class="card-header  border text-center ">
+                <h4>{{title_form}}</h4>
+            </div>
+            <div class=" card-body row d-flex py-1 mb-3  justify-content-start align-items-baseline">
+                {% for campo in form %}
+                <div class="col-sm-6  col-md-4 col-12 p-1 ">
+                    <div class="mb-2 ms-2">
+                        {% if campo.errors %}
+                        <label class="form-label" for="{{campo.id_for_label}}">{{campo.label}}</label>
+                        {{campo|addclass:'form-control border-danger'}}
+                        {% else %}
+                        <label class="form-label" for="{{campo.id_for_label}}">{{campo.label}}</label>
+                        {{campo|addclass:'form-control'}}
+                        {% endif %}
+                        <div class="form-text">{{campo.help_text}}</div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            </div>
+            {%endfor%}
+            <div class="card-footer   text-center">
+                <div class="d-grid gap-2 col-4 mx-auto">
+                    <button type="submit" class="btn btn-success ">Salvar</button>
+                    {%if url_cancelar  == 'lista' %}
+                    <a href="{% url 'listar_cadastros' id_cancelar %}"  class="btn btn-warning ">Cancelar</a>
+                    {%elif  url_cancelar  == 'dados'  %}
+                    <a href="{% url 'exibir_dados_cadastro' id_cancelar %}"  class="btn btn-warning ">Cancelar</a>
+                    {%else%}
+                    <a href="{% url 'listar_cadastros'%}"  class="btn btn-warning ">Cancelar</a>
+                    
+                    {%endif%}
+                </div>
+            </div>
+          </div>
+        
+    </form>
+<script>
+
+const input = document.getElementById("id_cpf");
+
+input.addEventListener("keyup", formatarCPF);
+
+function formatarCPF(e){
+
+var v=e.target.value.replace(/\D/g,"");
+
+v = v.replace(".", "");
+v = v.replace(" ", "");
+v = v.replace("-", "");
+
+e.target.value = v;
+
+}
+</script>
+    {% endblock main %}
