@@ -9,7 +9,7 @@ from .models import *
 # Create your views here.
 @method_decorator(login_required, name='dispatch')
 class ListaModificacoesView(TemplateView):
-    template_name = 'tabelas_modificacoes.html'
+    template_name = 'change_control/tabelas_modificacoes.html'
 
     def get_context_data(self, **kwargs):
 

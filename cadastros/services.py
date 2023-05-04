@@ -54,12 +54,14 @@ def salvar_cadastros_massivo(dados,tecnico):
 	Cadastro.objects.create(situacao_habitacao=situacao_habitacao,responsavel_familiar=responsavel_familiar,
 							responsavel_cadastro=tecnico,endereco=endereco)
 
+
 def lista_objeto_str(lista):
 	conjunto_str=""
 	for item in lista:
 		conjunto_str += f"{item}, "
 	conjunto_str = conjunto_str[:-2]
 	return conjunto_str
+
 
 def editar_model_data(inst_model,inst_form,ignore=[]):
 	"""Função para edição da tabela de dados habitacionais"""

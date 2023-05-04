@@ -79,7 +79,13 @@ def is_cpf_valid(cpf):
     else:
         return False
 
+def cpf_existing(cpf):
 
+    if Pessoa.objects.filter(cpf=cpf):
+        return True
+    else:
+        return False
+    
 
 
 def validar_termo(termo,data_termo,lista_erros):

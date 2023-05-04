@@ -56,7 +56,7 @@ class HomePageView(TemplateView):
 
 @method_decorator(login_required, name='dispatch')
 class RenderData(TemplateView):
-    template_name = 'tabelas_dados.html'
+    template_name = 'cadastros/geral/tabelas_dados.html'
 
     def get(self, request, *args, **kwargs):
         dados_bairros = total_cadastro_bairro()
@@ -68,7 +68,7 @@ class RenderData(TemplateView):
 
 @method_decorator(login_required, name='dispatch')
 class ListaCadastroView(TemplateView):
-    template_name = 'cadastros/lista_cadastros.html'
+    template_name = 'cadastros/geral/lista_cadastros.html'
 
     def get_context_data(self, **kwargs):
 
@@ -289,7 +289,7 @@ class EditarEnderecoView(TemplateView):
 @method_decorator(login_required, name='dispatch')
 class ExibirFichaCadastroView(TemplateView):
     # form_habitacao = FormHabitacao
-    template_name = "cadastros/dados_cadastro.html"
+    template_name = "cadastros/geral/dados_cadastro.html"
     context = {'titulo_pagina': "Dados Cadastro"}
 
     def get(self, request, *args, **kwargs):
@@ -432,7 +432,7 @@ class EditarHabitacaoView(TemplateView):
 
 @method_decorator(login_required, name='dispatch')
 class ExibirDadosCadastroView(TemplateView):
-    template_name = "cadastros/dados_cadastro.html"
+    template_name = "cadastros/geral/dados_cadastro.html"
     context = {'titulo_pagina': "Dados Cadastro"}
 
     def get(self, request, *args, **kwargs):
@@ -548,7 +548,7 @@ class EditarMembroView(TemplateView):
 
 @method_decorator(login_required, name='dispatch')
 class ExcluirMembroView(TemplateView):
-    template_name = "cadastros/dados_excluir.html"
+    template_name = "cadastros/geral/dados_excluir.html"
     context = {'titulo_pagina': "Editar Membro"}
 
     def get(self, request, *args, **kwargs):
@@ -627,14 +627,12 @@ class EnviarDados(TemplateView):
                     except:
                         pass
             elif tipo == "2":
-                print("-"*10)
-                    
                 for dado in dados:
                     referencia_familiar = Referencia()
                     endereco = Endereco()
                     cadastro = Cadastro()
                     validar_cpf = None
-                    # print(vars(referencia_familiar))
+                    
                     for chave, valor in dado.items():
                         
                         if chave in vars(referencia_familiar):
@@ -649,14 +647,12 @@ class EnviarDados(TemplateView):
                                 
                         if chave in vars(endereco) or chave == 'bairro':
                             if valor:
-                                # print(chave)
                                 if chave == 'bairro':
                                     busca_bairro = Bairro.objects.filter(nome=valor)
                                     if busca_bairro:
                                         setattr(endereco, 'bairro_id', busca_bairro.get(nome=valor).id)
                                     else:
                                         bairro = Bairro.objects.create(nome=valor)
-                                        # print(bairro.id)
                                         setattr(endereco, 'bairro_id', bairro.id)
                                 else:
                                     setattr(endereco, chave, valor)

@@ -26,6 +26,7 @@ styleTitulo = ParagraphStyle('titulo',
                            spaceBefore=10,
                            spaceAfter=16)
 
+
 styleTableBairro = TableStyle([('BOX', (0, 0), (-1, -1), 0.25, colors.black),
                                ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
                                ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
@@ -45,6 +46,7 @@ styleTableBairro = TableStyle([('BOX', (0, 0), (-1, -1), 0.25, colors.black),
                                ('FONTSIZE', (0, 0), (-1, 0), 14),
                                ('TEXTCOLOR', (0, 0), (1, -1), colors.black)]
                               )
+
 
 styleTableNormal = [('BOX', (0, 0), (-1, -1), 0.25, colors.black),
                     ('FONTNAME', (0, 0), (-1, 0), 'ArialN'),
@@ -82,7 +84,6 @@ styleTableReferencia = [('BOX', (0, 0), (-1, -1), 0.25, colors.black),
 styleFicha = [('BOX', (0, 0), (-1, -1), 0.25, colors.black),
                         ('FONTNAME', (0, 1), (-1, -1), 'Arial'),
 
-                        
                         # ('FONTNAME', (4, 0), (4, 0), 'ArialN'),
 
                         ('SPAN', (1, 0), (2, 0)), # nome
