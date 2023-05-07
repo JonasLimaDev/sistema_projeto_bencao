@@ -53,7 +53,6 @@ class LoginView(TemplateView):
     context = {'titulo_pagina': "Logar-se no Sistema",'login':True}
 
     def get(self, request, *args, **kwargs):
-
         forms_generic = {"Informações de Acesso": self.form_class_logar()}
         self.context['forms_generic'] = forms_generic
         return render(request, self.template_name, self.context)
@@ -100,7 +99,7 @@ class PerfilUsuarioView(TemplateView):
 @method_decorator(login_required, name='dispatch')
 class EquipeTecnicaView(TemplateView):
     template_name = "tecnicos/equipe.html"
-    def get(self,request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         user = User.objects.get(id=int(request.user.id))
         if user.groups.filter(name='Supervisor').exists():
             supervisor = True if request.user.groups.filter(name='Supervisor').exists() else False
@@ -114,7 +113,7 @@ class EquipeTecnicaView(TemplateView):
         supervisor = True if request.user.groups.filter(name='Supervisor').exists() else False
         tecnicos = Tecnico.objects.all()
         desativados = tecnicos.filter()
-        grupos = {'1':"Agente",'2':"Supervisor"} 
+        grupos = {'1': "Agente", '2': "Supervisor"}
         if 'desativar' in request.POST:
             id_tecnico = request.POST['id_tecnico']
             tecnico = tecnicos.filter(id=id_tecnico)[0]

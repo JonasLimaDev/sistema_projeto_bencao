@@ -14,44 +14,57 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path
-from .views import *
-from .views_printer import PrinterTableView, PrinterFichaView
+from .views.views_create import AddCadastroView, AddHabitacaoView, AddMembroView
+from .views.views_delete import DeleteMembroView
+from .views.views_printer import PrinterTableView, PrinterFichaView
+from .views.views_data_and_handler import UploadDados, get_dados_json
+from .views.views_edit import EditCadastroView, EditEnderecoView, EditReferenciaView, \
+    EditHabitacaoView, EditMembroView
 
-urls_familia = [
-    path('cadastros/editar/referencia/<int:pk>/', EditarReferenciaView.as_view(),name='editar_referencia'),
-    path('cadastros/adicionar/membro/<int:pk>/', AdicionarMembroView.as_view(),name='adicionar_membro'),
-    path('cadastros/editar/membro/<int:pk>/', EditarMembroView.as_view(),name='editar_membro'),
-    path('cadastros/excluir/membro/<int:pk>/', ExcluirMembroView.as_view(),name='excluir_membro'),#ExcluirMembroView
+from .views.views_show import *
+
+urls_add = [
+    path('cadastros/adicionar/membro/<int:pk>/', AddMembroView.as_view(),name='adicionar_membro'),
+    path('cadastros/adicionar/habitacao/<int:pk>/', AddHabitacaoView.as_view(), name='adicionar_habitacao'),
+    path('cadastros/adicionar/', AddCadastroView.as_view(), name='adicionar_cadastro'),
 ]
 
-urls_cadastro =[
-    path('cadastros/adicionar/', AdicionarCadastroView.as_view(), name='adicionar_cadastro'),
+urls_edit = [
+    path('cadastros/editar/referencia/<int:pk>/', EditReferenciaView.as_view(), name='editar_referencia'),
+    path('cadastros/editar/membro/<int:pk>/', EditMembroView.as_view(), name='editar_membro'),
+    path('cadastro/editar/<int:pk>/', EditCadastroView.as_view(), name='editar_cadastro'),
+
+]
+
+urls_delete = [
+    path('cadastros/excluir/membro/<int:pk>/', DeleteMembroView.as_view(),name='excluir_membro'),
+]
+
+urls_show = [
+
+    path('', HomePageView.as_view(), name='home'),
+    path('dados/tabelas/', RenderData.as_view(), name='dados_tabelas'),
     path('cadastros/exibir/informacoes/<int:pk>/', ExibirFichaCadastroView.as_view(), name='exibir_dados_cadastro'),
     path('cadastros/lista/', ListaCadastroView.as_view(), name='listar_cadastros'),
     path('cadastros/lista/<str:filter>/', ListaCadastroView.as_view(), name='listar_cadastros'),
-    path('cadastro/editar/<int:pk>/', EditarCadastroView.as_view(), name='editar_cadastro'),
+    path('cadastros/editar/endereco/<int:pk>/', EditEnderecoView.as_view(), name='editar_endereco'),
+    path('cadastros/editar/habitacao/<int:pk>/', EditHabitacaoView.as_view(), name='editar_habitacao'),
+
 
 ]
 
-printer = [
-
+urls_printer = [
     path('printer/dados/tabela/total/<str:filter>/', PrinterTableView.as_view(), name='dados_pdf'),
     path('printer/dados/cadastro/<int:pk>/', PrinterFichaView.as_view(), name='ficha_pdf'),# PrinterFichaView
+]
 
+urls_data = [
+    path('dados/uploads/', UploadDados.as_view(), name='upload_dados'),
+    path('dados/json/', get_dados_json, name='json'),
 ]
 
 outros = [
-    path('', HomePageView.as_view(), name='home'),
-    path('cadastros/editar/endereco/<int:pk>/', EditarEnderecoView.as_view(),name='editar_endereco'),
-    path('cadastros/editar/habitacao/<int:pk>/', EditarHabitacaoView.as_view(), name='editar_habitacao'),
-    path('cadastros/adicionar/habitacao/<int:pk>/', AdicionarHabitacaoView.as_view(), name='adicionar_habitacao'),
 
-    path('dados/json/', dados_cadastro_json, name='json'),
-    path('dados/uploads/', EnviarDados.as_view(), name='upload_dados'),
-
-    path('dados/tabelas/', RenderData.as_view(), name='dados_tabelas'),
-
-    
 ]
 
-urlpatterns = urls_familia + urls_cadastro +printer+ outros
+urlpatterns = urls_add +urls_edit+ urls_show + urls_delete + urls_data + urls_printer

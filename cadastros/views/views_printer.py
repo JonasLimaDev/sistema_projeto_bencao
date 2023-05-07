@@ -7,7 +7,7 @@ from reportlab.platypus import Paragraph, Table, TableStyle, LongTable
 from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 
 from reportlab.lib import colors
-from .printer_data import *
+from ..printer_data import *
 
 styles = getSampleStyleSheet()
 set_fonts()

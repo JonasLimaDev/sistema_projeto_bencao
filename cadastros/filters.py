@@ -108,7 +108,6 @@ def buscar_cadastro_ruc(bairro):
     for cadastro in cadastros:
         if cadastro not in lista_cadastros:
             lista_cadastros.append(cadastro)
-
     return lista_cadastros
 
 
@@ -117,7 +116,6 @@ def buscar_cadastro(filter=None):
     if filter:
         cadastro = Cadastro.objects.get(id=filter)
         return CadastroData(cadastro)
-
     else:
         cadastros = Cadastro.objects.select_related().all()
 
