@@ -132,6 +132,7 @@ class ListaCadastroView(TemplateView):
 
     def post(self, request, *args, **kwargs):
         busca = request.POST['busca']
+        print(request.POST)
 
         bairro = request.POST['bairro']
         cras = request.POST['cras'] if request.POST['cras'] != "-------" else None

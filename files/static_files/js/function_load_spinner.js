@@ -27,41 +27,41 @@ $('#button-busca').on("click", function(){
 });
 
 
-$('#bairroDataList').on("change", function(){
-     $.ajax({
-        type:"POST",
-         beforeSend: function() {
-        spinner.classList.remove("visually-hidden");
-        },
-        success: function(){
-            spinner.classList.add("visually-hidden");
-            },
-    });
-});
-$('#abrangenciaSelect').on("change", function(){
-
-    $.ajax({
-        type:"POST",
-         beforeSend: function() {
-        spinner.classList.remove("visually-hidden");
-        },
-        success: function(){
-            spinner.classList.add("visually-hidden");
-            },
-    });
-});
-
-$('#rucSelect').on("change", function(){
-    $.ajax({
-        type:"POST",
-         beforeSend: function() {
-        spinner.classList.remove("visually-hidden");
-        },
-        success: function(){
-            spinner.classList.add("visually-hidden");
-            },
-    });
-});
+//$('#bairroDataList').on("change", function(){
+//     $.ajax({
+//        type:"POST",
+//         beforeSend: function() {
+//        spinner.classList.remove("visually-hidden");
+//        },
+//        success: function(){
+//            spinner.classList.add("visually-hidden");
+//            },
+//    });
+//});
+//$('#abrangenciaSelect').on("change", function(){
+//
+//    $.ajax({
+//        type:"POST",
+//         beforeSend: function() {
+//        spinner.classList.remove("visually-hidden");
+//        },
+//        success: function(){
+//            spinner.classList.add("visually-hidden");
+//            },
+//    });
+//});
+//
+//$('#rucSelect').on("change", function(){
+//    $.ajax({
+//        type:"POST",
+//         beforeSend: function() {
+//        spinner.classList.remove("visually-hidden");
+//        },
+//        success: function(){
+//            spinner.classList.add("visually-hidden");
+//            },
+//    });
+//});
 
 
 

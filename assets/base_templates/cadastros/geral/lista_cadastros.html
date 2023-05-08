@@ -36,13 +36,13 @@
 </div>
 <hr>
 
-<form class="d-flex row  align-items-center justify-content-center gy-0 py-0 p-0 " method="post">
+<form class="d-flex row  align-items-center justify-content-center gy-2 gy-sm-1 gy-md-0 gy-lg-1 gy-xl-1 gy-xxl-0 py-0  " method="post">
   {% csrf_token %}
 
-  <div class="col-2">
+  <div class="col-sm-6 col-md-2 col-lg-2 col-xl-2 col-xxl-2 col-12">
 
     <div class="form-floating  ">
-      <select class="form-select rounded  my-0 pb-0" id="abrangenciaSelect" style="height: 50px;" aria-label="Default select example" onchange="this.form.submit()"
+      <select class="form-select rounded  my-0 pb-0" id="abrangenciaSelect" style="height: 50px;" aria-label="Default select example"
         name="cras">
         <option selected>-------</option>
         <option value="1">CRAS I</option>
@@ -52,10 +52,10 @@
       <label for="floatingSelect" >Abrangência</label>
     </div>
   </div>
-  <div class="col-3">
+  <div class="col-sm-6 col-md-3 col-lg-3 col-xl-3 col-xxl-3 col-12">
 
     <div class="form-floating ">
-      <select class="form-select rounded   my-0 pb-0" id="rucSelect" style="height: 50px;" aria-label="Default select example" onchange="this.form.submit()"
+      <select class="form-select rounded   my-0 pb-0" id="rucSelect" style="height: 50px;" aria-label="Default select example"
         name="ruc">
         <option selected>-------</option>
         <option value="1">Nenhum</option>
@@ -68,12 +68,12 @@
       <label for="floatingSelect">Ruc</label>
     </div>
   </div>
-  <div class="col-3">
+  <div class="col-sm-6 col-md-3 col-lg-3 col-xl-3 col-xxl-3 col-12">
     <div class="form-floating">
 
       <input class="form-control   rounded  my-0 pb-0" style="height: 50px;" list="datalistOptions" id="bairroDataList" placeholder="Buscar por Bairro"
-        onchange="this.form.submit()" autocomplete="off" name="bairro">
-      <label for="floatingSelect ">Bairro</label>
+         autocomplete="off" name="bairro">
+      <label for="floatingSelect">Bairro</label>
       <datalist id="datalistOptions">
         {% for bairro in lista_bairros %}
         <option value="{{bairro}}">
@@ -83,17 +83,21 @@
     </div>
   </div>
   
-  <div class="col-4">
+  <div class="col-sm-6 col-md-4 col-lg-4 col-xl-4 col-xxl-4 col-12">
     <div class="input-group">
       <div class="form-floating ">
-        <input class="form-control  my-0 pb-0" style="height: 50px;" value="" id="busca" name="busca" type="search" required="busca" placeholder="Nome ou CPF" aria-label="Search">
+        <input class="form-control rounded  my-0 pb-0" style="height: 50px;" value="" id="busca" name="busca" type="search" placeholder="Nome ou CPF" aria-label="Search">
         <label for="floatingInput">Nome ou CPF</label>
-      </div>
-      <button class="btn btn-outline-primary" type="submit" id="button-busca"><i
-          class="bi bi-search mx-1"></i>Buscar</button>
     </div>
-  </div>
+  <button class="btn btn-outline-primary mx-2 rounded" type="submit" id="button-busca"><i
+          class="bi bi-search mx-1"></i>Buscar</button>
 
+</div>
+    <div class="input-group">
+
+    </div>
+
+    </div>
 </form>
 <div class="row row-cols-auto mt-2 gy-2 gx-0 justify-content-center">
   <div class="col">

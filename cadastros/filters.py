@@ -47,9 +47,10 @@ def buscar_cadastro_cpf(cpf):
     return lista_cadastros
 
 
-def buscar_cadastro_bairro(bairro):
+def buscar_cadastro_bairro(bairro, cadastros=None):
     # bairro_bd = Bairro.objects.filter(nome=bairro)
-    cadastros = Cadastro.objects.filter(endereco__bairro__nome=bairro).all()
+    if not cadastros:
+        cadastros = Cadastro.objects.filter(endereco__bairro__nome=bairro).all()
     lista_cadastros = []
     for cadastro in cadastros:
         if cadastro not in lista_cadastros:
@@ -101,9 +102,25 @@ def total_cadastro_cras():
     return dados
 
 
-def buscar_cadastro_ruc(bairro):
+def buscar_cadastro_ruc(ruc, cadastros=None):
     # bairro_bd = Bairro.objects.filter(nome=bairro)
-    cadastros = Cadastro.objects.filter(endereco__ruc=bairro).all()
+    if cadastros:
+        cadastros = cadastros.filter(endereco__ruc=ruc).all()
+    else:
+        cadastros = Cadastro.objects.filter(endereco__ruc=ruc).all()
+    lista_cadastros = []
+    for cadastro in cadastros:
+        if cadastro not in lista_cadastros:
+            lista_cadastros.append(cadastro)
+    return lista_cadastros
+
+def buscar_cadastro_cras(cras, cadastros=None):
+    # bairro_bd = Bairro.objects.filter(nome=bairro) cadastros.filter(abrangencia=argumento[1])
+    if cadastros:
+        cadastros = cadastros.filter(abrangencia=cras).all()
+    else:
+        cadastros = cadastros.filter(abrangencia=cras).all()
+
     lista_cadastros = []
     for cadastro in cadastros:
         if cadastro not in lista_cadastros:
