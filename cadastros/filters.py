@@ -134,6 +134,6 @@ def buscar_cadastro(filter=None):
         cadastro = Cadastro.objects.get(id=filter)
         return CadastroData(cadastro)
     else:
-        cadastros = Cadastro.objects.select_related().all()
+        cadastros =[CadastroData(cadastro) for cadastro in Cadastro.objects.select_related().all()]
 
     return cadastros

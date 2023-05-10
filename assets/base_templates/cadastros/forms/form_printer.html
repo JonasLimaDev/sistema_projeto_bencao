@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% load filtros %}
+{% block title %}{{titulo_pagina}}{% endblock title %}
+{% block barra_titulo %}
+<div class="row py-1 align-items-center justify-content-content-between ">
+
+    <div class="col-3 ">
+        <h5 class="card-title ">Impressão de Dados</h5>
+    </div>
+
+</div>
+</div>
+
+{% endblock barra_titulo %}
+{% block main %}
+{% include 'mensagens/erros.html' %}
+<form method="post" class="py-1 ">
+    {% csrf_token %}
+    <div class="card mb-3 bg-transparent border-light">
+
+        <div class="card  h-100">
+            <div class="card-header  border text-center ">
+                <h4>Filtros de Impressão</h4>
+            </div>
+            <div class=" card-body row row-cols-3 d-flex  justify-content-start ">
+
+                <div class="col">
+                    <div class="form-floating">
+                        <select class="form-select rounded" aria-label="Default select example" name="cras">
+                            <option selected>-------</option>
+                            <option >Todos</option>
+                            <option value="1">CRAS I</option>
+                            <option value="2">CRAS I</option>
+                            <option value="3">CRAS II</option>
+                            <option value="4">CRAS III</option>
+                        </select>
+                        <label for="floatingSelect">Abrangência</label>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="form-floating">
+                        <select class="form-select rounded   " aria-label="Default select example" name="ruc">
+                            <option selected>-------</option>
+                            <option >Todos</option>
+                            <option value="1">Nenhum</option>
+                            <option value="2">Água Azul</option>
+                            <option value="3">Jatobá</option>
+                            <option value="4">São Joaquim</option>
+                            <option value="5">Casa Nova</option>
+                            <option value="6">Laranjeiras</option>
+                        </select>
+                        <label for="floatingSelect">Ruc</label>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-floating">
+                        <input class="form-control   rounded" list="datalistOptions" placeholder="Buscar por Bairro"
+                        autocomplete="off" name="bairro">
+                    <label for="floatingSelect">Bairro</label>
+                    <datalist id="datalistOptions">
+                        <option value="Todos"></option>
+                        {% for bairro in bairros %}
+                        <option value="{{bairro}}">
+                            {%endfor%}
+                    </datalist>
+
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-floating">
+
+                        
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer   text-center">
+                <div class="d-grid gap-2 col-4 mx-auto">
+                    <button target="_blank" type="submit" class="btn btn-success ">Imprimir</button>
+
+                </div>
+            </div>
+
+        </div>
+
+
+
+
+        <div>
+            <embed id="verPDF" src="{{file.url}}" width="500" height="375" type="application/pdf">
+        </div>
+
+</form>
+<script>
+
+    const input = document.getElementById("id_cpf");
+
+    input.addEventListener("keyup", formatarCPF);
+
+    function formatarCPF(e) {
+
+        var v = e.target.value.replace(/\D/g, "");
+
+        v = v.replace(".", "");
+        v = v.replace(" ", "");
+        v = v.replace("-", "");
+
+        e.target.value = v;
+
+    }
+</script>
+{% endblock main %}

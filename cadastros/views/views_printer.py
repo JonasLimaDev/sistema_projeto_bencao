@@ -1,7 +1,10 @@
 from django.views import View
+from django.views.generic import TemplateView
 from django.http import FileResponse
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from django.shortcuts import render
+
 ### ------ reportlab imports ------ ###
 from reportlab.platypus import Paragraph, Table, TableStyle, LongTable
 from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
@@ -67,17 +70,16 @@ styleTableNormal = [('BOX', (0, 0), (-1, -1), 0.25, colors.black),
 styleTableReferencia = [('BOX', (0, 0), (-1, -1), 0.25, colors.black),
                         ('FONTNAME', (0, 0), (-1, 0), 'ArialN'),
                         ('BOTTOMPADDING', (0, 0), (0, -1), 6),
-                        ('RIGHTPADDING', (0, 0), (-1, -1), 8),
-                        ('LEFTPADDING', (0, 0), (-1, -1), 8),
+                        ('RIGHTPADDING', (0, 0), (-1, -1), 3),
+                        ('LEFTPADDING', (0, 0), (-1, -1), 3),
                         ('FONTNAME', (0, 1), (-1, -1), 'Arial'),
+                        ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
 
                         ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
 
 
                         ('VALIGN', (0, 0), (-1, -1), 'TOP'),
-
-                        ('FONTSIZE', (0, 0), (-1, -1), 12),
-                        ('FONTSIZE', (0, 0), (-1, 0), 14),
+                        ('FONTSIZE', (0, 0), (-1, 0), 11),
                         ('TEXTCOLOR', (0, 0), (1, -1), colors.black)]
 
 
@@ -146,7 +148,7 @@ class PrinterTableView(View):
 
         elif argumento == "referencias":
             data = printer_referecias()
-            tabela = LongTable(data, colWidths=[45, 170, 80, 120, 110],repeatRows=1)
+            tabela = LongTable(data, colWidths=[35, 165, 110, 145, 85],repeatRows=1)
             tabela.setStyle(styleTableReferencia)
             text.append(tabela)
         else:
@@ -155,6 +157,61 @@ class PrinterTableView(View):
         
         return FileResponse(buffer, filename=f'termo_entrega_orgão.pdf')
 
+
+
+
+@method_decorator(login_required, name='dispatch')
+class PrinterReferenciasTableView(TemplateView):
+    template_name = 'cadastros/forms/form_printer.html'
+    def get(self, request, *args, **kwargs):
+        bairros = Bairro.objects.select_related().all()
+        context = {"bairros":bairros}
+        return render(request, self.template_name,context) #FileResponse(buffer, filename=f'termo_entrega_orgão.pdf')
+    
+    def post(self, request, *args, **kwargs):
+        # print(request.POST)
+        cras = request.POST['cras'] if request.POST['cras'] != '-------' else "Todos"
+        bairro = request.POST['bairro'] if request.POST['bairro'] != '' else "Todos"
+        ruc = request.POST['ruc'] if request.POST['ruc'] != '-------' else "Todos"
+        lista_cadastro = []
+        if not cras and not bairro and not ruc:
+            
+            data = printer_referecias()
+        else:
+            print("Filtro")
+            cadastros = Cadastro.objects.select_related().all()
+            print(len(cadastros))
+            if bairro != "Todos" and cras !="Todos" and ruc !="Todos":
+                cadastros = cadastros.filter(endereco__bairro__nome=bairro, abrangencia=cras, endereco__ruc=ruc)
+            elif cras !="Todos" and bairro != "Todos":
+                cadastros = cadastros.filter(abrangencia=cras, endereco__bairro__nome=bairro,)
+               
+            elif cras !="Todos" and ruc != "Todos":
+                cadastros = cadastros.filter(abrangencia=cras, endereco__ruc=ruc)
+            elif ruc !="Todos" and bairro != "Todos":
+                cadastros = cadastros.filter(endereco__ruc=ruc,endereco__bairro__nome=bairro,)
+            
+            elif ruc !="Todos":
+                cadastros = cadastros.filter(endereco__ruc=ruc)
+            elif cras !="Todos" and ruc != "Todos":
+                cadastros = cadastros.filter(abrangencia=cras)
+            elif bairro != "Todos":
+                cadastros = cadastros.filter(endereco__bairro__nome=bairro)
+            
+               
+            print(len(cadastros))
+            data = printer_referecias(cadastros)
+        text = []
+        tabela = LongTable(data, colWidths=[35, 160, 120,70, 85, 90],repeatRows=1)
+        tabela.setStyle(styleTableReferencia)
+        text.append(tabela)
+        
+        if not data:
+            text.append(Paragraph(f"ERRO na geração do documento", styleErro))
+        buffer = gerar_doc(text)
+        
+        return FileResponse(buffer, filename=f'termo_entrega_orgão.pdf')
+        
 
 @method_decorator(login_required, name='dispatch')
 class PrinterFichaView(View):

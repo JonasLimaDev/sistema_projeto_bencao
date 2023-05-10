@@ -167,22 +167,30 @@ def printer_total_cras():
     return lista
 
 
-def printer_referecias():
-    dados = buscar_cadastro()
+def printer_referecias(dados=None):
+    if not dados:
+        dados = buscar_cadastro()
+    else:
+        print("aqui")
+        dados = [CadastroData(cadastro) for cadastro in dados]
     styles = getSampleStyleSheet()
-    styleNormal = ParagraphStyle('corpo_normal', fontFamily="Arial", fontSize=12,
-                                 parent=styles['Normal'], alignment=0, leading=18, spaceBefore=0, spaceAfter=0)
+    styleNormal = ParagraphStyle('corpo_normal', fontFamily="Arial", fontSize=10,
+                                 parent=styles['Normal'], alignment=0, leading=12, spaceBefore=0, spaceAfter=0)
+    
+    styleOrdem = ParagraphStyle('corpo_normal', fontFamily="Arial", fontSize=10,
+                                 parent=styles['Normal'], alignment=1, leading=12, spaceBefore=0, spaceAfter=0)
 
-    lista = [["Ord.", "Nome", "Bairro", "Endereco", "Telefone"]]
+    lista = [["Ord.", "Nome", "Bairro","RUC", "CPF", "Telefone"]]
     contador = 1
 
     for cadastro in dados:
         endereco = f"{cadastro.endereco.logradouro}, Nº {cadastro.endereco.numero}"
-        lista.append([Paragraph(str(contador), styleNormal),
-                      Paragraph(str(cadastro.responsavel_familiar), styleNormal),
+        lista.append([Paragraph(str(contador), styleOrdem),
+                      Paragraph(str(cadastro.responsavel.nome), styleNormal),
                       Paragraph(str(cadastro.endereco.bairro), styleNormal),
-                      Paragraph(endereco,  styleNormal),
-                      Paragraph(str(cadastro.responsavel_familiar.contato if cadastro.responsavel_familiar.contato else '--------' ), styleNormal)])
+                      Paragraph(str(cadastro.endereco.get_ruc_display()), styleNormal),
+                      Paragraph(cadastro.responsavel.cpf,  styleNormal),
+                      Paragraph(str(cadastro.responsavel.contato if cadastro.responsavel.contato else '--------' ), styleNormal)])
         contador += 1
     return lista
 

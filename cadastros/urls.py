@@ -16,7 +16,7 @@ Including another URLconf
 from django.urls import path
 from .views.views_create import AddCadastroView, AddHabitacaoView, AddMembroView
 from .views.views_delete import DeleteMembroView
-from .views.views_printer import PrinterTableView, PrinterFichaView
+from .views.views_printer import PrinterTableView, PrinterFichaView, PrinterReferenciasTableView
 from .views.views_data_and_handler import UploadDados, get_dados_json
 from .views.views_edit import EditCadastroView, EditEnderecoView, EditReferenciaView, \
     EditHabitacaoView, EditMembroView
@@ -56,6 +56,7 @@ urls_show = [
 urls_printer = [
     path('printer/dados/tabela/total/<str:filter>/', PrinterTableView.as_view(), name='dados_pdf'),
     path('printer/dados/cadastro/<int:pk>/', PrinterFichaView.as_view(), name='ficha_pdf'),# PrinterFichaView
+    path('printer/dados/cadastro/referencias/', PrinterReferenciasTableView.as_view(), name='referencias_printer')#PrinterReferenciasTableView
 ]
 
 urls_data = [
