@@ -75,15 +75,14 @@ def is_cpf_valid(cpf):
                 return False
             else:
                 return True
-        
     else:
         return False
 
 def cpf_existing(cpf):
-
-    if Pessoa.objects.filter(cpf=cpf):
+    busca = Pessoa.objects.filter(cpf=cpf)
+    if len(busca) > 0 :
         return True
-    else:
+    else:        
         return False
     
 

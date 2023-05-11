@@ -9,7 +9,6 @@
     </div>
 
 </div>
-</div>
 
 {% endblock barra_titulo %}
 {% block main %}
@@ -18,7 +17,7 @@
     {% csrf_token %}
     <div class="card mb-3 bg-transparent border-light">
 
-        <div class="card  h-100">
+        <div class="card">
             <div class="card-header  border text-center ">
                 <h4>Filtros de Impressão</h4>
             </div>
@@ -28,11 +27,10 @@
                     <div class="form-floating">
                         <select class="form-select rounded" aria-label="Default select example" name="cras">
                             <option selected>-------</option>
-                            <option >Todos</option>
+                            <option>Todos</option>
                             <option value="1">CRAS I</option>
-                            <option value="2">CRAS I</option>
-                            <option value="3">CRAS II</option>
-                            <option value="4">CRAS III</option>
+                            <option value="2">CRAS II</option>
+                            <option value="3">CRAS III</option>
                         </select>
                         <label for="floatingSelect">Abrangência</label>
                     </div>
@@ -42,7 +40,7 @@
                     <div class="form-floating">
                         <select class="form-select rounded   " aria-label="Default select example" name="ruc">
                             <option selected>-------</option>
-                            <option >Todos</option>
+                            <option>Todos</option>
                             <option value="1">Nenhum</option>
                             <option value="2">Água Azul</option>
                             <option value="3">Jatobá</option>
@@ -56,21 +54,21 @@
                 <div class="col">
                     <div class="form-floating">
                         <input class="form-control   rounded" list="datalistOptions" placeholder="Buscar por Bairro"
-                        autocomplete="off" name="bairro">
-                    <label for="floatingSelect">Bairro</label>
-                    <datalist id="datalistOptions">
-                        <option value="Todos"></option>
-                        {% for bairro in bairros %}
-                        <option value="{{bairro}}">
-                            {%endfor%}
-                    </datalist>
+                            autocomplete="off" name="bairro">
+                        <label for="floatingSelect">Bairro</label>
+                        <datalist id="datalistOptions">
+                            <option value="Todos"></option>
+                            {% for bairro in bairros %}
+                            <option value="{{bairro}}">
+                                {%endfor%}
+                        </datalist>
 
                     </div>
                 </div>
                 <div class="col">
                     <div class="form-floating">
 
-                        
+
                     </div>
                 </div>
             </div>
@@ -83,14 +81,7 @@
             </div>
 
         </div>
-
-
-
-
-        <div>
-            <embed id="verPDF" src="{{file.url}}" width="500" height="375" type="application/pdf">
-        </div>
-
+    </div>
 </form>
 <script>
 

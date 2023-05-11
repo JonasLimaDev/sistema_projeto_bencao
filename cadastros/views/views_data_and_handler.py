@@ -79,6 +79,7 @@ class UploadDados(TemplateView):
                                 if chave == "cpf":
                                     cpf_arquivo = valor.replace(".", "").replace("-", "")
                                     validar_cpf = is_cpf_valid(cpf_arquivo)
+                                    cpf_existente = cpf_existing(cpf_arquivo)
                                     if validar_cpf:
                                         setattr(referencia_familiar, chave, cpf_arquivo)
                                 else:
@@ -119,30 +120,36 @@ class UploadDados(TemplateView):
                                     referencia_familiar.delete()
                                     endereco.delete()
                                     resultado = ErrosData(referencia=f"{referencia_familiar.nome}",
-                                                          resultado="Erro ao Salvar",
+                                                          resultado="Erro ao Salvar Cadastro",
                                                           descricao_erro="Erro não documentado", erro=str(e))
                                     lista_erros.append(resultado)
 
                             except Exception as e:
                                 referencia_familiar.delete()
                                 resultado = ErrosData(referencia=f"{referencia_familiar.nome}",
-                                                      resultado="Erro ao Salvar",
+                                                      resultado="Erro ao Salvar Endereço",
                                                       descricao_erro="Erro não documentado", erro=str(e))
                                 lista_erros.append(resultado)
                         except Exception as e:
+                            print(e)
                             if str(e) == "UNIQUE constraint failed: cadastros_pessoa.cpf":
                                 resultado = ErrosData(referencia=f"{referencia_familiar.nome}",
-                                                      resultado="Erro ao Salvar",
+                                                      resultado="Erro ao Salvar Referência",
                                                       descricao_erro="CPF já está cadastrado", erro=str(e))
                                 lista_erros.append(resultado)
                             else:
                                 resultado = ErrosData(referencia=f"{referencia_familiar.nome}",
-                                                      resultado="Erro ao Salvar",
+                                                      resultado="Erro ao Salvar Referência",
                                                       descricao_erro="Erro não documentado", erro=str(e))
                                 lista_erros.append(resultado)
                     else:
-                        resultado = ErrosData(referencia=f"{referencia_familiar.nome}", resultado="Erro ao Salvar",
-                                              descricao_erro="CPF inválido ou já cadastrado", erro="Validação")
+                        if cpf_existente:
+                            resultado = ErrosData(referencia=f"{referencia_familiar.nome}", resultado="Erro ao Salvar Referência",
+                                                descricao_erro="CPF já cadastrado", erro="Validação")
+                        else:
+                            
+                            resultado = ErrosData(referencia=f"{referencia_familiar.nome}", resultado="Erro ao Salvar Referência",
+                                                descricao_erro="CPF inválido", erro="Validação")
                         lista_erros.append(resultado)
             os.remove(caminho_arquivo)
         self.context["resultados"] = lista_erros

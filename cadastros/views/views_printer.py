@@ -175,28 +175,23 @@ class PrinterReferenciasTableView(TemplateView):
         ruc = request.POST['ruc'] if request.POST['ruc'] != '-------' else "Todos"
         lista_cadastro = []
         if not cras and not bairro and not ruc:
-            
             data = printer_referecias()
         else:
-            print("Filtro")
             cadastros = Cadastro.objects.select_related().all()
-            print(len(cadastros))
             if bairro != "Todos" and cras !="Todos" and ruc !="Todos":
-                cadastros = cadastros.filter(endereco__bairro__nome=bairro, abrangencia=cras, endereco__ruc=ruc)
+                cadastros = cadastros.order_by("endereco__bairro","responsavel_familiar").filter(endereco__bairro__nome=bairro, abrangencia=cras, endereco__ruc=ruc)
             elif cras !="Todos" and bairro != "Todos":
-                cadastros = cadastros.filter(abrangencia=cras, endereco__bairro__nome=bairro,)
-               
+                cadastros = cadastros.order_by("endereco__bairro","responsavel_familiar").filter(abrangencia=cras, endereco__bairro__nome=bairro)
             elif cras !="Todos" and ruc != "Todos":
-                cadastros = cadastros.filter(abrangencia=cras, endereco__ruc=ruc)
+                cadastros = cadastros.order_by("endereco__bairro","responsavel_familiar").filter(abrangencia=cras, endereco__ruc=ruc)
             elif ruc !="Todos" and bairro != "Todos":
-                cadastros = cadastros.filter(endereco__ruc=ruc,endereco__bairro__nome=bairro,)
-            
+                cadastros = cadastros.order_by("endereco__bairro","responsavel_familiar").filter(endereco__ruc=ruc,endereco__bairro__nome=bairro,)
             elif ruc !="Todos":
-                cadastros = cadastros.filter(endereco__ruc=ruc)
-            elif cras !="Todos" and ruc != "Todos":
-                cadastros = cadastros.filter(abrangencia=cras)
+                cadastros = cadastros.order_by("endereco__bairro","responsavel_familiar").filter(endereco__ruc=ruc)
+            elif cras !="Todos":
+                cadastros = cadastros.order_by("endereco__bairro","responsavel_familiar").filter(abrangencia=cras)
             elif bairro != "Todos":
-                cadastros = cadastros.filter(endereco__bairro__nome=bairro)
+                cadastros = cadastros.order_by("endereco__bairro","responsavel_familiar").filter(endereco__bairro__nome=bairro)
             
                
             print(len(cadastros))
