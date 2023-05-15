@@ -1,29 +1,14 @@
-import json
-import os
 # Create your views here.
 from random import randint
 
-from django.http import JsonResponse
-from django.views import View
-from ..validations import is_cpf_valid
-from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from tecnicos.models import Tecnico
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
 from django.core.paginator import Paginator
-from time import sleep
-from ..entidades.dados import *
-from ..forms import *
-from ..models import *
 from ..services import *
 from ..filters import *
-from pprint import pprint
-from change_control.services import create_change_campos
-from change_control.classes_change_control import ChangeCampoData
 
 
 def gerar_valores(mes_dict):
@@ -123,13 +108,14 @@ class ListaCadastroView(TemplateView):
                 argumento = argumento.split(':')
                 if "name" in argumento:
                     lista_cadastro = buscar_cadastro_nome(argumento[1])
+                    context['busca'] = argumento[1]
                 elif "cpf" in argumento:
                     lista_cadastro = buscar_cadastro_cpf(argumento[1])
+                    context['busca'] = argumento[1]
                 elif "id" in argumento:
                     lista_cadastro.append(get_object_or_404(Cadastro, id=argumento[1]))
                 elif "inicial" in argumento:
                     lista_cadastro = cadastros.filter(responsavel_familiar__nome__startswith=argumento[1])
-                context['busca'] = argumento[1] if argumento[0] != "inicial" else ""
 
             context['cadastros'] = [CadastroData(cadastro_bd) for cadastro_bd in lista_cadastro]
         else:

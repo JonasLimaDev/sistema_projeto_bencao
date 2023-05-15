@@ -1,26 +1,11 @@
-from random import randint
-
-from django.http import JsonResponse
-from django.views import View
-from ..validations import is_cpf_valid
-from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from tecnicos.models import Tecnico
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
-from django.core.paginator import Paginator
-from time import sleep
 from ..entidades.dados import *
-from ..forms import *
-from ..models import *
-from ..services import *
 from ..filters import *
-from pprint import pprint
-from change_control.services import create_change_campos
-from change_control.classes_change_control import ChangeCampoData
 
 
 @method_decorator(login_required, name='dispatch')
