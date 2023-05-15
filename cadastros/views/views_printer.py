@@ -173,34 +173,31 @@ class PrinterReferenciasTableView(TemplateView):
         cras = request.POST['cras'] if request.POST['cras'] != '-------' else "Todos"
         bairro = request.POST['bairro'] if request.POST['bairro'] != '' else "Todos"
         ruc = request.POST['ruc'] if request.POST['ruc'] != '-------' else "Todos"
-        lista_cadastro = []
+        # lista_cadastro = []
         if not cras and not bairro and not ruc:
             data = printer_referecias()
         else:
             cadastros = Cadastro.objects.select_related().all()
-            if bairro != "Todos" and cras !="Todos" and ruc !="Todos":
-                cadastros = cadastros.order_by("endereco__nome_bairro","responsavel_familiar").filter(endereco__bairro__nome_bairro=bairro, abrangencia=cras, endereco__ruc=ruc)
-            elif cras !="Todos" and bairro != "Todos":
-                cadastros = cadastros.order_by("endereco__nome_bairro","responsavel_familiar").filter(abrangencia=cras, endereco__bairro__nome_bairro=bairro)
-            elif cras !="Todos" and ruc != "Todos":
-                cadastros = cadastros.order_by("endereco__nome_bairro","responsavel_familiar").filter(abrangencia=cras, endereco__ruc=ruc)
-            elif ruc !="Todos" and bairro != "Todos":
-                cadastros = cadastros.order_by("endereco__nome_bairro","responsavel_familiar").filter(endereco__ruc=ruc,endereco__bairro__nome_bairro=bairro,)
-            elif ruc !="Todos":
-                cadastros = cadastros.order_by("endereco__nome_bairro","responsavel_familiar").filter(endereco__ruc=ruc)
-            elif cras !="Todos":
-                cadastros = cadastros.order_by("endereco__nome_bairro","responsavel_familiar").filter(abrangencia=cras)
+            if bairro != "Todos" and cras != "Todos" and ruc != "Todos":
+                cadastros = cadastros.order_by("endereco__bairro", "responsavel_familiar").filter(endereco__bairro__nome=bairro, abrangencia=cras, endereco__ruc=ruc)
+            elif cras != "Todos" and bairro != "Todos":
+                cadastros = cadastros.order_by("endereco__bairro", "responsavel_familiar").filter(abrangencia=cras, endereco__bairro__nome=bairro)
+            elif cras != "Todos" and ruc != "Todos":
+                cadastros = cadastros.order_by("endereco__bairro", "responsavel_familiar").filter(abrangencia=cras, endereco__ruc=ruc)
+            elif ruc != "Todos" and bairro != "Todos":
+                cadastros = cadastros.order_by("endereco__bairro", "responsavel_familiar").filter(endereco__ruc=ruc,endereco__bairro__nome=bairro,)
+            elif ruc != "Todos":
+                cadastros = cadastros.order_by("endereco__bairro", "responsavel_familiar").filter(endereco__ruc=ruc)
+            elif cras != "Todos":
+                cadastros = cadastros.order_by("endereco__bairro", "responsavel_familiar").filter(abrangencia=cras)
             elif bairro != "Todos":
-                cadastros = cadastros.order_by("endereco__nome_bairro","responsavel_familiar").filter(endereco__bairro__nome_bairro=bairro)
-            
-               
-            print(len(cadastros))
+                cadastros = cadastros.order_by("endereco__bairro", "responsavel_familiar").filter(endereco__bairro__nome=bairro)
+
             data = printer_referecias(cadastros)
         text = []
         tabela = LongTable(data, colWidths=[35, 160, 120,70, 85, 90],repeatRows=1)
         tabela.setStyle(styleTableReferencia)
         text.append(tabela)
-        
         if not data:
             text.append(Paragraph(f"ERRO na geração do documento", styleErro))
         buffer = gerar_doc(text)

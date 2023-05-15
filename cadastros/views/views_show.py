@@ -72,56 +72,73 @@ class ListaCadastroView(TemplateView):
     template_name = 'cadastros/geral/lista_cadastros.html'
 
     def get_context_data(self, **kwargs):
-
         context = super().get_context_data(**kwargs)
         bairros = Bairro.objects.select_related().all()
         argumento = None
         cadastros = Cadastro.objects.select_related().all()
-        # cadastros = Cadastro.objects.all()
+        lista_cadastro = []
+        context['bairro_busca'] = ""
+        context['ruc'] = ""
+        context['cras'] = ""
+        context['busca'] = ""
         if 'filter' in self.kwargs:
             argumento = self.kwargs['filter']
-            if "name" in argumento:
-                argumento = argumento.split(':')
-            elif "id" in argumento:
-                argumento = argumento.split(':')
-            elif "bairro" in argumento:
-                argumento = argumento.split(':')
-            elif "inicial" in argumento:
-                argumento = argumento.split(':')
-            elif "cpf" in argumento:
-                argumento = argumento.split(':')
-            elif "cras" in argumento:
-                argumento = argumento.split(':')
-            elif "ruc" in argumento:
-                argumento = argumento.split(':')
+            if ";" in argumento:
+                filters_args = split_filter(argumento)
+                if "bairro" in filters_args and "cras" in filters_args and "ruc" in filters_args:
+                    lista_cadastro = cadastros.filter(endereco__bairro__nome=filters_args['bairro'],
+                                                      abrangencia=filters_args['cras'], endereco__ruc=filters_args['ruc'])
+                    context['bairro_busca'] = filters_args['bairro']
+                    context['ruc'] = filters_args['ruc']
+                    context['cras'] = filters_args['cras']
+                elif "bairro" in filters_args and "cras" in filters_args:
+                        lista_cadastro = cadastros.filter(endereco__bairro__nome=filters_args['bairro'],
+                                                          abrangencia=filters_args['cras'])
+                        context['bairro_busca']  = filters_args['bairro']
+                        context['cras'] = filters_args['cras']
+                elif "bairro" in filters_args and "ruc" in filters_args:
+                    lista_cadastro = cadastros.filter(endereco__bairro__nome=filters_args['bairro'],
+                                                      endereco__ruc=filters_args['ruc'])
+                    context['bairro_busca']  = filters_args['bairro']
+                    context['ruc'] = filters_args['ruc']
 
-        if argumento:
-            lista_cadastro = []
-            if argumento[0] == 'name':
-                lista_cadastro = buscar_cadastro_nome(argumento[1])
-            elif argumento[0] == 'cpf':
-                lista_cadastro = buscar_cadastro_cpf(argumento[1])
-            elif argumento[0] == 'bairro':
-                context["busca_bairro"] = argumento[1]
-                lista_cadastro = buscar_cadastro_bairro(argumento[1])
-            elif argumento[0] == 'ruc':
-                context["busca_ruc"] = argumento[1]
-                lista_cadastro = buscar_cadastro_ruc(argumento[1])
-            elif argumento[0] == 'cras':
-                context["busca_cras"] = argumento[1]
-                lista_cadastro = cadastros.filter(abrangencia=argumento[1])
-            elif argumento[0] == 'inicial':
-                lista_cadastro = cadastros.filter(responsavel_familiar__nome__startswith=argumento[1])
-            elif argumento[0] == 'id':
-                lista_cadastro.append(get_object_or_404(Cadastro, id=argumento[1]))
-            # print(argumento)
+                elif "cras" in filters_args and "ruc" in filters_args:
+                    lista_cadastro = cadastros.filter(abrangencia=filters_args['cras'],
+                                                      endereco__ruc=filters_args['ruc'])
+                    context['ruc'] = filters_args['ruc']
+                    context['cras'] = filters_args['cras']
+
+                elif "bairro" in filters_args:
+                    lista_cadastro = cadastros.filter(endereco__bairro__nome=filters_args['bairro'])
+                    context['bairro_busca']  = filters_args['bairro']
+
+                elif "cras" in filters_args:
+                    lista_cadastro = cadastros.filter(abrangencia=filters_args['cras'])
+                    context['cras'] = filters_args['cras']
+
+                elif "ruc" in filters_args:
+                    lista_cadastro = cadastros.filter(endereco__ruc=filters_args['ruc'])
+                    context['ruc'] = filters_args['ruc']
+            else:
+                argumento = argumento.split(':')
+                if "name" in argumento:
+                    lista_cadastro = buscar_cadastro_nome(argumento[1])
+                elif "cpf" in argumento:
+                    lista_cadastro = buscar_cadastro_cpf(argumento[1])
+                elif "id" in argumento:
+                    lista_cadastro.append(get_object_or_404(Cadastro, id=argumento[1]))
+                elif "inicial" in argumento:
+                    lista_cadastro = cadastros.filter(responsavel_familiar__nome__startswith=argumento[1])
+                context['busca'] = argumento[1] if argumento[0] != "inicial" else ""
+
             context['cadastros'] = [CadastroData(cadastro_bd) for cadastro_bd in lista_cadastro]
         else:
             context['cadastros'] = [CadastroData(cadastro_bd) for cadastro_bd in cadastros]
+
         context['alfabeto'] = lista_alfabeto()
         context['total_cadastros'] = len(context['cadastros'])
 
-        paginator = Paginator(context['cadastros'], 20)  # Show 25 contacts per page.
+        paginator = Paginator(context['cadastros'], 20)
         page_number = self.request.GET.get('page')
         page_obj = paginator.get_page(page_number)
         context['page_obj'] = page_obj
@@ -132,29 +149,30 @@ class ListaCadastroView(TemplateView):
 
     def post(self, request, *args, **kwargs):
         busca = request.POST['busca']
-        print(request.POST)
-
         bairro = request.POST['bairro']
         cras = request.POST['cras'] if request.POST['cras'] != "-------" else None
         ruc = request.POST['ruc'] if request.POST['ruc'] != "-------" else None
+        filters = ""
+        if not busca and not bairro and not cras and not ruc:
+            return redirect('listar_cadastros')
         if busca:
             if is_cpf(busca):
                 busca = busca.replace('.', '').replace('-', '').replace(" ", '')
                 return redirect('listar_cadastros', "cpf:" + busca)
-            if len(busca) == 11 and busca.isdigit():
+            elif len(busca) == 11 and busca.isdigit():
                 return redirect('listar_cadastros', "cpf:" + busca)
             elif busca.isdigit():
                 return redirect('listar_cadastros', "id:" + request.POST['busca'])
             else:
                 return redirect('listar_cadastros', "name:" + request.POST['busca'])
-        elif bairro:
-            return redirect('listar_cadastros', "bairro:" + request.POST['bairro'])
-        elif ruc:
-            return redirect('listar_cadastros', "ruc:" + request.POST['ruc'])
-        elif cras:
-            return redirect('listar_cadastros', "cras:" + request.POST['cras'])
         else:
-            return redirect('listar_cadastros')
+            if bairro:
+                filters += f"bairro:{bairro};"
+            if ruc:
+                filters += f"ruc:{ruc};"
+            if cras:
+                filters += f"cras:{cras};"
+            return redirect('listar_cadastros', filters)
 
 
 @method_decorator(login_required, name='dispatch')

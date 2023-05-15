@@ -50,14 +50,15 @@ class EditCadastroView(TemplateView):
             entrevistador_form = form.cleaned_data['entrevistador']
             abrangencia_form = form.cleaned_data['abrangencia']
             lista_alteracoes = []
+            dict_data_form = dict(form.fields["abrangencia"]._choices)
             if cadastro_bd.entrevistador != entrevistador_form:
                 lista_alteracoes.append(ChangeCampoData(campo="Entrevistador", valor_antigo=cadastro_bd.entrevistador,
                                                         valor_novo=entrevistador_form))
                 cadastro_bd.entrevistador = entrevistador_form
                 atualizacao = True
             if cadastro_bd.abrangencia != abrangencia_form:
-                lista_alteracoes.append(ChangeCampoData(campo="Abrangência", valor_antigo=cadastro_bd.abrangencia,
-                                                        valor_novo=abrangencia_form))
+                lista_alteracoes.append(ChangeCampoData(campo="Abrangência", valor_antigo=cadastro_bd.get_abrangencia_display(),
+                                                        valor_novo=dict_data_form[form.cleaned_data["abrangencia"]]))
                 cadastro_bd.abrangencia = abrangencia_form
                 atualizacao = True
 

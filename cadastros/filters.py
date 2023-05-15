@@ -137,3 +137,13 @@ def buscar_cadastro(filter=None):
         cadastros =[CadastroData(cadastro) for cadastro in Cadastro.objects.select_related().all()]
 
     return cadastros
+
+
+def split_filter(filter_str):
+    filters = filter_str.split(";")
+    filter_dict = {}
+    for filter in filters:
+        if filter:
+            filter_split = filter.split(":")
+            filter_dict[filter_split[0]] = filter_split[1]
+    return filter_dict

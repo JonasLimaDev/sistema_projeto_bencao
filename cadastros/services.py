@@ -77,11 +77,11 @@ def editar_model_data(inst_model,inst_form,ignore=[]):
 			valor_form = inst_form.cleaned_data[field.name]
 			if valor_atual != valor_form:
 				lista_alteracoes.append(ChangeCampoData(campo=inst_model._meta.get_field(field.name).verbose_name,
-												valor_antigo=valor_atual  if valor_atual  else "-",
+												valor_antigo=valor_atual if valor_atual else "-",
 												valor_novo=valor_form))
 				setattr(inst_model, f"{field.name}_id", valor_form.id)
 				has_change = True
-		elif field.name not in ignore and  inst_model_data[field.name] != inst_form.cleaned_data[field.name]:
+		elif field.name not in ignore and inst_model_data[field.name] != inst_form.cleaned_data[field.name]:
 			if hasattr(inst_form.fields[field.name], "_choices"):
 				"""Verifica se o Campo e do tipo CHOICES"""	
 				dict_data_form = dict(inst_form.fields[field.name]._choices) # gera o dicionário de valores e alternativas do choices

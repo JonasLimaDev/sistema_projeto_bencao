@@ -42,12 +42,12 @@
   <div class="col-sm-6 col-md-2 col-lg-2 col-xl-2 col-xxl-2 col-12">
 
     <div class="form-floating  ">
-      <select class="form-select rounded  my-0 pb-0"  style="height: 50px;" aria-label="Default select example"
+      <select class="form-select rounded" aria-label="Default select example"
         name="cras">
         <option selected>-------</option>
-        <option value="1">CRAS I</option>
-        <option value="2">CRAS II</option>
-        <option value="3">CRAS III</option>
+        <option {%if cras == '1' %} selected  {%endif%}value="1">CRAS I</option>
+        <option {%if cras == '2' %} selected  {%endif%} value="2">CRAS II</option>
+        <option {%if cras == '3' %} selected  {%endif%} value="3">CRAS III</option>
       </select>
       <label for="floatingSelect" >Abrangência</label>
     </div>
@@ -55,15 +55,15 @@
   <div class="col-sm-6 col-md-3 col-lg-3 col-xl-3 col-xxl-3 col-12">
 
     <div class="form-floating ">
-      <select class="form-select rounded   my-0 pb-0"  style="height: 50px;" aria-label="Default select example"
+      <select class="form-select rounded" aria-label="Default select example"
         name="ruc">
         <option selected>-------</option>
-        <option value="1">Nenhum</option>
-        <option value="2">Água Azul</option>
-        <option value="3">Jatobá</option>
-        <option value="4">São Joaquim</option>
-        <option value="5">Casa Nova</option>
-        <option value="6">Laranjeiras</option>
+        <option {%if ruc == '1' %} selected  {%endif%} value="1">Nenhum</option>
+        <option {%if ruc == '2' %} selected  {%endif%} value="2">Água Azul</option>
+        <option {%if ruc == '3' %} selected  {%endif%} value="3">Jatobá</option>
+        <option {%if ruc == '4' %} selected  {%endif%} value="4">São Joaquim</option>
+        <option {%if ruc == '5' %} selected  {%endif%} value="5">Casa Nova</option>
+        <option {%if ruc == '6' %} selected  {%endif%} value="6">Laranjeiras</option>
       </select>
       <label for="floatingSelect">Ruc</label>
     </div>
@@ -71,12 +71,13 @@
   <div class="col-sm-6 col-md-3 col-lg-3 col-xl-3 col-xxl-3 col-12">
     <div class="form-floating">
 
-      <input class="form-control   rounded  my-0 pb-0" style="height: 50px;" list="datalistOptions" id="bairroDataList" placeholder="Buscar por Bairro"
-         autocomplete="off" name="bairro">
+      <input class="form-control   rounded " list="datalistOptions" id="bairroDataList" placeholder="Buscar por Bairro"
+         autocomplete="off" name="bairro" {%if bairro_busca %} value="{{bairro_busca}}" {%endif%}>
       <label for="floatingSelect">Bairro</label>
       <datalist id="datalistOptions">
         {% for bairro in lista_bairros %}
-        <option value="{{bairro}}">
+        <option {%if bairro_busca == bairro %} {%endif%} value="{{bairro}}">
+
           {%endfor%}
       </datalist>
 
@@ -86,7 +87,7 @@
   <div class="col-sm-6 col-md-4 col-lg-4 col-xl-4 col-xxl-4 col-12">
     <div class="input-group">
       <div class="form-floating ">
-        <input class="form-control rounded  my-0 pb-0" style="height: 50px;" value="" id="busca" name="busca" type="search" placeholder="Nome ou CPF" aria-label="Search">
+        <input class="form-control rounded " value="{{busca}}" id="busca" name="busca" type="search" placeholder="Nome ou CPF" aria-label="Search">
         <label for="floatingInput">Nome ou CPF</label>
     </div>
   <button class="btn btn-outline-primary mx-2 rounded" type="submit" id="button-busca"><i
@@ -121,13 +122,17 @@
   {% for cadastro in page_obj %}
   <div class="card list-group-item my-2 border" aria-current="true">
     <div class="d-flex w-100 justify-content-between ">
+
       <h5 class="mb-1">{{cadastro.responsavel.nome}}</h5>
+
       <div class="d-flex flex-column align-items-end">
         <small class="text-secondary">Cadastro realizado em: {{cadastro.data_cadastro}}</small>
         <small class=" text-muted fw-bold">Cadastrador: <span
             class="text-uppercase ">{{cadastro.responsavel_cadastro}}</span></small>
       </div>
     </div>
+    <div class="d-flex w-100 justify-content-between mt-1">
+      <div class="d-flex flex-column align-items-start">
     <p class="mb-1">{%if cadastro.responsavel.sexo == "Feminino"%}Moradora{%else%}Morador{%endif%} do Bairro: {{cadastro.endereco.bairro}}
       <a href="{% url 'editar_endereco' cadastro.endereco.id %}" class="link-warning mt-2 btn-sm d-print-none">
         <i class="bi bi-pencil"></i>
@@ -140,8 +145,16 @@
       {% if cadastro.endereco.numero %}
       nº {{cadastro.endereco.numero}}
       {% endif %}
+      {% if cadastro.endereco.ruc != "Nenhum" %}- RUC {{cadastro.endereco.get_ruc_display}}
+      {% endif %}
 
     </p>
+      </div>
+      <div class="d-flex flex-column align-items-end">
+         <small class="text-secondary ">Abrangência: {{cadastro.abrangencia}}</small>
+      </div>
+    </div>
+    <hr class="my-1 py-1">
     <div class="d-grid gap-2 d-md-flex justify-content-md-start pb-3 ">
       <button class="btn btn-primary me-md-2 btn-sm" type="button" data-bs-toggle="collapse"
         data-bs-target="#collapseComposicao{{cadastro.id}}">
