@@ -232,6 +232,7 @@ class Habitacao(models.Model):
         ('3', 'Cedida'),
         ('4', 'Invasão'),
         ('5', 'Sem Moradia Fixa'),
+        ('6', 'Não Informado'),
     )
 
     COSNTRUCAO = (
@@ -240,6 +241,7 @@ class Habitacao(models.Model):
         ('3', 'Madeira'),
         ('4', 'Outro'),
         ('5', 'Não Se Aplica'),
+        ('6', 'Não Informado'),
     )
 
     TELHADO = (
@@ -248,12 +250,14 @@ class Habitacao(models.Model):
         ('3', 'Lage'),
         ('4', 'Outro'),
         ('5', 'Não Se Aplica'),
+        ('6', 'Não Informado'),
     )
 
     ELETRICIDADE = (
         ('1', 'Com Medidor Próprio'),
         ('2', 'Sem Padrão'),
         ('3', 'Não Possui'),
+        ('4', 'Não Informado'),
     )
 
     ABASTECIMENTO = (
@@ -264,6 +268,7 @@ class Habitacao(models.Model):
         ('5', 'Água da Chuva Armazenada'),
         ('6', ' Rios, Açudes, Córregos, Lagos e Igarapés'),
         ('7', 'Outra'),
+        ('8', 'Não Informado'),
     )
 
     ESGOTO = (
@@ -280,12 +285,14 @@ class Habitacao(models.Model):
         ('4', 'Enterrado na Propriedade'),
         ('5', 'Jogado em Terreno Baldio, Encosta ou Área Pública'),
         ('6', 'Outro Destino'),
+        ('7', 'Não Informado'),
     )
 
     PAVIMENTO = (
         ('1', 'Asfalto'),
         ('2', 'Bloqueteamento'),
         ('3', 'Não Possui'),
+        ('4', 'Não Informado'),
     )
 
 

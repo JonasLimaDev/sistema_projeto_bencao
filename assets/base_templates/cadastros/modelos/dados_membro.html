@@ -46,14 +46,14 @@
             <div class="card mb-3">
                 <div class="card-header d-flex justify-content-between align-items-start">
                     <h5>Dados de Saúde</h5>
-                    <a href="{% url 'editar_saude' cadastro.id cadastro.responsavel.dados_saude.id %}"
+                    <a href="{% url 'editar_saude' cadastro.id membro.dados_saude.id %}"
                         class="link-warning btn-sm d-print-none">
                         <i class="bi bi-pencil fs-5"></i>
                     </a>
                 </div>
                 <div class="card-body ">
                     <div class="row row-cols-md-3 row-cols-sm-2 row-cols-xs-1  row-cols-auto g-3">
-                        {%for chave, valor in cadastro.responsavel.saude_all_data.items %}
+                        {%for chave, valor in membro.saude_all_data.items %}
                         {%include 'cadastros/modelos/dados_chave_valor.html'%}
                         {%endfor%}
                     </div>
