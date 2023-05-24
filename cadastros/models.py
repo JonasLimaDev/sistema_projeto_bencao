@@ -121,6 +121,7 @@ class Referencia(Pessoa):
         ('2', 'Casado(a)'),
         ('3', 'Divorciado(a)'),
         ('4', 'Viúvo(a)'),
+        ('5', 'Não Informado'),
     )
 
     GENERO = (
@@ -128,6 +129,7 @@ class Referencia(Pessoa):
         ('2', 'Transgênero'),
         ('3', 'Não Binário'),
         ('4', 'Não Declarado'),
+        ('5', 'Não Informado'),
     )
 
     COR_RACA = (
@@ -135,7 +137,8 @@ class Referencia(Pessoa):
         ('2', 'Preta'),
         ('3', 'Amarela'),
         ('4', 'Parda'),
-        ('5', 'Indígena')
+        ('5', 'Indígena'),
+        ('6', 'Não Informado'),
     )
     #apelido = models.CharField(max_length=30, null=True, blank=True)
 

@@ -27,6 +27,8 @@ class ReferenciaDados():
         self.dados_educacionais = referencia_bd.dados_educacionais
         self.dados_saude = referencia_bd.dados_saude
         self.dados_faltantes = self.get_ausentes(referencia_bd)
+        self.len_nis = len(self.nis)
+
        
 
         self.all_data = {            
@@ -114,7 +116,7 @@ class MembroDados():
         self.parentesco = membro_bd.get_parentesco_display()
         self.dados_educacionais = membro_bd.dados_educacionais
         self.dados_saude = membro_bd.dados_saude
-        
+        self.len_nis = len(self.nis)
 
         self.all_data = {
             "Nome": self.nome,

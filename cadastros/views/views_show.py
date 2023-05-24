@@ -29,14 +29,6 @@ class HomePageView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         dados = {}
-        # inserir_bairros()
-        # orgs = ["CRAS I","CRAS II","CRAS III","CREAS","SEMAPS - SEDE","Projeto"]
-        # for org in orgs:
-        #     mes = {'Jan':0, "Fev":0,'Mar':0, "Abr":0,
-        # 'Mai':0,"Jun":0,'Jul':0, "Ago":0,
-        # 'Set':0, "Out":0,'Nov':0, "Dez":0,}
-        #     lista = gerar_valores(mes)
-        #     dados[org]=lista
         return render(request, self.template_name, {'dados': dados})
 
 
@@ -61,6 +53,7 @@ class ListaCadastroView(TemplateView):
         bairros = Bairro.objects.select_related().all()
         argumento = None
         cadastros = Cadastro.objects.select_related().all()
+        nis_estourado()
         lista_cadastro = []
         context['bairro_busca'] = ""
         context['ruc'] = ""
@@ -106,12 +99,17 @@ class ListaCadastroView(TemplateView):
                     context['ruc'] = filters_args['ruc']
             else:
                 argumento = argumento.split(':')
+                
                 if "name" in argumento:
                     lista_cadastro = buscar_cadastro_nome(argumento[1])
                     context['busca'] = argumento[1]
                 elif "cpf" in argumento:
                     lista_cadastro = buscar_cadastro_cpf(argumento[1])
                     context['busca'] = argumento[1]
+                elif "nis_broken_out" in argumento:
+                    lista_cadastro = nis_estourado()
+                    context['busca'] = argumento[0]
+                
                 elif "id" in argumento:
                     # cad  = get_object_or_404(Cadastro, id=argumento[1])
                     # print("Sim")
@@ -119,7 +117,7 @@ class ListaCadastroView(TemplateView):
                     
                     cad  =  Cadastro.objects.filter(id=argumento[1])
                     if cad:
-                        lista_cadastro.append(cad)
+                        lista_cadastro.append(cad[0])
                     else:
                         context['busca'] = argumento[1]
                 elif "inicial" in argumento:
@@ -147,6 +145,8 @@ class ListaCadastroView(TemplateView):
         cras = request.POST['cras'] if request.POST['cras'] != "-------" else None
         ruc = request.POST['ruc'] if request.POST['ruc'] != "-------" else None
         filters = ""
+        if busca == "nis_broken_out":
+            return redirect('listar_cadastros', "nis_broken_out:"+"")
         if not busca and not bairro and not cras and not ruc:
             return redirect('listar_cadastros')
         if busca:

@@ -139,6 +139,9 @@ def buscar_cadastro(filter=None):
     return cadastros
 
 
+
+
+
 def split_filter(filter_str):
     filters = filter_str.split(";")
     filter_dict = {}
@@ -147,3 +150,12 @@ def split_filter(filter_str):
             filter_split = filter.split(":")
             filter_dict[filter_split[0]] = filter_split[1]
     return filter_dict
+
+def nis_estourado():
+    cadastros = Cadastro.objects.all()
+    lista = []
+    for cadastro in cadastros:
+        if cadastro.responsavel_familiar.nis and  len(cadastro.responsavel_familiar.nis) >11:
+            if cadastro not in lista:
+                lista.append(cadastro)
+    return lista
