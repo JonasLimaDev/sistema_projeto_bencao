@@ -113,7 +113,15 @@ class ListaCadastroView(TemplateView):
                     lista_cadastro = buscar_cadastro_cpf(argumento[1])
                     context['busca'] = argumento[1]
                 elif "id" in argumento:
-                    lista_cadastro.append(get_object_or_404(Cadastro, id=argumento[1]))
+                    # cad  = get_object_or_404(Cadastro, id=argumento[1])
+                    # print("Sim")
+                    # print(vars(cadastros))
+                    
+                    cad  =  Cadastro.objects.filter(id=argumento[1])
+                    if cad:
+                        lista_cadastro.append(cad)
+                    else:
+                        context['busca'] = argumento[1]
                 elif "inicial" in argumento:
                     lista_cadastro = cadastros.filter(responsavel_familiar__nome__startswith=argumento[1])
 

@@ -276,6 +276,8 @@ class Habitacao(models.Model):
         ('2', 'Fossa Rudimentar ou Buraco'),
         ('3', 'Vala'),
         ('4', 'Não Possui'),
+        ('5', 'Não Informado'),
+        
     )
 
     COLETA = (

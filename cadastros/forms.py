@@ -208,7 +208,7 @@ class FormCadastro(forms.ModelForm):
     class Meta:
         model = Cadastro
 
-        exclude = ['responsavel_familiar', 'habitacao', 'endereco', 'responsavel_cadastro', 'data_cadastro','data_alteracao']
+        exclude = ['responsavel_familiar', 'habitacao', 'endereco', 'responsavel_cadastro', 'data_cadastro','data_alteracao','status']
         # help_texts = {
         #     'cpf': 'digite apenas os 11 números sem ponto ou espaço',
         #     'parentesco': 'Parentesco em relação ao Responsável Familiar',
