@@ -4,7 +4,7 @@ from django.http import FileResponse
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.shortcuts import render
-
+from django.contrib import messages
 ### ------ reportlab imports ------ ###
 from reportlab.platypus import Paragraph, Table, TableStyle, LongTable
 from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
@@ -169,11 +169,14 @@ class PrinterReferenciasTableView(TemplateView):
         return render(request, self.template_name,context) #FileResponse(buffer, filename=f'termo_entrega_orgão.pdf')
     
     def post(self, request, *args, **kwargs):
-        # print(request.POST)
+        bairros = Bairro.objects.select_related().all()
+        context = {"bairros":bairros}
         cras = request.POST['cras'] if request.POST['cras'] != '-------' else "Todos"
         bairro = request.POST['bairro'] if request.POST['bairro'] != '' else "Todos"
         ruc = request.POST['ruc'] if request.POST['ruc'] != '-------' else "Todos"
-        # lista_cadastro = []
+        context["select_cras"] = cras
+        context["select_ruc"] = ruc
+        context["select_bairro"] = bairro
         if not cras and not bairro and not ruc:
             data = printer_referecias()
         else:
@@ -192,17 +195,22 @@ class PrinterReferenciasTableView(TemplateView):
                 cadastros = cadastros.order_by("endereco__bairro", "responsavel_familiar").filter(abrangencia=cras)
             elif bairro != "Todos":
                 cadastros = cadastros.order_by("endereco__bairro", "responsavel_familiar").filter(endereco__bairro__nome=bairro)
-
+        if cadastros:    
             data = printer_referecias(cadastros)
-        text = []
-        tabela = LongTable(data, colWidths=[35, 160, 120,70, 85, 90],repeatRows=1)
-        tabela.setStyle(styleTableReferencia)
-        text.append(tabela)
-        if not data:
-            text.append(Paragraph(f"ERRO na geração do documento", styleErro))
-        buffer = gerar_doc(text)
+            text = []
+            tabela = LongTable(data, colWidths=[35, 160, 120,70, 85, 90],repeatRows=1)
+            tabela.setStyle(styleTableReferencia)
+            text.append(tabela)
+            if not data:
+                text.append(Paragraph(f"ERRO na geração do documento", styleErro))
+            buffer = gerar_doc(text)
+            
+            return FileResponse(buffer, filename=f'Lista De Familias Cadastradas.pdf')
+        else:
+            messages.error(request, f'Não há dados para os filtros selecionados')
+            
+            return render(request, self.template_name,context)
         
-        return FileResponse(buffer, filename=f'termo_entrega_orgão.pdf')
         
 
 @method_decorator(login_required, name='dispatch')

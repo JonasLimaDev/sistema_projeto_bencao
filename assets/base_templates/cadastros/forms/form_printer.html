@@ -28,9 +28,9 @@
                         <select class="form-select rounded" aria-label="Default select example" name="cras">
                             <option selected>-------</option>
                             <option>Todos</option>
-                            <option value="1">CRAS I</option>
-                            <option value="2">CRAS II</option>
-                            <option value="3">CRAS III</option>
+                            <option {%if select_cras == '1' %} selected {%endif%} value="1">CRAS I</option>
+                            <option {%if select_cras == '2' %} selected {%endif%} value="2">CRAS II</option>
+                            <option {%if select_cras == '3' %} selected {%endif%} value="3">CRAS III</option>
                         </select>
                         <label for="floatingSelect">Abrangência</label>
                     </div>
@@ -41,25 +41,25 @@
                         <select class="form-select rounded   " aria-label="Default select example" name="ruc">
                             <option selected>-------</option>
                             <option>Todos</option>
-                            <option value="1">Nenhum</option>
-                            <option value="2">Água Azul</option>
-                            <option value="3">Jatobá</option>
-                            <option value="4">São Joaquim</option>
-                            <option value="5">Casa Nova</option>
-                            <option value="6">Laranjeiras</option>
+                            <option  {%if select_ruc == '1' %} selected  {%endif%} value="1">Nenhum</option>
+                            <option {%if select_ruc == '2' %} selected  {%endif%} value="2">Água Azul</option>
+                            <option {%if select_ruc == '3' %} selected  {%endif%} value="3">Jatobá</option>
+                            <option {%if select_ruc == '4' %} selected  {%endif%} value="4">São Joaquim</option>
+                            <option {%if select_ruc == '5' %} selected  {%endif%} value="5">Casa Nova</option>
+                            <option {%if select_ruc == '6' %} selected  {%endif%} value="6">Laranjeiras</option>
                         </select>
                         <label for="floatingSelect">Ruc</label>
                     </div>
                 </div>
                 <div class="col">
                     <div class="form-floating">
-                        <input class="form-control   rounded" list="datalistOptions" placeholder="Buscar por Bairro"
+                        <input class="form-control   rounded" list="datalistOptions" {%if select_bairro %} value="{{select_bairro}}" {%endif%} placeholder="Buscar por Bairro"
                             autocomplete="off" name="bairro">
                         <label for="floatingSelect">Bairro</label>
                         <datalist id="datalistOptions">
                             <option value="Todos"></option>
                             {% for bairro in bairros %}
-                            <option value="{{bairro}}">
+                            <option  value="{{bairro}}">
                                 {%endfor%}
                         </datalist>
 
@@ -75,7 +75,7 @@
 
             <div class="card-footer   text-center">
                 <div class="d-grid gap-2 col-4 mx-auto">
-                    <button target="_blank" type="submit" class="btn btn-success ">Imprimir</button>
+                    <button type="submit" id="btn-form"  class="btn btn-success ">Imprimir</button>
 
                 </div>
             </div>

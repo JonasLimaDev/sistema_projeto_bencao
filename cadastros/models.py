@@ -30,6 +30,7 @@ class Endereco(models.Model):
         ('4', 'São Joaquim'),
         ('5', 'Casa Nova'),
         ('6', 'Laranjeiras'),
+        ('7', 'Tavaquara')
     )
     
     logradouro = models.CharField(max_length=100, null=False, blank=False, verbose_name="Logradouro")
@@ -351,5 +352,3 @@ class Cadastro(models.Model):
     status = models.CharField(max_length=1, choices=STATUS, null=False, blank=False, default="1", verbose_name="Status do Cadastro")
     def __str__(self):
         return self.responsavel_familiar.nome
-
-

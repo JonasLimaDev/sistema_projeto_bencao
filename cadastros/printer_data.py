@@ -108,7 +108,7 @@ def gerar_doc(text_param, titulo="Dados Sistema"):
     # definição das margens
     frame = Frame(2*cm, 1*cm, doc.width+1.5*cm, doc.height+2*cm)
 
-    template = PageTemplate(id='termo_entrega_orgão', frames=frame,)
+    template = PageTemplate(id='Dados Programa Bênção', frames=frame,)
 
     doc.addPageTemplates([template])
     text = []
@@ -167,19 +167,21 @@ def printer_total_cras():
     return lista
 
 
-def printer_referecias(dados=None):
-    if not dados:
+def printer_referecias(dados=None, tudo=True):
+    if not dados and tudo:
         dados = buscar_cadastro()
     else:
-        print("aqui")
         dados = [CadastroData(cadastro) for cadastro in dados]
     styles = getSampleStyleSheet()
+    if not dados:
+        return []
     styleNormal = ParagraphStyle('corpo_normal', fontFamily="Arial", fontSize=10,
                                  parent=styles['Normal'], alignment=0, leading=12, spaceBefore=0, spaceAfter=0)
     
     styleOrdem = ParagraphStyle('corpo_normal', fontFamily="Arial", fontSize=10,
                                  parent=styles['Normal'], alignment=1, leading=12, spaceBefore=0, spaceAfter=0)
-
+    
+  
     lista = [["Ord.", "Nome", "Bairro","RUC", "CPF", "Telefone"]]
     contador = 1
 

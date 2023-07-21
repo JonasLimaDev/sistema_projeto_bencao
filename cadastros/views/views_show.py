@@ -51,9 +51,8 @@ class ListaCadastroView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         bairros = Bairro.objects.select_related().all()
-        argumento = None
         cadastros = Cadastro.objects.select_related().all()
-        nis_estourado()
+        argumento = None
         lista_cadastro = []
         context['bairro_busca'] = ""
         context['ruc'] = ""
